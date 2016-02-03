@@ -1,0 +1,1 @@
+This is where you will be working on the mobile application, create new branch everytime you make a change and merge once you're happy, never push to master!
