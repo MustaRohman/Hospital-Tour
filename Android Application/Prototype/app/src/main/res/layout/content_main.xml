@@ -12,40 +12,52 @@
     tools:context="com.example.mustarohman.prototype.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-        android:id="@+id/linear_buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerInParent="true">
 
-        <Button
-            android:id="@+id/help_button"
+        <LinearLayout
+            android:id="@+id/linear_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_help"
-            android:layout_centerInParent="true"/>
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true">
 
-        <Button
+            <Button
+                android:id="@+id/help_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_help"
+                android:textColor="@android:color/tab_indicator_text"
+                android:background="@android:color/transparent"
+                android:layout_margin="9dp"
+                android:onClick="onClickHelpBtn"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_start"
+                android:background="@drawable/border"
+                android:layout_margin="9dp"
+                android:onClick="onClickStartBtn"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/code_edit"
+            android:layout_width="250dp"
+            android:inputType="text"
+            android:hint="@string/hint_text"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/linear_buttons"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/colorPrimary"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_start"/>
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/code_edit"
-        android:layout_width="250dp"
-        android:inputType="text"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/linear_buttons"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_code"
-        android:layout_above="@id/code_edit"
-        android:layout_centerHorizontal="true"/>
+            android:text="@string/enter_code"
+            android:textSize="@dimen/text_enter_code"
+            android:layout_above="@id/code_edit"
+            android:layout_marginBottom="16dp"
+            android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
