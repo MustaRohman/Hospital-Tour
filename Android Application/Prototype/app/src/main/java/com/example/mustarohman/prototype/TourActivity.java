@@ -1,5 +1,6 @@
 package com.example.mustarohman.prototype;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,25 +10,32 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class TourActivity extends AppCompatActivity {
 
-    private LinearLayout tourPointsLin;
+    private LinearLayout tourPointsLinear;
 
     //Map of tour points with their locations. Could be retrieved via JSON
     private HashMap<String,String> tourPoints;
+    private ArrayList<View> tourViewsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
-        tourPointsLin = (LinearLayout) findViewById(R.id.linear_tourpoints);
+
+        tourPointsLinear = (LinearLayout) findViewById(R.id.linear_tourpoints);
+        tourViewsList = new ArrayList<>();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Royal Brompton Hospital");
@@ -38,8 +46,18 @@ public class TourActivity extends AppCompatActivity {
         tourPoints.put("Radiology","Sydney Wing");
         tourPoints.put("Cardiac","North Wing");
         tourPoints.put("Something","Main Building");
+        tourPoints.put("ER","North Wing");
+        tourPoints.put("Operating Theatre","North Wing");
+        tourPoints.put("Reception","Main Building");
+        tourPoints.put("Staff Room","Sydney Wing");
+        tourPoints.put("Toilet","Sydney Wing");
 
         addTourPointViews();
+
+        //
+        View point = tourViewsList.get(0);
+        ImageView img = (ImageView) point.findViewById(R.id.thumbnail);
+        img.setImageResource(R.drawable.cardiac5);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -56,9 +74,12 @@ public class TourActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create new activity for the tourPoint
+                Toast.makeText(TourActivity.this, "Tour point click event", Toast.LENGTH_SHORT)
+                .show();
             }
         };
+
+        //Iterate through map and creates View object and adds to activity screen
         Iterator it = tourPoints.entrySet().iterator();
         while (it.hasNext()){
             Map.Entry<String,String> point = (Map.Entry) it.next();
@@ -69,7 +90,8 @@ public class TourActivity extends AppCompatActivity {
             TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
             location.setText(point.getValue());
 
-            tourPointsLin.addView(tourPointView);
+            tourPointsLinear.addView(tourPointView);
+            tourViewsList.add(tourPointView);
         }
     }
 
