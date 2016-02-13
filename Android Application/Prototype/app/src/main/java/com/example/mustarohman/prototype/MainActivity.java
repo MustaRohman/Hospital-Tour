@@ -67,6 +67,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickHelpBtn(View view) {
-        
+
     }
 }
