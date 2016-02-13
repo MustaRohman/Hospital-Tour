@@ -97,4 +97,5 @@
     <string name="button_start">Start</string>
     <string name="title_activity_tour">TourActivity</string>
     <string name="hint_text">Tour Code</string>
+    <string name="title_activity_tour_point">TourPointActivity</string>
 </resources>
