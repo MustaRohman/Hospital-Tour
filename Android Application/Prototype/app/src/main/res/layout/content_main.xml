@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:layout_centerInParent="true">
 
             <Button
@@ -28,7 +28,7 @@
                 android:text="@string/button_help"
                 android:textColor="@android:color/tab_indicator_text"
                 android:background="@android:color/transparent"
-                android:layout_margin="9dp"
+                android:layout_marginRight="25dp"
                 android:onClick="onClickHelpBtn"/>
 
             <Button
@@ -36,14 +36,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_start"
                 android:background="@drawable/border"
-                android:layout_margin="9dp"
+                android:layout_marginLeft="25dp"
                 android:onClick="onClickStartBtn"/>
 
         </LinearLayout>
 
         <EditText
             android:id="@+id/code_edit"
-            android:layout_width="250dp"
+            android:layout_width="270dp"
             android:inputType="text"
             android:hint="@string/hint_text"
             android:layout_height="wrap_content"

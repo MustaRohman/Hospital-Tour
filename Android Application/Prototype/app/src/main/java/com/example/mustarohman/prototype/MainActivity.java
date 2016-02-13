@@ -30,12 +30,10 @@ public class MainActivity extends AppCompatActivity {
         tourCodes.add("BROMP200");
         tourCodes.add("BROMP300");
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
-
     }
 
     @Override
