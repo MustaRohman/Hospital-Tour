@@ -98,4 +98,5 @@
     <string name="title_activity_tour">TourActivity</string>
     <string name="hint_text">Tour Code</string>
     <string name="title_activity_tour_point">TourPointActivity</string>
+    <string name="title_activity_current">CurrentActivity</string>
 </resources>
