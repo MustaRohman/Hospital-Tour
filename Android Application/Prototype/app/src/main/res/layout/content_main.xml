@@ -60,4 +60,13 @@
             android:layout_marginBottom="16dp"
             android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/sign_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="onSignInBtn"/>
+
 </RelativeLayout>
