@@ -31,4 +31,9 @@ public class AddNodeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TourActivity.class);
         startActivity(intent);
     }
+
+    public void onClickAddNode(View view) {
+        Intent intent = new Intent(this, CurrentActivity.class);
+        startActivity(intent);
+    }
 }
