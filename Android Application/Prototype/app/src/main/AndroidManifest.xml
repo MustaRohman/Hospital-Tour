@@ -34,6 +34,10 @@
         <activity
             android:name=".LogInActivity"
             android:label="@string/title_activity_log_in"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddNodeActivity"
+            android:label="@string/title_activity_add_node"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

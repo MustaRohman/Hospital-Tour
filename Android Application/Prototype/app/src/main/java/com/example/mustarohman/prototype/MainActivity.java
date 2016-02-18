@@ -69,5 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSignInBtn(View view) {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
     }
 }

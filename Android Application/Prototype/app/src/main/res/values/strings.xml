@@ -100,4 +100,6 @@
     <string name="title_activity_tour_point">TourPointActivity</string>
     <string name="title_activity_current">CurrentActivity</string>
     <string name="title_activity_log_in">LogInActivity</string>
+    <string name="title_activity_add_node">AddNodeActivity</string>
+    <string name="tourcode_text">Your Tour Code</string>
 </resources>

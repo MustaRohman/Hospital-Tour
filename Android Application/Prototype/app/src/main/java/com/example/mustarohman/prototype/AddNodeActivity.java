@@ -8,12 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class LogInActivity extends AppCompatActivity {
+public class AddNodeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_add_node);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -27,8 +27,8 @@ public class LogInActivity extends AppCompatActivity {
         });
     }
 
-    public void onLogInBtn(View view) {
-        Intent intent = new Intent(this, AddNodeActivity.class);
+    public void onViewStopsBtnClick(View view) {
+        Intent intent = new Intent(this, TourActivity.class);
         startActivity(intent);
     }
 }

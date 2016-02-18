@@ -28,6 +28,7 @@
             android:id="@+id/pass_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:hint="Password"/>
 
     </LinearLayout>
@@ -38,7 +39,6 @@
         android:layout_height="wrap_content"
         android:text="Log In"
         android:onClick="onLogInBtn"
-        android:layout_centerInParent="true"
-        />
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

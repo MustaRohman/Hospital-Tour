@@ -67,7 +67,7 @@ public class CurrentActivity extends AppCompatActivity {
             if (location != null) {
 
                 String message = String.format(
-                        "Current Location \n Longitude: %1$s \n Latitude: %2$s",
+                        "Current Location \n Longitude: %1$s \n Latitude: %2$s   from showCurrentLocation",
                         location.getLongitude(), location.getLatitude()
                 );
                 Toast.makeText(CurrentActivity.this, message,
@@ -88,7 +88,7 @@ public class CurrentActivity extends AppCompatActivity {
 
         public void onLocationChanged(Location location) {
             String message = String.format(
-                    "New Location \n Longitude: %1$s \n Latitude: %2$s",
+                    "New Location \n Longitude: %1$s \n Latitude: %2$s     from location changed",
                     location.getLongitude(), location.getLatitude()
             );
             Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_LONG).show();
