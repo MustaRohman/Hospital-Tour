@@ -12,33 +12,34 @@
     tools:context="com.example.mustarohman.prototype.LogInActivity"
     tools:showIn="@layout/activity_log_in">
 
-    <LinearLayout
-        android:id="@+id/user_linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/user_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Username" />
-
-        <EditText
-            android:id="@+id/pass_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="Password"/>
-
-    </LinearLayout>
-
     <Button
         android:id="@+id/log_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log In"
         android:onClick="onLogInBtn"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:background="@drawable/border"/>
+
+    <EditText
+        android:id="@+id/pass_edit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/pass_hint"
+        android:layout_above="@id/log_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/user_edit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/user_hint"
+        android:layout_above="@id/pass_edit"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/colorPrimary"/>
+
 
 </RelativeLayout>

@@ -102,4 +102,10 @@
     <string name="title_activity_log_in">LogInActivity</string>
     <string name="title_activity_add_node">AddNodeActivity</string>
     <string name="tourcode_text">Your Tour Code</string>
+    <string name="title_activity_tour_point_info">TourPointInfoActivity</string>
+    <string name="add_item">Add Stop</string>
+    <string name="view_tour_item">View Stops</string>
+    <string name="change_tour_item">Change Tour</string>
+    <string name="pass_hint">Password</string>
+    <string name="user_hint">Username</string>
 </resources>
