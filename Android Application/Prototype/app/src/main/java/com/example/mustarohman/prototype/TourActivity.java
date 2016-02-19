@@ -1,5 +1,7 @@
 package com.example.mustarohman.prototype;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -58,7 +60,7 @@ public class TourActivity extends AppCompatActivity {
         ImageView img = (ImageView) point.findViewById(R.id.thumbnail);
         img.setImageResource(R.drawable.cardiac5);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -31,13 +31,9 @@ public class CurrentActivity extends AppCompatActivity {
 
         retrieveLocationButton = (Button) findViewById(R.id.retrieve_location_button);
 
-        retrieveLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
 
 
 //        try {
@@ -66,8 +62,7 @@ public class CurrentActivity extends AppCompatActivity {
         try {
 
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            MyLocationListener locListener = new MyLocationListener();
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locListener);
+
 
             if (location != null) {
 
