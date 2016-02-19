@@ -15,6 +15,7 @@
     <TextView
         android:id="@+id/tourcode_text"
         android:text="@string/tourcode_text"
+        android:textSize="35dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -23,6 +24,7 @@
     <TextView
         android:id="@+id/tour_code"
         android:text="812AXB"
+        android:textSize="35dp"
         android:layout_below="@id/tourcode_text"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
@@ -30,10 +32,11 @@
 
     <EditText
         android:id="@+id/namestop_edit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:hint="Name of stop"
         android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginBottom="20dp"/>
 
     <Button
         android:id="@+id/addnode_btn"
@@ -42,7 +45,9 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickAddNode"/>
+        android:layout_marginBottom="20dp"
+        android:onClick="onClickAddNode"
+        android:background="@drawable/border"/>
 
     <Button
         android:id="@+id/viewstops_btn"
@@ -51,7 +56,9 @@
         android:text="View Stops"
         android:layout_below="@id/addnode_btn"
         android:layout_centerHorizontal="true"
-        android:onClick="onViewStopsBtnClick"/>
+        android:onClick="onViewStopsBtnClick"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/border"/>
 
 
 

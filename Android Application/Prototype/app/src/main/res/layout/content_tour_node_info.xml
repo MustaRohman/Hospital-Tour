@@ -9,13 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.mustarohman.prototype.CurrentActivity"
-    tools:showIn="@layout/activity_current">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:id="@+id/retrieve_location_button"/>
+    tools:context="com.example.mustarohman.prototype.TourNodeInfoActivity"
+    tools:showIn="@layout/activity_tour_node_info">
 
 </RelativeLayout>
