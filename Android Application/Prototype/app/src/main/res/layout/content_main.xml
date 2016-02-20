@@ -64,9 +64,11 @@
         android:id="@+id/sign_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in"
+        android:text="@string/sign_in"
+        android:textColor="@android:color/tab_indicator_text"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:onClick="onSignInBtn"/>
+        android:onClick="onSignInBtn"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>

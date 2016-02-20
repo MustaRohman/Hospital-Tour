@@ -108,4 +108,5 @@
     <string name="change_tour_item">Change Tour</string>
     <string name="pass_hint">Password</string>
     <string name="user_hint">Username</string>
+    <string name="sign_in"><u>Sign in</u></string>
 </resources>

@@ -7,8 +7,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 
 public class LogInActivity extends AppCompatActivity {
+
+    private EditText userEditText, passEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,18 +20,18 @@ public class LogInActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        userEditText = (EditText) findViewById(R.id.user_edit);
+        passEditText = (EditText) findViewById(R.id.pass_edit);
+
     }
 
     public void onLogInBtn(View view) {
+        //TODO
+        //Check database if username and password combination is correct
+        String userString = userEditText.getText().toString();
         Intent intent = new Intent(this, AddNodeActivity.class);
+        intent.putExtra("username", userString);
         startActivity(intent);
+
     }
 }

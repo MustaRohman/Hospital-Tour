@@ -21,14 +21,6 @@ public class AddNodeActivity extends AppCompatActivity {
         toolbar.setTitle("Edit Tour");
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -57,11 +49,17 @@ public class AddNodeActivity extends AppCompatActivity {
     }
 
     public void onClickAddStopMenuItem(MenuItem item) {
+        Intent intent = new Intent(this, CurrentActivity.class);
+        startActivity(intent);
     }
 
     public void onClickViewStopsMenuItem(MenuItem item) {
+        Intent intent = new Intent(this, TourActivity.class);
+        startActivity(intent);
     }
 
     public void onClickChangeTourMenuItem(MenuItem item) {
+        //TODO
+        //Sliding list of tour codes. Should reload the current activity
     }
 }
