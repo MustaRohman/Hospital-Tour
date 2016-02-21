@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class AddNodeActivity extends AppCompatActivity {
 
@@ -19,6 +20,13 @@ public class AddNodeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Edit Tour");
+
+        TextView loggedInText = (TextView) findViewById(R.id.logged_in_text);
+        String loggedInString = loggedInText.getText().toString();
+        String username = getIntent().getStringExtra("username");
+        loggedInString += " " + username;
+        loggedInText.setText(loggedInString);
+
         setSupportActionBar(toolbar);
 
     }

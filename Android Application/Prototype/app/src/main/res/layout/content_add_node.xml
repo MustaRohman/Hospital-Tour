@@ -13,12 +13,21 @@
     tools:showIn="@layout/activity_add_node">
 
     <TextView
+        android:id="@+id/logged_in_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logged_in"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="25dp"/>
+
+    <TextView
         android:id="@+id/tourcode_text"
         android:text="@string/tourcode_text"
         android:textSize="35dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/logged_in_text"
         android:layout_centerHorizontal="true"/>
 
     <TextView
