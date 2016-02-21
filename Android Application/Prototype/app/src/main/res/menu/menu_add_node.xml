@@ -3,19 +3,19 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context="com.example.mustarohman.prototype.AddNodeActivity"
         xmlns:tools="http://schemas.android.com/tools">
-        <item
-            android:id="@+id/add_item"
-            android:title="@string/add_item"
-            app:showAsAction="ifRoom"
-            android:icon="@drawable/ic_note_add_white_24dp"
-            android:onClick="onClickAddStopMenuItem"/>
+        <!--<item-->
+            <!--android:id="@+id/add_item"-->
+            <!--android:title="@string/add_item"-->
+            <!--app:showAsAction="ifRoom"-->
+            <!--android:icon="@drawable/ic_note_add_white_24dp"-->
+            <!--android:onClick="onClickAddStopMenuItem"/>-->
 
-        <item
-            android:id="@+id/viewstops_item"
-            android:title="@string/view_tour_item"
-            app:showAsAction="ifRoom"
-            android:icon="@drawable/ic_view_list_white_24dp"
-            android:onClick="onClickViewStopsMenuItem"/>
+        <!--<item-->
+            <!--android:id="@+id/viewstops_item"-->
+            <!--android:title="@string/view_tour_item"-->
+            <!--app:showAsAction="ifRoom"-->
+            <!--android:icon="@drawable/ic_view_list_white_24dp"-->
+            <!--android:onClick="onClickViewStopsMenuItem"/>-->
 
         <item
             android:id="@+id/action_settings"

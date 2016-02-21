@@ -12,4 +12,14 @@
     tools:context="com.example.mustarohman.prototype.TourPointActivity"
     tools:showIn="@layout/activity_tour_point">
 
+
+    <GridLayout
+        android:id="@+id/grid_views"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:columnCount="3">
+
+    </GridLayout>
+
 </RelativeLayout>

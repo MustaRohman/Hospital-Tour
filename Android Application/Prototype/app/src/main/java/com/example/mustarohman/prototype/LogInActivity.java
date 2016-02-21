@@ -18,6 +18,7 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Log In");
         setSupportActionBar(toolbar);
 
         userEditText = (EditText) findViewById(R.id.user_edit);

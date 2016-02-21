@@ -46,7 +46,7 @@
             android:label="@string/title_activity_add_node"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TourPointInfoActivity"
+            android:name=".TourNodeInfoActivity"
             android:label="@string/title_activity_tour_point_info"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -38,36 +38,53 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <EditText
-        android:layout_width="200dp"
+    
+    <RelativeLayout
+        android:id="@+id/inner_relative"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/namestop_edit"
-        android:hint="Name of stop"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="20dp"/>
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/addnode_btn"
-        android:text="Add Node"
-        android:layout_below="@id/namestop_edit"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickAddNode"
-        android:layout_marginBottom="20dp" />
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/namestop_edit"
+            android:hint="Name of stop"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="30dp"/>
 
-    <Button
-        android:id="@+id/viewstops_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Stops"
-        android:layout_below="@id/addnode_btn"
-        android:layout_centerHorizontal="true"
-        android:onClick="onViewStopsBtnClick"/>
+        <LinearLayout
+            android:id="@+id/buttons_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/namestop_edit">
 
+            <Button
+                android:id="@+id/viewstops_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Stops"
+                android:onClick="onViewStopsBtnClick"
+                android:background="@android:color/transparent"
+                android:padding="7dp"
+                android:elevation="5dp"
+                android:translationZ="5dp"/>
 
+            <Button
+                android:id="@+id/addnode_btn"
+                android:text="Add Node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickAddNode"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/border"/>
 
+        </LinearLayout>
 
+    </RelativeLayout>
 
 </RelativeLayout>
