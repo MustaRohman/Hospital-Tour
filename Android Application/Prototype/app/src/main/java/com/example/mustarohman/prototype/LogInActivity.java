@@ -35,4 +35,8 @@ public class LogInActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void verifyUser(String username, String password){
+
+    }
 }

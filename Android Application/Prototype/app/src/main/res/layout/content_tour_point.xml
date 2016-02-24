@@ -12,14 +12,23 @@
     tools:context="com.example.mustarohman.prototype.TourPointActivity"
     tools:showIn="@layout/activity_tour_point">
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
-    <GridLayout
-        android:id="@+id/grid_views"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="15dp"
-        android:columnCount="3">
+        <LinearLayout
+            android:id="@+id/grid_views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:orientation="vertical">
 
-    </GridLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
 
 </RelativeLayout>
