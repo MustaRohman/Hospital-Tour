@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +41,21 @@ public class TourActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Royal Brompton Hospital");
+
+        LogInActivity.LOGGED_IN = true;
+
+        if (LogInActivity.LOGGED_IN){
+            Button btn = new Button(this);
+            btn.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(TourActivity.this, "Add button clicked", Toast.LENGTH_LONG).show();
+                }
+            });
+            btn.setBackgroundResource(R.drawable.ic_note_add_white_24dp);
+            toolbar.addView(btn);
+        }
+
         setSupportActionBar(toolbar);
 
         tourPoints = new HashMap<>();

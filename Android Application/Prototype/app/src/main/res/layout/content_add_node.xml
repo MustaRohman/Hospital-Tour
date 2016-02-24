@@ -49,8 +49,8 @@
         <EditText
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:id="@+id/namestop_edit"
-            android:hint="Name of stop"
+            android:id="@+id/nameroom_edit"
+            android:hint="Name of the Room"
             android:backgroundTint="@color/colorPrimary"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="30dp"/>
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/namestop_edit">
+            android:layout_below="@id/nameroom_edit">
 
             <Button
                 android:id="@+id/viewstops_btn"
@@ -75,8 +75,8 @@
                 android:translationZ="5dp"/>
 
             <Button
-                android:id="@+id/addnode_btn"
-                android:text="Add Node"
+                android:id="@+id/addroom_btn"
+                android:text="Add Room"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClickAddNode"

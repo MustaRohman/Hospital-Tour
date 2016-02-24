@@ -110,4 +110,5 @@
     <string name="user_hint">Username</string>
     <string name="sign_in"><u>Sign in</u></string>
     <string name="logged_in">Logged in as:</string>
+    <string name="title_activity_post_login">PostLoginActivity</string>
 </resources>

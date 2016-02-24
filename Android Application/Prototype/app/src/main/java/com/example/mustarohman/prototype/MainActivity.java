@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import database.DBQuery;
+import database.DBQueryAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +59,27 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TourActivity.class);
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
 
-        if (tourCodes.contains(codeEditText.getText().toString())){
+        /**
+         * Retrieve data related to the to tour code
+         *
+         */
+
+
+        String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
+
+        DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
+        ArrayList<String> tourIds = null;
+        try {
+           tourIds = dbQueryAsyncTask.execute(query).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(tourIds.toString());
+
+        if (tourIds.contains(codeEditText.getText().toString())){
             intent.putExtra(TOUR_CODE, codeEditText.getText());
             startActivity(intent);
         } else {

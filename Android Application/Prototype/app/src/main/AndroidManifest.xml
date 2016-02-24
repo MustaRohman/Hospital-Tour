@@ -48,6 +48,10 @@
         <activity
             android:name=".TourNodeInfoActivity"
             android:label="@string/title_activity_tour_point_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PostLoginActivity"
+            android:label="@string/title_activity_post_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
