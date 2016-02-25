@@ -3,14 +3,14 @@ package com.example.mustarohman.prototype.Backend.Objects;
 /**
  * Created by yezenalnafei on 25/02/2016.
  */
-public class Location {
+public class TourLocation {
 
     private int locationId;
     private String name;
     private float latitude;
     private float longitude;
 
-    public Location(int locationId, String name, float latitude, float longitude){
+    public TourLocation(int locationId, String name, float latitude, float longitude){
 
         this.locationId = locationId;
         this.name = name;

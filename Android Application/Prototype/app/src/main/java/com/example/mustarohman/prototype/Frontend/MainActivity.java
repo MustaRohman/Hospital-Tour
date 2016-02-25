@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
+import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TOUR_CODE =  "Tour Code";
     private  ArrayList<String> tourCodes;
-
+    private DBConnectionSystem dbConnection = new DBConnectionSystem();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,15 +69,18 @@ public class MainActivity extends AppCompatActivity {
 
         DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
         ArrayList<String> tourIds = null;
+        ArrayList<TourLocation> locationslist = null;
         try {
            tourIds = dbQueryAsyncTask.execute(query).get();
+            locationslist = dbConnection.getTourlocations("select * from tour r , tour_res tr, location l, location_res lr where r.tourid = '" + codeEditText.getText().toString() + "' and r.tourid = tr.tourid and tr.locationid = l.locationid and l.locationid = lr.locationid;");
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        System.out.println(tourIds.toString());
+        System.out.println(locationslist.get(0).getName());
 
         if (tourIds.contains(codeEditText.getText().toString())){
             intent.putExtra(TOUR_CODE, codeEditText.getText());

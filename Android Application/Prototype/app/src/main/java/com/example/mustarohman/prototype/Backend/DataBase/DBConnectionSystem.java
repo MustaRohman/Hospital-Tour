@@ -2,7 +2,7 @@ package com.example.mustarohman.prototype.Backend.DataBase;
 
 import android.os.AsyncTask;
 
-import com.example.mustarohman.prototype.Backend.Objects.Location;
+import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -56,6 +56,12 @@ public class DBConnectionSystem {
         return loginQuery.execute(query).get();
     }
 
+    public   ArrayList<TourLocation> getTourlocations(String query) throws ExecutionException, InterruptedException {
+
+        TourQuery getTourlocations = new TourQuery();
+        return getTourlocations.execute(query).get();
+    }
+
      private  class loginQuery extends AsyncTask<String,Void,HashMap<String,String>> {
             @Override
             //This does the connection protocol in the background.
@@ -88,13 +94,13 @@ public class DBConnectionSystem {
 }
 
 
-    private  class TourQuery extends AsyncTask<String,Void,ArrayList<Location>> {
+    private  class TourQuery extends AsyncTask<String,Void,ArrayList<TourLocation>> {
         @Override
         //This does the connection protocol in the background.
-        protected ArrayList<Location> doInBackground(String... params) {
+        protected ArrayList<TourLocation> doInBackground(String... params) {
             // to retrive the query result.
             String query = params[0];
-            ArrayList<Location> retval = new ArrayList<>();
+            ArrayList<TourLocation> retval = new ArrayList<>();
             try {
                 connectionDriver();
                 //this logs in to get data from database.
@@ -103,7 +109,7 @@ public class DBConnectionSystem {
                 sql = query;
                 ResultSet rs = st.executeQuery(sql);
                 while(rs.next()) {
-                    retval.add(new Location());
+                    retval.add(new TourLocation(rs.getInt("locationid"),rs.getString("lname"),rs.getFloat("latitude"),rs.getFloat("logitude")));
                 }
                 rs.close();
                 st.close();

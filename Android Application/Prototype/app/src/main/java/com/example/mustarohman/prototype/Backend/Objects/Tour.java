@@ -1,7 +1,5 @@
 package com.example.mustarohman.prototype.Backend.Objects;
 
-import com.example.mustarohman.prototype.Backend.Objects.Location;
-
 import java.util.ArrayList;
 
 /**
@@ -12,7 +10,7 @@ public class Tour {
     private String tourId;
     private String name;
     private String date;
-    private ArrayList<Location> locations;
+    private ArrayList<TourLocation> locations;
 
     public String getTourId() {
         return tourId;
@@ -38,11 +36,11 @@ public class Tour {
         this.date = date;
     }
 
-    public ArrayList<Location> getLocations() {
+    public ArrayList<TourLocation> getLocations() {
         return locations;
     }
 
-    public void setLocations(ArrayList<Location> locations) {
+    public void setLocations(ArrayList<TourLocation> locations) {
         this.locations = locations;
     }
 }
