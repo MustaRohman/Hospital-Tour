@@ -1,10 +1,7 @@
-package com.example.mustarohman.prototype;
+package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

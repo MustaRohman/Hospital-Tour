@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Frontend.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,31 +26,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TourActivity"
+            android:name=".Frontend.TourActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TourPointActivity"
+            android:name=".Frontend.TourPointActivity"
             android:label="@string/title_activity_tour_point"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CurrentActivity"
+            android:name=".Frontend.CurrentActivity"
             android:label="@string/title_activity_current"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LogInActivity"
+            android:name=".Frontend.LogInActivity"
             android:label="@string/title_activity_log_in"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddNodeActivity"
+            android:name=".Frontend.AddNodeActivity"
             android:label="@string/title_activity_add_node"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TourNodeInfoActivity"
+            android:name=".Frontend.TourNodeInfoActivity"
             android:label="@string/title_activity_tour_point_info"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PostLoginActivity"
+            android:name=".Frontend.PostLoginActivity"
             android:label="@string/title_activity_post_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

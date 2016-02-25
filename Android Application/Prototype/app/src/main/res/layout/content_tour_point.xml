@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.mustarohman.prototype.TourPointActivity"
+    tools:context=".Frontend.TourPointActivity"
     tools:showIn="@layout/activity_tour_point">
 
     <ScrollView

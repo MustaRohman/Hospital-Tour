@@ -1,4 +1,4 @@
-package com.example.mustarohman.prototype;
+package com.example.mustarohman.prototype.Frontend;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
 

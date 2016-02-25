@@ -1,4 +1,4 @@
-package com.example.mustarohman.prototype;
+package com.example.mustarohman.prototype.Frontend;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
+
+import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,7 @@
-package com.example.mustarohman.prototype;
+package com.example.mustarohman.prototype.Frontend;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,10 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mustarohman.prototype.R;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import database.DBQuery;
 import database.DBQueryAsyncTask;
 
 public class MainActivity extends AppCompatActivity {

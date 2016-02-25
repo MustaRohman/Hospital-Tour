@@ -1,19 +1,18 @@
-package com.example.mustarohman.prototype;
+package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
+import com.example.mustarohman.prototype.R;
+
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
-
-import database.loginQuery;
 
 public class LogInActivity extends AppCompatActivity {
 
@@ -42,10 +41,11 @@ public class LogInActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PostLoginActivity.class);
         intent.putExtra("username", userString);
         HashMap<String, String> hashMap = null;
-        loginQuery query = new loginQuery();
+        DBConnectionSystem query = new DBConnectionSystem();
+
         try {
 
-            hashMap = query.execute("select * from users where username = '" + userString + "';").get();
+            hashMap = query.loginQueryFetch("select * from users where username = '" + userString + "';");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
