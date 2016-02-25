@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mustarohman.prototype.Backend.DataCaching;
+import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
@@ -24,16 +26,20 @@ import java.util.Map;
 public class TourActivity extends AppCompatActivity {
 
     private LinearLayout tourPointsLinear;
+    private DataCaching dataCaching = new DataCaching(this.getApplicationContext());
+
 
     //Map of tour points with their locations. Could be retrieved via JSON
     private HashMap<String,String> tourPoints;
     private ArrayList<View> tourViewsList;
 
+    private  ArrayList<TourLocation> tourLocations;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
-
+        tourLocations =  dataCaching.readFromInternalStorage("locationslist");
         tourPointsLinear = (LinearLayout) findViewById(R.id.linear_tourpoints);
         tourViewsList = new ArrayList<>();
 

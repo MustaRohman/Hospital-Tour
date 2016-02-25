@@ -1,9 +1,11 @@
 package com.example.mustarohman.prototype.Backend.Objects;
 
+import java.io.Serializable;
+
 /**
  * Created by yezenalnafei on 25/02/2016.
  */
-public class TourLocation {
+public class TourLocation implements Serializable{
 
     private int locationId;
     private String name;

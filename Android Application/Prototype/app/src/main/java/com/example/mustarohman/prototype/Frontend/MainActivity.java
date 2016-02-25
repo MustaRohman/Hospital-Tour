@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
+import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TOUR_CODE =  "Tour Code";
     private  ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
+    private DataCaching dataCaching = new DataCaching(this.getApplicationContext());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
          *
          */
 
-
         String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
 
         DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         try {
            tourIds = dbQueryAsyncTask.execute(query).get();
             locationslist = dbConnection.getTourlocations("select * from tour r , tour_res tr, location l, location_res lr where r.tourid = '" + codeEditText.getText().toString() + "' and r.tourid = tr.tourid and tr.locationid = l.locationid and l.locationid = lr.locationid;");
-
+            dataCaching.saveDataToInternalStorage("locationsList",locationslist );
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
