@@ -36,17 +36,17 @@ public class CurrentActivity extends AppCompatActivity {
 
 
 
-//        try {
-//            locationManager.requestLocationUpdates(
-//                    LocationManager.GPS_PROVIDER,
-//                    MINIMUM_TIME_BETWEEN_UPDATES,
-//                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
-//                    new MyLocationListener()
-//            );
-//        }
-//        catch(SecurityException e) {
-//            Log.w("e", "error1");
-//        }
+        try {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MINIMUM_TIME_BETWEEN_UPDATES,
+                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                    new MyLocationListener()
+            );
+        }
+        catch(SecurityException e) {
+            Log.w("e", "error1");
+        }
 
         retrieveLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,13 +61,13 @@ public class CurrentActivity extends AppCompatActivity {
 
         try {
 
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
 
             if (location != null) {
 
                 String message = String.format(
-                        "Current Location \n Longitude: %1$s \n Latitude: %2$s   from showCurrentLocation",
+                        "Current Location \n Longitude: %1$s \n Latitude: %2$s",
                         location.getLongitude(), location.getLatitude()
                 );
                 Toast.makeText(CurrentActivity.this, message,
@@ -87,10 +87,8 @@ public class CurrentActivity extends AppCompatActivity {
     private class MyLocationListener implements LocationListener {
 
         public void onLocationChanged(Location location) {
-            String message = String.format(
-                    "New Location \n Longitude: %1$s \n Latitude: %2$s     from location changed",
-                    location.getLongitude(), location.getLatitude()
-            );
+            String message = "location updated";
+
             Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_LONG).show();
         }
 
