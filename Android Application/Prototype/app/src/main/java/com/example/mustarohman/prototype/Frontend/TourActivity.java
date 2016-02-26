@@ -26,7 +26,7 @@ import java.util.Map;
 public class TourActivity extends AppCompatActivity {
 
     private LinearLayout tourPointsLinear;
-    private DataCaching dataCaching = new DataCaching(this.getApplicationContext());
+    private DataCaching dataCaching;
 
 
     //Map of tour points with their locations. Could be retrieved via JSON
@@ -37,6 +37,9 @@ public class TourActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        dataCaching = new DataCaching(this.getApplicationContext());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
         tourLocations =  dataCaching.readFromInternalStorage("locationslist");
