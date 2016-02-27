@@ -58,7 +58,7 @@ public class DBConnectionSystem {
 
     public   ArrayList<TourLocation> getTourlocations(String query) throws ExecutionException, InterruptedException {
 
-        TourQuery getTourlocations = new TourQuery();
+        TourLocations getTourlocations = new TourLocations();
         return getTourlocations.execute(query).get();
     }
     //this method used to pass update queries to the database
@@ -99,11 +99,11 @@ public class DBConnectionSystem {
 }
 
 
-    private  class TourQuery extends AsyncTask<String,Void,ArrayList<TourLocation>> {
+    private  class TourLocations extends AsyncTask<String,Void,ArrayList<TourLocation>> {
         @Override
         //This does the connection protocol in the background.
         protected ArrayList<TourLocation> doInBackground(String... params) {
-            // to retrive the query result.
+            // to retrieve the query result.
             String query = params[0];
             ArrayList<TourLocation> retval = new ArrayList<>();
             try {
@@ -159,6 +159,38 @@ public class DBConnectionSystem {
         }
     }
 
+    private  class TourCodes extends AsyncTask<Void,Void,ArrayList<String>> {
+        @Override
+        //This does the connection protocol in the background.
+        protected ArrayList<String> doInBackground(Void... params) {
+            // to retrieve the query result.
+            String query = "Select * from tour;";
+            ArrayList<String> retval = new ArrayList<>();
+            try {
+                connectionDriver();
+                //this logs in to get data from database.
+                //this is query.
+                ResultSet rs = st.executeQuery(query);
+                while(rs.next()) {
+                    retval.add(rs.getString("tourid"));
+                }
+                rs.close();
+                st.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return retval;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    public ArrayList<String> getTourCodes() throws ExecutionException, InterruptedException {
+       return new TourCodes().execute().get();
+    }
 
 }
 

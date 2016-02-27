@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,17 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private  ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
+    public static ArrayList<TourLocation> locationslist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataCaching = new DataCaching(this.getApplicationContext());
+        dataCaching = new DataCaching(this);
 
-
-        tourCodes = new ArrayList<>();
-        tourCodes.add("BROMP100");
-        tourCodes.add("BROMP200");
-        tourCodes.add("BROMP300");
+        locationslist = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
@@ -63,28 +61,23 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TourActivity.class);
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
 
-        /**
-         * Retrieve data related to the to tour code
-         *
-         */
 
         String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
 
         DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
         ArrayList<String> tourIds = null;
-        ArrayList<TourLocation> locationslist = null;
         try {
-           tourIds = dbQueryAsyncTask.execute(query).get();
-            locationslist = dbConnection.getTourlocations("select * from tour r , tour_res tr, location l, location_res lr where r.tourid = '" + codeEditText.getText().toString() + "' and r.tourid = tr.tourid and tr.locationid = l.locationid and l.locationid = lr.locationid;");
-            dataCaching.saveDataToInternalStorage("locationsList",locationslist );
-            System.out.println(locationslist.get(0).getName());
-
+            tourIds = dbQueryAsyncTask.execute(query).get();
+            locationslist = dbConnection.getTourlocations("SELECT * from tour_res, location where tourid ='" +codeEditText.getText().toString() +"'and tour_res.locationid = location.locationid;");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
+//       dataCaching.saveDataToInternalStorage("locationsList",locationslist);
+
+        Log.d("MainActivity", locationslist.get(0).getName());
 
         if (tourIds.contains(codeEditText.getText().toString())){
             intent.putExtra(TOUR_CODE, codeEditText.getText());

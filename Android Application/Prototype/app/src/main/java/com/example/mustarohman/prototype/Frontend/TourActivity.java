@@ -20,6 +20,7 @@ import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +49,7 @@ public class TourActivity extends AppCompatActivity {
         tourPointsLinear = (LinearLayout) findViewById(R.id.linear_tourpoints);
         tourViewsList = new ArrayList<>();
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (LogInActivity.LOGGED_IN){
@@ -64,18 +66,6 @@ public class TourActivity extends AppCompatActivity {
         toolbar.setTitle("Royal Brompton Hospital");
 
         LogInActivity.LOGGED_IN = true;
-
-//        if (LogInActivity.LOGGED_IN){
-//            Button btn = new Button(this);
-//            btn.setOnClickListener(new Button.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(TourActivity.this, "Add button clicked", Toast.LENGTH_LONG).show();
-//                }
-//            });
-//            btn.setBackgroundResource(R.drawable.ic_note_add_white_24dp);
-//            toolbar.addView(btn);
-//        }
 
         tourPoints = new HashMap<>();
         tourPoints.put("Cardiac","North Wing");
@@ -103,16 +93,14 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        //Iterate through map and creates View object and adds to activity screen
-        Iterator it = tourPoints.entrySet().iterator();
-        while (it.hasNext()){
-            Map.Entry<String,String> point = (Map.Entry) it.next();
+        for (TourLocation tourLoc: MainActivity.locationslist){
             View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
             tourPointView.setOnClickListener(listener);
             TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
-            name.setText(point.getKey());
+            name.setText(tourLoc.getName());
             TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
-            location.setText(point.getValue());
+            location.setText("Some place");
+            Log.d("TourLocation", tourLoc.getName());
 
             tourPointsLinear.addView(tourPointView);
             tourViewsList.add(tourPointView);
