@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -47,24 +49,33 @@ public class TourActivity extends AppCompatActivity {
         tourViewsList = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
+        setSupportActionBar(toolbar);
+        if (LogInActivity.LOGGED_IN){
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        } else{
+            toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
+        }
         toolbar.setTitle("Royal Brompton Hospital");
 
         LogInActivity.LOGGED_IN = true;
 
-        if (LogInActivity.LOGGED_IN){
-            Button btn = new Button(this);
-            btn.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(TourActivity.this, "Add button clicked", Toast.LENGTH_LONG).show();
-                }
-            });
-            btn.setBackgroundResource(R.drawable.ic_note_add_white_24dp);
-            toolbar.addView(btn);
-        }
-
-        setSupportActionBar(toolbar);
+//        if (LogInActivity.LOGGED_IN){
+//            Button btn = new Button(this);
+//            btn.setOnClickListener(new Button.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(TourActivity.this, "Add button clicked", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//            btn.setBackgroundResource(R.drawable.ic_note_add_white_24dp);
+//            toolbar.addView(btn);
+//        }
 
         tourPoints = new HashMap<>();
         tourPoints.put("Cardiac","North Wing");
@@ -75,14 +86,9 @@ public class TourActivity extends AppCompatActivity {
         tourPoints.put("Operating Theatre","North Wing");
         tourPoints.put("Reception","Main Building");
         tourPoints.put("Staff Room","Sydney Wing");
-        tourPoints.put("Toilet","Sydney Wing");
 
         addTourPointViews();
 
-        //
-        View point = tourViewsList.get(0);
-        ImageView img = (ImageView) point.findViewById(R.id.thumbnail);
-        img.setImageResource(R.drawable.cardiac5);
     }
 
     public void addTourPointViews(){
@@ -115,7 +121,15 @@ public class TourActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuInflater menuInflater = getMenuInflater();
+        if (LogInActivity.LOGGED_IN){
+            menuInflater.inflate(R.menu.menu_tour_add, menu);
+            Log.d("onCreateOptionsMenu", "Loaded menu_tour_add");
+        } else {
+            menuInflater.inflate(R.menu.menu_main, menu);
+            Log.d("onCreateOptionsMenu", "Loaded menu_main");
+
+        }
         return true;
     }
 
@@ -128,4 +142,6 @@ public class TourActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onClickAddTourPoint(MenuItem item) {
+    }
 }

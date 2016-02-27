@@ -11,6 +11,8 @@ import com.example.mustarohman.prototype.R;
 
 public class PostLoginActivity extends AppCompatActivity {
 
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,11 +21,19 @@ public class PostLoginActivity extends AppCompatActivity {
         toolbar.setTitle("Manage Tours");
         setSupportActionBar(toolbar);
 
+        username = getIntent().getStringExtra("username");
+
         TextView loggedIn = (TextView) findViewById(R.id.user_textview);
         String text = loggedIn.getText().toString();
-        String loggedMsg =  text += " " + getIntent().getStringExtra("username");
+        String loggedMsg =  text += " " + username;
         loggedIn.setText(loggedMsg);
 
+    }
+
+    public void addToursToList(){
+        //TODO
+        //Loop through Tour objects related to user and add them to the list
+        //Each list item will have on onClickListener that will open up a TourActivity with the relevant tourpoints
     }
 
     public void onClickCreateTourBtn(View view) {
@@ -31,7 +41,8 @@ public class PostLoginActivity extends AppCompatActivity {
 
         //Random code generator
         //putExtra(code)
-
+        intent.putExtra("username", username);
         startActivity(intent);
     }
+
 }

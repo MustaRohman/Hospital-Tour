@@ -25,12 +25,18 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Log In");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                System.out.println("------------------------");
+            }
+        });
 
         userEditText = (EditText) findViewById(R.id.user_edit);
         passEditText = (EditText) findViewById(R.id.pass_edit);
-
     }
 
     public void onLogInBtn(View view) {
@@ -44,7 +50,6 @@ public class LogInActivity extends AppCompatActivity {
         DBConnectionSystem query = new DBConnectionSystem();
 
         try {
-
             hashMap = query.loginQueryFetch("select * from users where username = '" + userString + "';");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -59,10 +64,8 @@ public class LogInActivity extends AppCompatActivity {
                 Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
             }
 
-
         }else{
             Toast.makeText(this, "User does not exsits", Toast.LENGTH_SHORT).show();
-
         }
     }
     public void verifyUser(String username, String password){

@@ -18,8 +18,16 @@ public class AddNodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_node);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Edit Tour");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         TextView loggedInText = (TextView) findViewById(R.id.logged_in_text);
         String loggedInString = loggedInText.getText().toString();
@@ -27,7 +35,6 @@ public class AddNodeActivity extends AppCompatActivity {
         loggedInString += " " + username;
         loggedInText.setText(loggedInString);
 
-        setSupportActionBar(toolbar);
 
     }
 

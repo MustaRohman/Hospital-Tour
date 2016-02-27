@@ -36,18 +36,29 @@
 
     <ScrollView
         android:id="@+id/modify_tour_scroll"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="200dp"
         android:layout_below="@id/modify_tour_textview"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/border">
 
-        <ListView
+        <LinearLayout
             android:id="@+id/modify_tourlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TEST1234"
+                android:textColor="@android:color/black"
+                android:gravity="left"
+                android:padding="10dp"
+                android:textStyle="italic"
+                android:background="@android:color/transparent"/>
 
-        </ListView>
+        </LinearLayout>
 
     </ScrollView>
 
