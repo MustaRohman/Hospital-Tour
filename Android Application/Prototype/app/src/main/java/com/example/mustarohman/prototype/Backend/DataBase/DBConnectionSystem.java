@@ -61,6 +61,11 @@ public class DBConnectionSystem {
         TourQuery getTourlocations = new TourQuery();
         return getTourlocations.execute(query).get();
     }
+    //this method used to pass update queries to the database
+    public void UpdateDatabase(String query){
+        UpdateQuery updateQuery = new UpdateQuery();
+        updateQuery.execute(query);
+    }
 
      private  class loginQuery extends AsyncTask<String,Void,HashMap<String,String>> {
             @Override
@@ -109,7 +114,7 @@ public class DBConnectionSystem {
                 sql = query;
                 ResultSet rs = st.executeQuery(sql);
                 while(rs.next()) {
-                    retval.add(new TourLocation(rs.getInt("locationid"),rs.getString("lname"),rs.getFloat("latitude"),rs.getFloat("logitude")));
+                    retval.add(new TourLocation(rs.getInt("locationid"), rs.getString("lname"), rs.getFloat("latitude"), rs.getFloat("logitude")));
                 }
                 rs.close();
                 st.close();
@@ -125,14 +130,50 @@ public class DBConnectionSystem {
         }
     }
 
+    private class UpdateQuery extends AsyncTask<String, Void, String> {
 
 
+        @Override
+        protected void onPreExecute() {
+//Here we could add progress bar,
+        }
+//this will allow the user to insert/update the database
+        @Override
+        protected String doInBackground(String... params) {
+            connectionDriver();
 
+            try {
+                //This will pass the query to the database
+                st.executeQuery(params[0]);
+                st.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(String result) {
 
-
-
-
+        }
+    }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
