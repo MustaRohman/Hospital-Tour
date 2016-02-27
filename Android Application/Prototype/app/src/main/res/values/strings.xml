@@ -111,4 +111,5 @@
     <string name="sign_in"><u>Sign in</u></string>
     <string name="logged_in">Logged in as:</string>
     <string name="title_activity_post_login">PostLoginActivity</string>
+    <string name="create_tour">Create New Tour</string>
 </resources>

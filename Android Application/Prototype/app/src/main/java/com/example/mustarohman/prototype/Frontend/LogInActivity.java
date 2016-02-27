@@ -56,7 +56,7 @@ public class LogInActivity extends AppCompatActivity {
                 startActivity(intent);
                 LOGGED_IN = true;
             } else {
-                Toast.makeText(this, "Invaild", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
             }
 
 
