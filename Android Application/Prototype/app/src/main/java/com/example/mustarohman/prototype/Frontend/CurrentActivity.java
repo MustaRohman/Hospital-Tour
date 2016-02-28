@@ -46,8 +46,6 @@ public class CurrentActivity extends AppCompatActivity {
             Log.w("e", "error1");
         }
 
-
-
         retrieveLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,10 +85,8 @@ public class CurrentActivity extends AppCompatActivity {
     private class MyLocationListener implements LocationListener {
 
         public void onLocationChanged(Location location) {
-            String message = String.format(
-                    "New Location \n Longitude: %1$s \n Latitude: %2$s     from location changed",
-                    location.getLongitude(), location.getLatitude()
-            );
+            String message = "location updated";
+
             Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_LONG).show();
         }
 
