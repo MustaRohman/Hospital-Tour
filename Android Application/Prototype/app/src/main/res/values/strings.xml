@@ -112,4 +112,6 @@
     <string name="logged_in">Logged in as:</string>
     <string name="title_activity_post_login">PostLoginActivity</string>
     <string name="create_tour">Create New Tour</string>
+    <string name="choose_existing_location">Choose Existing Location</string>
+    <string name="add_new_location">Add new location</string>
 </resources>

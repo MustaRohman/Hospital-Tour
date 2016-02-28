@@ -2,6 +2,7 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -131,5 +132,10 @@ public class TourActivity extends AppCompatActivity {
     }
 
     public void onClickAddTourPoint(MenuItem item) {
+        DialogFragment dialog = new AddTourPointDialog();
+        dialog.show(getSupportFragmentManager(), "add node");
+    }
+
+    public void onClickAddNewLocation(View view) {
     }
 }
