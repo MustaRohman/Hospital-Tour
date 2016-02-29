@@ -66,8 +66,6 @@ public class TourActivity extends AppCompatActivity {
         }
         toolbar.setTitle("Royal Brompton Hospital");
 
-        LogInActivity.LOGGED_IN = true;
-
         tourPoints = new HashMap<>();
         tourPoints.put("Cardiac","North Wing");
         tourPoints.put("Radiology","Sydney Wing");
