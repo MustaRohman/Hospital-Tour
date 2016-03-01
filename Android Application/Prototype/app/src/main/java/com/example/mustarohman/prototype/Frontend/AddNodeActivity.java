@@ -10,11 +10,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.mustarohman.prototype.Backend.DataBase.DBConnect;
+import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.R;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import database.DBQueryAsyncTask;
 
 public class AddNodeActivity extends AppCompatActivity {
 
     private String tourCodeString;
+    DBQueryAsyncTask getTourCodes ;
+    ArrayList<String> tourCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,17 @@ public class AddNodeActivity extends AppCompatActivity {
                 finish();
             }
         });
+        tourCodeString = getIntent().getStringExtra("tourcode");
+
+
+        try {
+            getTourCodes = new DBQueryAsyncTask();
+          tourCode = getTourCodes.execute("Select * from tour where tourid = '"+ tourCodeString + "';").get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setTextOfViews();
     }
@@ -52,6 +72,7 @@ public class AddNodeActivity extends AppCompatActivity {
     public void onViewStopsBtnClick(View view) {
         Intent intent = new Intent(this, TourActivity.class);
         startActivity(intent);
+
     }
 
     public void onClickAddNode(View view) {
@@ -84,7 +105,6 @@ public class AddNodeActivity extends AppCompatActivity {
 
     public void setTextOfViews(){
         TextView tourCodeText = (TextView) findViewById(R.id.tour_code);
-        tourCodeString = getIntent().getStringExtra("tourcode");
         tourCodeText.setText(tourCodeString);
 
         //Retrieve name of tour from the database
@@ -97,7 +117,6 @@ public class AddNodeActivity extends AppCompatActivity {
         loggedInText.setText(loggedInString);
 
         EditText tourNameEdit = (EditText) findViewById(R.id.tourname_edit);
-        //retrieve name of tour from database
-        //Set textfield text
+        tourNameEdit.setText(tourCode.get(0));
     }
 }
