@@ -48,32 +48,41 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TEST1234"
-                android:textColor="@android:color/black"
-                android:gravity="left"
-                android:padding="10dp"
-                android:textStyle="italic"
-                android:background="@android:color/transparent"/>
-
         </LinearLayout>
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/create_tour_button"
+    <LinearLayout
+        android:id="@+id/buttons_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_tour"
-        android:textStyle="bold"
-        android:layout_below="@id/modify_tour_scroll"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:padding="20dp"
-        android:onClick="onClickCreateTourBtn"
-        android:background="@drawable/border"/>
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
 
+        <Button
+            android:id="@+id/create_tour_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_tour"
+            android:textStyle="bold"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="10dp"
+            android:padding="20dp"
+            android:onClick="onClickCreateTourBtn"
+            android:background="@drawable/border"/>
+
+        <Button
+            android:id="@+id/add_room_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Room"
+            android:textStyle="bold"
+            android:layout_marginTop="80dp"
+            android:padding="20dp"
+            android:onClick="onClickAddRoom"
+            android:background="@drawable/border"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

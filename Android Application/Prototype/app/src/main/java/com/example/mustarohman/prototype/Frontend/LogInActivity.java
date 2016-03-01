@@ -18,6 +18,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private EditText userEditText, passEditText;
     public static boolean LOGGED_IN;
+    public static String USER_NAME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class LogInActivity extends AppCompatActivity {
         //Check database if username and password combination is correct
 
         String userString = userEditText.getText().toString();
+        USER_NAME = userString;
         Intent intent = new Intent(this, PostLoginActivity.class);
         intent.putExtra("username", userString);
         HashMap<String, String> hashMap = null;

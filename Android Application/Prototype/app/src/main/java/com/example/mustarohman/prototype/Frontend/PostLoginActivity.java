@@ -61,12 +61,24 @@ public class PostLoginActivity extends AppCompatActivity {
         //Loop through Tour objects related to user and add them to the list
         //Each list item will have on onClickListener that will open up a TourActivity with the relevant tourpoints
 
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button tourbutton = (Button) v;
+                Intent intent = new Intent(PostLoginActivity.this, AddNodeActivity.class);
+                intent.putExtra("tourcode",tourbutton.getText().toString());
+                startActivity(intent);
+            }
+        };
+
         for (String tourCode: tourCodes){
             Button btn = new Button(this);
             btn.setText(tourCode);
             btn.setGravity(Gravity.LEFT);
             btn.setPadding(40, 10, 10, 10);
             btn.setBackgroundColor(Color.TRANSPARENT);
+            btn.setOnClickListener(listener);
             tourCodesLinear.addView(btn);
         }
     }
@@ -80,4 +92,8 @@ public class PostLoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onClickAddRoom(View view) {
+        Intent intent = new Intent(this, CurrentActivity.class);
+        startActivity(intent);
+    }
 }

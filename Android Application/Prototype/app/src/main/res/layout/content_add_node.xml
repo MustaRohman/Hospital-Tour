@@ -49,8 +49,8 @@
         <EditText
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:id="@+id/nameroom_edit"
-            android:hint="Name of the Room"
+            android:id="@+id/tourname_edit"
+            android:hint="Name of the tour"
             android:backgroundTint="@color/colorPrimary"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="30dp"/>
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/nameroom_edit">
+            android:layout_below="@id/tourname_edit">
 
             <Button
                 android:id="@+id/viewstops_btn"
@@ -75,11 +75,11 @@
                 android:translationZ="5dp"/>
 
             <Button
-                android:id="@+id/addroom_btn"
-                android:text="Add Room"
+                android:id="@+id/save_btn"
+                android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickAddNode"
+                android:onClick="onClickSaveTour"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/border"/>
 

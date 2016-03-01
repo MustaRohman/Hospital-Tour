@@ -135,8 +135,7 @@ public class CurrentActivity extends AppCompatActivity {
     }
 
 
-    public void checkInGeofence(double la, double lo, double sensitivity)
-    {
+    public void checkInGeofence(double la, double lo, double sensitivity) {
 
         ArrayList<TourLocation> nodesList = MainActivity.locationslist;
         for (int i = 0; i <nodesList.size() ; i++) {
@@ -148,16 +147,13 @@ public class CurrentActivity extends AppCompatActivity {
             double geoLaNoe = nodesList.get(i).getLatitude(); //get Latitude;
             double geoloNode = nodesList.get(i).getLongitude();; //get Longitude
 
-            if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode))
-            {
+            if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
                 //Toast.makeText(CurrentActivity.this, "you have Near your locations: "+nodesList.get(i).getName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, LogInActivity.class);
                 startActivity(intent);
 
-
             }
         }
-
     }
 
 }

@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +19,8 @@ import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class TourActivity extends AppCompatActivity {
 
@@ -76,11 +71,11 @@ public class TourActivity extends AppCompatActivity {
         tourPoints.put("Reception","Main Building");
         tourPoints.put("Staff Room","Sydney Wing");
 
-        addTourPointViews();
+        addAllTourPointViews();
 
     }
 
-    public void addTourPointViews(){
+    public void addAllTourPointViews(){
         LayoutInflater inflater = getLayoutInflater();
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -93,17 +88,21 @@ public class TourActivity extends AppCompatActivity {
         };
 
         for (TourLocation tourLoc: MainActivity.locationslist){
-            View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
-            tourPointView.setOnClickListener(listener);
-            TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
-            name.setText(tourLoc.getName());
-            TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
-            location.setText("Some place");
-            Log.d("TourLocation", tourLoc.getName());
-
-            tourPointsLinear.addView(tourPointView);
-            tourViewsList.add(tourPointView);
+            addSingleTourPoint(tourLoc, inflater, listener);
         }
+    }
+
+    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener){
+        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
+        tourPointView.setOnClickListener(listener);
+        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
+        name.setText(tourLoc.getName());
+        TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
+        location.setText("Some place");
+        Log.d("TourLocation", tourLoc.getName());
+
+        tourPointsLinear.addView(tourPointView);
+        tourViewsList.add(tourPointView);
     }
 
     @Override

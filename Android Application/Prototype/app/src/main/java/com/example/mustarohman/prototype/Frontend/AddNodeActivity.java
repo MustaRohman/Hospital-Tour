@@ -7,11 +7,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.mustarohman.prototype.R;
 
 public class AddNodeActivity extends AppCompatActivity {
+
+    private String tourCodeString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +31,7 @@ public class AddNodeActivity extends AppCompatActivity {
             }
         });
 
-
-        TextView loggedInText = (TextView) findViewById(R.id.logged_in_text);
-        String loggedInString = loggedInText.getText().toString();
-        String username = getIntent().getStringExtra("username");
-        loggedInString += " " + username;
-        loggedInText.setText(loggedInString);
-
-
+        setTextOfViews();
     }
 
     @Override
@@ -76,5 +72,32 @@ public class AddNodeActivity extends AppCompatActivity {
     public void onClickChangeTourMenuItem(MenuItem item) {
         //TODO
         //Sliding list of tour codes. Should reload the current activity
+    }
+
+    public void generateTourCode(){
+
+    }
+
+    public void onClickSaveTour(View view) {
+
+    }
+
+    public void setTextOfViews(){
+        TextView tourCodeText = (TextView) findViewById(R.id.tour_code);
+        tourCodeString = getIntent().getStringExtra("tourcode");
+        tourCodeText.setText(tourCodeString);
+
+        //Retrieve name of tour from the database
+        generateTourCode();
+
+        TextView loggedInText = (TextView) findViewById(R.id.logged_in_text);
+        String loggedInString = loggedInText.getText().toString();
+        String username = getIntent().getStringExtra("username");
+        loggedInString += " " + LogInActivity.USER_NAME;
+        loggedInText.setText(loggedInString);
+
+        EditText tourNameEdit = (EditText) findViewById(R.id.tourname_edit);
+        //retrieve name of tour from database
+        //Set textfield text
     }
 }
