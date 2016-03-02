@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
     public static ArrayList<TourLocation> locationslist;
+    public static boolean LOGGED_IN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         dataCaching = new DataCaching(this);
 
         locationslist = new ArrayList<>();
+        LOGGED_IN = false;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
@@ -98,5 +101,10 @@ public class MainActivity extends AppCompatActivity {
     public void onSignInBtn(View view) {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class LogInActivity extends AppCompatActivity {
 
     private EditText userEditText, passEditText;
-    public static boolean LOGGED_IN;
+
     public static String USER_NAME;
 
     @Override
@@ -61,7 +61,7 @@ public class LogInActivity extends AppCompatActivity {
         if (!hashMap.isEmpty()) {
             if (hashMap.get(userString).equals(passEditText.getText().toString())) {
                 startActivity(intent);
-                LOGGED_IN = true;
+                MainActivity.LOGGED_IN = true;
             } else {
                 Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
             }

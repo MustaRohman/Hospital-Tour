@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -95,5 +96,12 @@ public class PostLoginActivity extends AppCompatActivity {
     public void onClickAddRoom(View view) {
         Intent intent = new Intent(this, CurrentActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        MainActivity.LOGGED_IN = false;
+        Log.d("EditTourActivity", " EditTourActivity has been destroyed");
+        super.onBackPressed();
     }
 }

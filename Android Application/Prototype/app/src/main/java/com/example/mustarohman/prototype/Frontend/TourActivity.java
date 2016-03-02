@@ -48,7 +48,7 @@ public class TourActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (LogInActivity.LOGGED_IN){
+        if (MainActivity.LOGGED_IN){
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,7 +108,7 @@ public class TourActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        if (LogInActivity.LOGGED_IN){
+        if (MainActivity.LOGGED_IN){
             menuInflater.inflate(R.menu.menu_tour_add, menu);
             Log.d("onCreateOptionsMenu", "Loaded menu_tour_add");
         } else {
