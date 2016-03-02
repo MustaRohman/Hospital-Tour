@@ -82,7 +82,7 @@ public class TourActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(TourActivity.this, "Tour point click event", Toast.LENGTH_SHORT)
                 .show();
-                Intent intent = new Intent(TourActivity.this, TourPointActivity.class);
+                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
                 startActivity(intent);
             }
         };

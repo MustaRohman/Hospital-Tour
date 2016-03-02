@@ -30,7 +30,7 @@
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Frontend.TourPointActivity"
+            android:name=".Frontend.TourPointMediaActivity"
             android:label="@string/title_activity_tour_point"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -42,12 +42,8 @@
             android:label="@string/title_activity_log_in"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Frontend.AddNodeActivity"
+            android:name=".Frontend.EditTourActivity"
             android:label="@string/title_activity_add_node"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Frontend.TourNodeInfoActivity"
-            android:label="@string/title_activity_tour_point_info"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.PostLoginActivity"

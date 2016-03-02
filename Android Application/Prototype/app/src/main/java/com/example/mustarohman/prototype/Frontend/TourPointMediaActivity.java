@@ -14,7 +14,7 @@ import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
 
-public class TourPointActivity extends AppCompatActivity {
+public class TourPointMediaActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private ArrayList<String> imageFilePaths;
@@ -52,7 +52,7 @@ public class TourPointActivity extends AppCompatActivity {
             img.setImageResource(R.drawable.cardiac5);
 
             linearLayout.addView(imageView, i);
-            Log.d("TourPointActivity", "view added");
+            Log.d("TourPointMediaActivity", "view added");
         }
 
     }

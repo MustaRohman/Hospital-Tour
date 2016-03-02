@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
 
-public class AddNodeActivity extends AppCompatActivity {
+public class EditTourActivity extends AppCompatActivity {
 
     private String tourCodeString;
     DBQueryAsyncTask getTourCodes ;
@@ -51,9 +51,9 @@ public class AddNodeActivity extends AppCompatActivity {
             getTourCodes = new DBQueryAsyncTask();
           tourCode = getTourCodes.execute("Select * from tour where tourid = '"+ tourCodeString + "';").get();
         } catch (ExecutionException e) {
-            Log.w("e", "TourRetive error in activity AddNodeActivity");
+            Log.w("e", "TourRetive error in activity EditTourActivity");
         } catch (InterruptedException e) {
-            Log.w(""+e, "TourRetive error in activity AddNodeActivity");
+            Log.w(""+e, "TourRetive error in activity EditTourActivity");
         }
 
         setTextOfViews();

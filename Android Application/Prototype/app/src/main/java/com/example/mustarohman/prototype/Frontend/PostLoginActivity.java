@@ -66,7 +66,7 @@ public class PostLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Button tourbutton = (Button) v;
-                Intent intent = new Intent(PostLoginActivity.this, AddNodeActivity.class);
+                Intent intent = new Intent(PostLoginActivity.this, EditTourActivity.class);
                 intent.putExtra("tourcode",tourbutton.getText().toString());
                 startActivity(intent);
             }
@@ -84,7 +84,7 @@ public class PostLoginActivity extends AppCompatActivity {
     }
 
     public void onClickCreateTourBtn(View view) {
-        Intent intent = new Intent(this, AddNodeActivity.class);
+        Intent intent = new Intent(this, EditTourActivity.class);
 
         //Random code generator
         //putExtra(code)
