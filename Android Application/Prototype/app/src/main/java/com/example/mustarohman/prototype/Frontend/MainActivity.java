@@ -17,6 +17,7 @@ import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
 
         DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
-        ArrayList<String> tourIds = null;
+        HashMap<String,String> tourIds = null;
         try {
             tourIds = dbQueryAsyncTask.execute(query).get();
             locationslist = dbConnection.getTourlocations("SELECT * from tour_res, location where tourid ='" +codeEditText.getText().toString() +"'and tour_res.locationid = location.locationid;");
@@ -79,11 +80,13 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("MainActivity", locationslist.get(0).getName());
 
-        if (tourIds.contains(codeEditText.getText().toString())){
-            intent.putExtra(TOUR_CODE, codeEditText.getText());
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Incorrect tour code", Toast.LENGTH_LONG).show();
+        if (tourIds != null) {
+            if (tourIds.containsKey(codeEditText.getText().toString())){
+                intent.putExtra(TOUR_CODE, codeEditText.getText());
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Incorrect tour code", Toast.LENGTH_LONG).show();
+            }
         }
 
     }

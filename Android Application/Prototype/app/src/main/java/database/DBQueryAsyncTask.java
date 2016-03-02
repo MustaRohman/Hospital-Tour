@@ -9,20 +9,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mustarohman on 24/02/2016.
  */
 
-   public class DBQueryAsyncTask extends AsyncTask<String,Void,ArrayList<String>> {
+   public class DBQueryAsyncTask extends AsyncTask<String,Void,HashMap<String,String>> {
     @Override
     //This does the connection protocol in the background.
 
-    protected ArrayList<String> doInBackground(String... params) {
+    protected HashMap<String,String> doInBackground(String... params) {
         // to retrive the query result.
         String query = params[0];
-        ArrayList<String> retval = new ArrayList<>();
+        HashMap<String,String>  retval = new HashMap<String,String>();
         try {
             //opens the jar.
             Class.forName("org.postgresql.Driver");
@@ -43,7 +43,7 @@ import java.util.ArrayList;
             sql = query;
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()) {
-                retval.add(rs.getString("tourid"));
+                retval.put(rs.getString("tourid"),rs.getString("tour_name"));
               }
             rs.close();
             st.close();

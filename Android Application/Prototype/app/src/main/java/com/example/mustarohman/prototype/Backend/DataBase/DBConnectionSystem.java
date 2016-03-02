@@ -130,16 +130,14 @@ public class DBConnectionSystem {
         }
     }
 
-    private class UpdateQuery extends AsyncTask<String, Void, String> {
-
-
+    private class UpdateQuery extends AsyncTask<String, Void, Void> {
         @Override
         protected void onPreExecute() {
 //Here we could add progress bar,
         }
 //this will allow the user to insert/update the database
         @Override
-        protected String doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             connectionDriver();
 
             try {
@@ -153,10 +151,10 @@ public class DBConnectionSystem {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-
-        }
+//        @Override
+//        protected void onPostExecute(String result) {
+//
+//        }
     }
 
     private  class TourCodes extends AsyncTask<Void,Void,ArrayList<String>> {
