@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class LogInActivity extends AppCompatActivity {
 
     private EditText userEditText, passEditText;
-
+    public static boolean LOGGED_IN;
     public static String USER_NAME;
 
     @Override
@@ -44,6 +44,11 @@ public class LogInActivity extends AppCompatActivity {
         //TODO
         //Check database if username and password combination is correct
 
+
+
+
+
+
         String userString = userEditText.getText().toString();
         USER_NAME = userString;
         Intent intent = new Intent(this, PostLoginActivity.class);
@@ -61,7 +66,7 @@ public class LogInActivity extends AppCompatActivity {
         if (!hashMap.isEmpty()) {
             if (hashMap.get(userString).equals(passEditText.getText().toString())) {
                 startActivity(intent);
-                MainActivity.LOGGED_IN = true;
+                LOGGED_IN = true;
             } else {
                 Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
             }

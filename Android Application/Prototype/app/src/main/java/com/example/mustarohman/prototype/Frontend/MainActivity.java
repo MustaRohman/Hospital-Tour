@@ -2,9 +2,9 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
     public static ArrayList<TourLocation> locationslist;
-    public static boolean LOGGED_IN;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         dataCaching = new DataCaching(this);
 
         locationslist = new ArrayList<>();
-        LOGGED_IN = false;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
@@ -66,13 +63,18 @@ public class MainActivity extends AppCompatActivity {
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
 
 
+        //shared preference for getting code from EditText
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("codeEdit", codeEditText.getText().toString()).commit();
+
+
+
+
         String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
 
         DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
         HashMap<String,String> tourIds = null;
         try {
             tourIds = dbQueryAsyncTask.execute(query).get();
-            locationslist = dbConnection.getTourlocations("SELECT * from tour_res, location where tourid ='" +codeEditText.getText().toString() +"'and tour_res.locationid = location.locationid;");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -80,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 //       dataCaching.saveDataToInternalStorage("locationsList",locationslist);
-
-        Log.d("MainActivity", locationslist.get(0).getName());
 
         if (tourIds != null) {
             if (tourIds.containsKey(codeEditText.getText().toString())){
@@ -101,10 +101,5 @@ public class MainActivity extends AppCompatActivity {
     public void onSignInBtn(View view) {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }
