@@ -6,6 +6,7 @@ import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,9 +63,10 @@ public class DBConnectionSystem {
         return getTourlocations.execute(query).get();
     }
     //this method used to pass update queries to the database
-    public void UpdateDatabase(String query){
+    public boolean UpdateDatabase(String query) throws ExecutionException, InterruptedException {
         UpdateQuery updateQuery = new UpdateQuery();
-        updateQuery.execute(query);
+
+        return updateQuery.execute(query).get();
     }
 
      private  class loginQuery extends AsyncTask<String,Void,HashMap<String,String>> {
@@ -130,25 +132,33 @@ public class DBConnectionSystem {
         }
     }
 
-    private class UpdateQuery extends AsyncTask<String, Void, Void> {
+    private class UpdateQuery extends AsyncTask<String, Void, Boolean> {
         @Override
         protected void onPreExecute() {
 //Here we could add progress bar,
         }
 //this will allow the user to insert/update the database
         @Override
-        protected Void doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
             connectionDriver();
+            boolean check = false;
 
             try {
-                //This will pass the query to the database
-                st.executeQuery(params[0]);
+
+                PreparedStatement statement = conn.prepareStatement(params[0]);
+                int rowsUpdated = statement.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    System.out.println("An existing user was updated successfully!");
+                    check = true;
+                }
+
                 st.close();
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return null;
+            return check;
         }
 
 //        @Override
