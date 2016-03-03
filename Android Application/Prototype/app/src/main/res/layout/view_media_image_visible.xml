@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/view_image_media"
+    android:src="@drawable/cardiac5"
+    android:scaleType="centerCrop"
+    android:padding="8dp"
+    android:background="@android:drawable/dialog_holo_dark_frame">
+
+</ImageButton>
