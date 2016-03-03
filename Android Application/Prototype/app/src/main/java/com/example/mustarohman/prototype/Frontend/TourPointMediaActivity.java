@@ -1,15 +1,15 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mustarohman.prototype.R;
@@ -20,6 +20,9 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private ArrayList<String> imageFilePaths;
+    private Animator mCurrentAnimator;
+    private int mShortAnimationDuration;
+    private FrameLayout mainFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,34 +36,61 @@ public class TourPointMediaActivity extends AppCompatActivity {
         //This activity should appear when user enters the respective geofence
 
         linearLayout = (LinearLayout) findViewById(R.id.grid_views);
+        mainFrame = (FrameLayout) findViewById(R.id.main_frame);
 
+        mShortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
         //Which will changed
         imageFilePaths = new ArrayList<>();
 
-        createImageViews(imageFilePaths);
-        createVideoViews();
+        addImageViews(imageFilePaths);
+        addVideoViews();
 
     }
 
-    public void createImageViews(ArrayList<String> filePaths){
+    private void addImageViews(ArrayList<String> filePaths){
         //TODO
         //Loop thru image file paths in arrayList and create views using layoutinflater and add them to the main layout
-
         LayoutInflater inflater = getLayoutInflater();
 
         for (int i = 0; i < 3; i++){
-            ImageButton imageView =  (ImageButton) inflater.inflate(R.layout.view_media_image_visible, null);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
-            if (i == 1) imageView.setImageResource(R.drawable.hospital);
-            param.setMargins(20,20,20,20);
-            imageView.setLayoutParams(param);
-            linearLayout.addView(imageView);
-            Log.d("TourPointMediaActivity", "view added");
+
+            int imageResource = R.drawable.cardiac5;
+            if (i == 1) imageResource = R.drawable.hospital;
+            setImageButtonAndAnimation(inflater, imageResource);
+
         }
 
     }
 
-    public void createVideoViews(){
+    /**
+     * Sets up image button and image view for enlarging animation
+     * @param inflater
+     * @param res
+     */
+    private void setImageButtonAndAnimation(LayoutInflater inflater, int res){
+        View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
+        ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
+        imageButton.setImageResource(res);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
+        param.setMargins(20,20,20,20);
+
+        ImageView enlargedImage = new ImageView(this);
+        enlargedImage.setImageResource(res);
+        FrameLayout.LayoutParams frameParam = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+        enlargedImage.setLayoutParams(frameParam);
+        enlargedImage.setVisibility(View.INVISIBLE);
+        enlargedImage.setContentDescription("Cardiac");
+
+        linearLayout.addView(imageView);
+        mainFrame.addView(enlargedImage);
+        imageView.setLayoutParams(param);
+        Log.d("TourPointMediaActivity", "view added");
+
+    }
+
+    private void addVideoViews(){
         //TODO
         //create video/youtube views
     }
