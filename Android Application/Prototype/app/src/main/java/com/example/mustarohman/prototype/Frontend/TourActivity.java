@@ -82,7 +82,7 @@ public class TourActivity extends AppCompatActivity {
 
             //getting tuples from tourRes table where the id = code and storing it in an arrayList
             DBConnectionSystem dbConnection = new DBConnectionSystem();
-            tourLocations = dbConnection.getTourlocations("SELECT * from tour_res, location where tourid ='" + codeFromMain + "'and tour_res.locationid = location.locationid;");
+            tourLocations = dbConnection.getLocations("SELECT * from tour_res, location where tourid ='" + codeFromMain + "'and tour_res.locationid = location.locationid;");
             System.out.println();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -152,6 +152,7 @@ public class TourActivity extends AppCompatActivity {
     public void onClickAddTourPoint(MenuItem item) {
         DialogFragment dialog = new AddTourPointDialog();
         dialog.show(getSupportFragmentManager(), "add node");
+
     }
 
     public void onClickAddNewLocation(View view) {

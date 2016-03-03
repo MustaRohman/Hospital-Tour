@@ -56,7 +56,7 @@ public class DBConnectionSystem {
         return loginQuery.execute(query).get();
     }
 
-    public   ArrayList<TourLocation> getTourlocations(String query) throws ExecutionException, InterruptedException {
+    public   ArrayList<TourLocation> getLocations(String query) throws ExecutionException, InterruptedException {
 
         TourLocations getTourlocations = new TourLocations();
         return getTourlocations.execute(query).get();
