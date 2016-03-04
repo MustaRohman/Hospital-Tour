@@ -1,7 +1,9 @@
 package com.example.mustarohman.prototype.Backend.DataBase;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 
 import java.sql.Connection;
@@ -59,7 +61,7 @@ public class DBConnectionSystem {
 
     public   ArrayList<TourLocation> getLocations(String query) throws ExecutionException, InterruptedException {
 
-        TourLocations getTourlocations = new TourLocations();
+        TourLocationsQuery getTourlocations = new TourLocationsQuery();
         return getTourlocations.execute(query).get();
     }
     //this method used to pass update queries to the database
@@ -67,6 +69,9 @@ public class DBConnectionSystem {
         UpdateQuery updateQuery = new UpdateQuery();
 
         return updateQuery.execute(query).get();
+    }
+    public ArrayList<String> getTourCodes() throws ExecutionException, InterruptedException {
+        return new TourCodesListQuery().execute().get();
     }
 
      private  class loginQuery extends AsyncTask<String,Void,HashMap<String,String>> {
@@ -101,7 +106,7 @@ public class DBConnectionSystem {
 }
 
 
-    private  class TourLocations extends AsyncTask<String,Void,ArrayList<TourLocation>> {
+    private  class TourLocationsQuery extends AsyncTask<String,Void,ArrayList<TourLocation>> {
         @Override
         //This does the connection protocol in the background.
         protected ArrayList<TourLocation> doInBackground(String... params) {
@@ -149,7 +154,7 @@ public class DBConnectionSystem {
                 int rowsUpdated = statement.executeUpdate();
 
                 if (rowsUpdated > 0) {
-                    System.out.println("An existing user was updated successfully!");
+                    Log.d("UpdateQuery","An existing user was updated successfully!");
                     check = true;
                 }
 
@@ -157,6 +162,7 @@ public class DBConnectionSystem {
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
+                Log.d("UpdateQuery", "error");
             }
             return check;
         }
@@ -167,7 +173,7 @@ public class DBConnectionSystem {
 //        }
     }
 
-    private  class TourCodes extends AsyncTask<Void,Void,ArrayList<String>> {
+    private  class TourCodesListQuery extends AsyncTask<Void,Void,ArrayList<String>> {
         @Override
         //This does the connection protocol in the background.
         protected ArrayList<String> doInBackground(Void... params) {
@@ -196,9 +202,57 @@ public class DBConnectionSystem {
         }
     }
 
-    public ArrayList<String> getTourCodes() throws ExecutionException, InterruptedException {
-       return new TourCodes().execute().get();
+    private  class LocationMediaQuery extends AsyncTask<ArrayList<TourLocation>,Void,ArrayList<TourLocation>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<TourLocation> doInBackground(ArrayList<TourLocation>... params) {
+
+            ArrayList<TourLocation> arrayList = null;
+            try {
+                arrayList = params[0];
+                PreparedStatement statement = conn.prepareStatement("select * from location_res, media where locationid = ? and location_res.mediaid= media.mediaid");
+                for (TourLocation arrayListLocation:arrayList){
+                    statement.setInt(1, arrayListLocation.getId());
+                    ResultSet result = statement.executeQuery();
+                    ArrayList<Media> meidaArray = new ArrayList<>();
+
+                    while(result.next()){
+
+                        String name = result.getString("media_name");
+                        String directory =  result.getString("path");
+                        String description = result.getString("description");
+                        int order = result.getInt("media_order");
+
+                        meidaArray.add(new Media(name,directory,description,order));
+                    }
+
+                    arrayListLocation.setMediaList(meidaArray);
+                }
+
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return arrayList;
+
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
     }
+
+
+
+
+
 
 }
 

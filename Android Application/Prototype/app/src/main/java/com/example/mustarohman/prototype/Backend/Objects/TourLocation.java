@@ -1,6 +1,7 @@
 package com.example.mustarohman.prototype.Backend.Objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by yezenalnafei on 25/02/2016.
@@ -11,6 +12,7 @@ public class TourLocation implements Serializable{
     private String name;
     private float latitude;
     private float longitude;
+    private ArrayList<Media> mediaList;
 
     public TourLocation(int locationId, String name, float latitude, float longitude){
 
@@ -52,4 +54,13 @@ public class TourLocation implements Serializable{
     public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
+
+    public ArrayList<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(ArrayList<Media> mediaList) {
+        this.mediaList = mediaList;
+    }
+
 }
