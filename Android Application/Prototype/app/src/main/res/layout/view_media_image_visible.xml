@@ -4,7 +4,7 @@
     android:id="@+id/view_image_media"
     android:scaleType="centerCrop"
     android:padding="8dp"
-    android:background="@android:drawable/dialog_holo_dark_frame">
+    android:background="@android:drawable/dialog_holo_light_frame">
 
     <ImageButton
         android:id="@+id/image_button"
