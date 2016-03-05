@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -26,6 +28,8 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private ArrayList<String> imageFilePaths;
+    private String tourLocationName;
+
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
     private FrameLayout mainFrame;
@@ -35,8 +39,17 @@ public class TourPointMediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_point_media);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Tour Point Info");
+        tourLocationName = getIntent().getStringExtra("tour-location-name");
+        toolbar.setTitle(tourLocationName);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         //TODO
         //Loop thru images and create views using layoutinflater and add them to the main layout
         //This activity should appear when user enters the respective geofence
@@ -78,7 +91,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
      * @param res
      */
     private void setImageButton(LayoutInflater inflater, final int res){
-        View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
+        final View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
         imageButton.setImageResource(res);
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
@@ -86,26 +99,20 @@ public class TourPointMediaActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                zoomImage(imageButton, res);
+//                zoomImage(imageView, res);
+                Intent intent = new Intent(TourPointMediaActivity.this,ImageFullScreenActivity.class);
+                intent.putExtra("image-res", res);
+                startActivity(intent);
             }
         });
 
-//        ImageView enlargedImage = new ImageView(this);
-//        enlargedImage.setImageResource(res);
-//        FrameLayout.LayoutParams frameParam = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-//                FrameLayout.LayoutParams.MATCH_PARENT);
-//        enlargedImage.setLayoutParams(frameParam);
-//        enlargedImage.setVisibility(View.INVISIBLE);
-//        enlargedImage.setContentDescription("Cardiac");
-
         linearLayout.addView(imageView);
-//        mainFrame.addView(enlargedImage);
         imageView.setLayoutParams(param);
         Log.d("TourPointMediaActivity", "view added");
 
     }
 
-    private void zoomImage(final ImageButton imageButton, int res) {
+    private void zoomImage(final View imageButton, int res) {
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();
         }

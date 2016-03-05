@@ -48,7 +48,11 @@
         <activity
             android:name=".Frontend.PostLoginActivity"
             android:label="@string/title_activity_post_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Frontend.ImageFullScreenActivity"
+            android:label="ImageFullScreenActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

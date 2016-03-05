@@ -101,9 +101,9 @@ public class TourActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TourActivity.this, "Tour point click event", Toast.LENGTH_SHORT)
-                .show();
+                TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                intent.putExtra("tour-location-name", nameView.getText().toString());
                 startActivity(intent);
             }
         };
