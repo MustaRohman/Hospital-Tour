@@ -114,4 +114,6 @@
     <string name="create_tour">Create New Tour</string>
     <string name="choose_existing_location">Choose Existing Location</string>
     <string name="add_new_location">Add new location</string>
+
+    <string name="transition_name">transition:NAME</string>
 </resources>

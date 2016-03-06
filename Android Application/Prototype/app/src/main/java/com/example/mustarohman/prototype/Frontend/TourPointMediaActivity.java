@@ -5,10 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -95,19 +98,30 @@ public class TourPointMediaActivity extends AppCompatActivity {
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
         imageButton.setImageResource(res);
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
-        param.setMargins(20,20,20,20);
+        param.setMargins(20, 20, 20, 20);
+        imageView.setLayoutParams(param);
+
+        final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
+        intent.putExtra("image-res", res);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    v.setTransitionName(String.valueOf(R.string.transition_name));
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            TourPointMediaActivity.this,
+                            new Pair<View, String>(v, getString(R.string.transition_name)));
+                    ActivityCompat.startActivity(TourPointMediaActivity.this, intent, options.toBundle());
+                    Log.d("setImageButton", "Build version sdk is >= lollipop");
+                } else {
 //                zoomImage(imageView, res);
-                Intent intent = new Intent(TourPointMediaActivity.this,ImageFullScreenActivity.class);
-                intent.putExtra("image-res", res);
-                startActivity(intent);
+                    startActivity(intent);
+                }
             }
         });
 
         linearLayout.addView(imageView);
-        imageView.setLayoutParams(param);
         Log.d("TourPointMediaActivity", "view added");
 
     }

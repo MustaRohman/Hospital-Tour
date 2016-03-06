@@ -51,7 +51,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Frontend.ImageFullScreenActivity"
             android:label="ImageFullScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
