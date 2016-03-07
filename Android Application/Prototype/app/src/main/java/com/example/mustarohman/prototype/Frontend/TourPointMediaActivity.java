@@ -49,7 +49,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -62,8 +62,6 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
         mShortAnimationDuration = getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
-
-
 
         //Which will changed
         imageFilePaths = new ArrayList<>();
@@ -79,13 +77,10 @@ public class TourPointMediaActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         for (int i = 0; i < 3; i++){
-
             int imageResource = R.drawable.cardiac5;
             if (i == 1) imageResource = R.drawable.hospital;
             setImageButton(inflater, imageResource);
-
         }
-
     }
 
     /**
@@ -97,8 +92,8 @@ public class TourPointMediaActivity extends AppCompatActivity {
         final View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
         imageButton.setImageResource(res);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
-        param.setMargins(20, 20, 20, 20);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250);
+        param.setMargins(30, 30, 30, 30);
         imageView.setLayoutParams(param);
 
         final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
@@ -107,17 +102,19 @@ public class TourPointMediaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    v.setTransitionName(String.valueOf(R.string.transition_name));
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            TourPointMediaActivity.this,
-                            new Pair<View, String>(v, getString(R.string.transition_name)));
-                    ActivityCompat.startActivity(TourPointMediaActivity.this, intent, options.toBundle());
-                    Log.d("setImageButton", "Build version sdk is >= lollipop");
-                } else {
-//                zoomImage(imageView, res);
-                    startActivity(intent);
-                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    v.setTransitionName(String.valueOf(R.string.transition_name));
+//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                            TourPointMediaActivity.this,
+//                            new Pair<View, String>(v, getString(R.string.transition_name)));
+//                    ActivityCompat.startActivity(TourPointMediaActivity.this, intent, options.toBundle());
+//                    Log.d("setImageButton", "Build version sdk is >= lollipop");
+//                } else {
+//                  zoomImage(imageView, res);
+//                  startActivity(intent);
+//                }
+
+                startActivity(intent);
             }
         });
 

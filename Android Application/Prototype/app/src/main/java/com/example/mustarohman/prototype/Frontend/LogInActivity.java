@@ -2,6 +2,8 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -65,7 +67,9 @@ public class LogInActivity extends AppCompatActivity {
         }
         if (!hashMap.isEmpty()) {
             if (hashMap.get(userString).equals(passEditText.getText().toString())) {
-                startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        LogInActivity.this);
+                ActivityCompat.startActivity(LogInActivity.this, intent, options.toBundle());
                 LOGGED_IN = true;
             } else {
                 Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
