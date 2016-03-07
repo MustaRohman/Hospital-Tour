@@ -115,7 +115,13 @@ public class EditTourActivity extends AppCompatActivity {
 
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
 
-                        dbConnectionSystem.UpdateDatabase("update tour set tour_name= '"+tourNameEdit.getText().toString()+"' where tourid = '"+tourCodeString+"';");
+                        try {
+                            dbConnectionSystem.UpdateDatabase("update tour set tour_name= '"+tourNameEdit.getText().toString()+"' where tourid = '"+tourCodeString+"';");
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
                         break;
 

@@ -1,6 +1,9 @@
 package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -22,31 +25,26 @@ import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class TourActivity extends AppCompatActivity {
 
+    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2000; // in Milliseconds
+    protected LocationManager locationManager;
     private LinearLayout tourPointsLinear;
     private DataCaching dataCaching;
-
-
-    //Map of tour points with their locations. Could be retrieved via JSON
-    private HashMap<String,String> tourPoints;
     private ArrayList<View> tourViewsList;
     private  ArrayList<TourLocation> tourLocations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        dataCaching = new DataCaching(this.getApplicationContext());
-
-
         super.onCreate(savedInstanceState);
+        //this is the datacaching class.
+        dataCaching = new DataCaching(this.getApplicationContext());
         setContentView(R.layout.activity_tour);
         tourPointsLinear = (LinearLayout) findViewById(R.id.linear_tourpoints);
         tourViewsList = new ArrayList<>();
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,17 +61,6 @@ public class TourActivity extends AppCompatActivity {
         }
         toolbar.setTitle("Royal Brompton Hospital");
 
-        tourPoints = new HashMap<>();
-        tourPoints.put("Cardiac","North Wing");
-        tourPoints.put("Radiology","Sydney Wing");
-        tourPoints.put("Cardiac", "North Wing");
-        tourPoints.put("Something", "Main Building");
-        tourPoints.put("ER","North Wing");
-        tourPoints.put("Operating Theatre","North Wing");
-        tourPoints.put("Reception","Main Building");
-        tourPoints.put("Staff Room", "Sydney Wing");
-
-
 
         try {
             //getting text from codeEdit in main class
@@ -82,7 +69,7 @@ public class TourActivity extends AppCompatActivity {
 
             //getting tuples from tourRes table where the id = code and storing it in an arrayList
             DBConnectionSystem dbConnection = new DBConnectionSystem();
-            tourLocations = dbConnection.getTourlocations("SELECT * from tour_res, location where tourid ='" + codeFromMain + "'and tour_res.locationid = location.locationid;");
+            tourLocations = dbConnection.getLocations("SELECT * from tour_res, location where tourid ='" + codeFromMain + "'and tour_res.locationid = location.locationid;");
             System.out.println();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -92,6 +79,19 @@ public class TourActivity extends AppCompatActivity {
 
         addAllTourPointViews();
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        try {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MINIMUM_TIME_BETWEEN_UPDATES,
+                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                    new MyLocationListener()
+            );
+        }
+        catch(SecurityException e) {
+            Log.w("e", "error1");
+        }
 
 
     }
@@ -152,8 +152,77 @@ public class TourActivity extends AppCompatActivity {
     public void onClickAddTourPoint(MenuItem item) {
         DialogFragment dialog = new AddTourPointDialog();
         dialog.show(getSupportFragmentManager(), "add node");
+
     }
 
     public void onClickAddNewLocation(View view) {
     }
+
+    private class MyLocationListener implements LocationListener {
+
+        public void onLocationChanged(Location location) {
+            String message = "location updated";
+
+            // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
+
+            checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00005);
+            Log.d("current loc","current latitude: "+location.getLatitude() + "longitude: "+ location.getLongitude()+"");
+            Log.d("la+",location.getLatitude()+0.00005+"");
+            Log.d("la-", location.getLatitude() - 0.00005 + "");
+            Log.d("lo+",location.getLongitude()+0.00005+"");
+            Log.d("lo-",location.getLongitude()-0.00005+"");
+        }
+
+        public void onStatusChanged(String s, int i, Bundle b) {
+            Toast.makeText(TourActivity.this, "Provider status changed",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        public void onProviderDisabled(String s) {
+            Toast.makeText(TourActivity.this,
+                    "Provider disabled by the user. GPS turned off",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        public void onProviderEnabled(String s) {
+
+        }
+
+    }
+
+    //check if location is in square
+    public boolean isInSquare(double la, double lo, double sensitivity ,double geoLa ,double geoLo){
+        Boolean isInSquare = false;
+
+        //check if we are in square
+        if((la <= geoLa+sensitivity && la >= geoLa-sensitivity) && (lo <= geoLo+sensitivity&& lo >= geoLo-sensitivity))
+        {
+            isInSquare = true;
+        }
+
+        return isInSquare;
+    }
+
+
+    public void checkInGeofence(double la, double lo, double sensitivity) {
+
+        ArrayList<TourLocation> nodesList = MainActivity.locationslist;
+        for (int i = 0; i <nodesList.size() ; i++) {
+
+            MainActivity.locationslist.get(i);
+
+            double currentLa = la;
+            double currentLo = lo;
+            double geoLaNoe = nodesList.get(i).getLatitude(); //get Latitude;
+            double geoloNode = nodesList.get(i).getLongitude();; //get Longitude
+
+            if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
+                //Toast.makeText(CurrentActivity.this, "you have Near your locations: "+nodesList.get(i).getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
+
+            }
+        }
+    }
+
 }
