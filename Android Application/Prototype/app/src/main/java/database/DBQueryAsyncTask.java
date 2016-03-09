@@ -55,7 +55,7 @@ import java.util.HashMap;
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
+    protected void onProgressUpdate(Void... values){
         super.onProgressUpdate(values);
     }
 

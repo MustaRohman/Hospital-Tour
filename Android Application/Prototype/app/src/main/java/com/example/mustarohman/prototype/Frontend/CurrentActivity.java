@@ -21,8 +21,8 @@ import java.util.concurrent.ExecutionException;
 public class CurrentActivity extends AppCompatActivity {
 
     protected int toastTimer =1500;
-        private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-       private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2000; // in Milliseconds
+    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2000; // in Milliseconds
     protected LocationManager locationManager;
     private EditText locationNameEt;
 
@@ -67,8 +67,6 @@ public class CurrentActivity extends AppCompatActivity {
         try {
 
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-
             if (location != null) {
 
                 String message = String.format(

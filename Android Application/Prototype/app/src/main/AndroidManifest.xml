@@ -36,7 +36,7 @@
         <activity
             android:name=".Frontend.CurrentActivity"
             android:label="@string/title_activity_current"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".Frontend.LogInActivity"
             android:label="@string/title_activity_log_in"

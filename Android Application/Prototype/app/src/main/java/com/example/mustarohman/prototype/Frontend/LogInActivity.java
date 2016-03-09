@@ -2,6 +2,8 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class LogInActivity extends AppCompatActivity {
 
     private EditText userEditText, passEditText;
+    private CoordinatorLayout coordinatorLayout;
     public static boolean LOGGED_IN;
     public static String USER_NAME;
 
@@ -26,6 +29,8 @@ public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Log In");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -45,11 +50,6 @@ public class LogInActivity extends AppCompatActivity {
     public void onLogInBtn(View view) {
         //TODO
         //Check database if username and password combination is correct
-
-
-
-
-
 
         String userString = userEditText.getText().toString();
         USER_NAME = userString;
@@ -72,11 +72,11 @@ public class LogInActivity extends AppCompatActivity {
                 ActivityCompat.startActivity(LogInActivity.this, intent, options.toBundle());
                 LOGGED_IN = true;
             } else {
-                Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
+                Snackbar.make(coordinatorLayout, "Invalid", Snackbar.LENGTH_SHORT).show();
             }
 
         }else{
-            Toast.makeText(this, "User does not exsits", Toast.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayout, "User does not exist", Snackbar.LENGTH_SHORT).show();
         }
     }
     public void verifyUser(String username, String password){

@@ -15,6 +15,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -92,7 +93,8 @@ public class TourPointMediaActivity extends AppCompatActivity {
         final View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
         imageButton.setImageResource(res);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
+        param.gravity = Gravity.CENTER;
         param.setMargins(30, 30, 30, 30);
         imageView.setLayoutParams(param);
 
