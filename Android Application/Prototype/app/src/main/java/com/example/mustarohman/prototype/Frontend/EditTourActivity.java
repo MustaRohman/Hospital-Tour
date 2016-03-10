@@ -33,7 +33,7 @@ public class EditTourActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_node);
+        setContentView(R.layout.activity_edit_tour);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Edit Tour");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);

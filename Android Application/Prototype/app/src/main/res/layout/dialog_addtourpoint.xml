@@ -35,13 +35,13 @@
         android:textSize="20sp"
         android:layout_margin="15dp"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_above="@id/scroll_room"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_new_location"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/scroll_room"
         android:layout_margin="15dp"
         android:padding="15dp"
         android:onClick="onClickAddNewLocation"

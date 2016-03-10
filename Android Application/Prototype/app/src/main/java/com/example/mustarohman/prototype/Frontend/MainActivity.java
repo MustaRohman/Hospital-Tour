@@ -3,6 +3,10 @@ package com.example.mustarohman.prototype.Frontend;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,6 +29,7 @@ import database.DBQueryAsyncTask;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TOUR_CODE =  "Tour Code";
+    private CoordinatorLayout coordinatorLayout;
     private  ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
@@ -33,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataCaching = new DataCaching(this);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
         locationslist = new ArrayList<>();
+        dataCaching = new DataCaching(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
@@ -62,34 +68,37 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TourActivity.class);
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
 
-
-        //shared preference for getting code from EditText
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("codeEdit", codeEditText.getText().toString()).commit();
-
-
+        if (!codeEditText.getText().toString().equals("")) {
+            //shared preference for getting code from EditText
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("codeEdit", codeEditText.getText().toString()).commit();
 
 
-        String query = "Select * from tour where tourid = '"+codeEditText.getText().toString() +"';";
+            String query = "Select * from tour where tourid = '" + codeEditText.getText().toString() + "';";
 
-        DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
-        HashMap<String,String> tourIds = null;
-        try {
-            tourIds = dbQueryAsyncTask.execute(query).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+            DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
+            HashMap<String, String> tourIds = null;
+            try {
+                tourIds = dbQueryAsyncTask.execute(query).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
 //       dataCaching.saveDataToInternalStorage("locationsList",locationslist);
 
-        if (tourIds != null) {
-            if (tourIds.containsKey(codeEditText.getText().toString())){
-                intent.putExtra(TOUR_CODE, codeEditText.getText());
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "Incorrect tour code", Toast.LENGTH_LONG).show();
+            if (tourIds != null) {
+                if (tourIds.containsKey(codeEditText.getText().toString())) {
+                    intent.putExtra(TOUR_CODE, codeEditText.getText());
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this);
+                    ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+                } else {
+                    Snackbar.make(coordinatorLayout, "Invalid tour code", Snackbar.LENGTH_SHORT).show();
+                }
             }
+        } else {
+            Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();
         }
 
     }

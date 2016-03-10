@@ -6,6 +6,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,7 +55,7 @@ public class TourActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finish();
+                    onBackPressed();
                 }
             });
         } else{
@@ -101,10 +103,13 @@ public class TourActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TourActivity.this, "Tour point click event", Toast.LENGTH_SHORT)
-                .show();
+                TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                startActivity(intent);
+                intent.putExtra("tour-location-name", nameView.getText().toString());
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        TourActivity.this);
+                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
             }
         };
 
