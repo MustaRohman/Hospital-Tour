@@ -42,12 +42,32 @@ public class TourActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //this is the datacaching class.
-        dataCaching = new DataCaching(this.getApplicationContext());
         setContentView(R.layout.activity_tour);
+
+        dataCaching = new DataCaching(this.getApplicationContext());
         tourPointsLinear = (LinearLayout) findViewById(R.id.linear_tourpoints);
         tourViewsList = new ArrayList<>();
 
+        setUpToolbar();
+        loadTourLocations();
+        addAllTourPointViews();
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MINIMUM_TIME_BETWEEN_UPDATES,
+                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                    new MyLocationListener()
+            );
+        }
+        catch(SecurityException e) {
+            Log.w("e", "error1");
+        }
+
+    }
+
+    private void setUpToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (LogInActivity.LOGGED_IN){
@@ -62,40 +82,29 @@ public class TourActivity extends AppCompatActivity {
             toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         }
         toolbar.setTitle("Royal Brompton Hospital");
+    }
 
+    private void loadTourLocations(){
+        tourLocations = null;
+        Log.d("loadTourLocations", "Attempting to load from storage...");
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
 
-        try {
-            //getting text from codeEdit in main class
-            String codeFromMain = PreferenceManager.getDefaultSharedPreferences(this).getString("codeEdit", " ");
+        if (tourLocations == null) {
+            Log.d("loadTourLocations", "Load from storage failed. Retrieving from database...");
+            try {
+                //getting text from codeEdit in main class
+                String inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("codeEdit", " ");
 
-
-            //getting tuples from tourRes table where the id = code and storing it in an arrayList
-            DBConnectionSystem dbConnection = new DBConnectionSystem();
-            tourLocations = dbConnection.getLocations("SELECT * from tour_res, location where tourid ='" + codeFromMain + "'and tour_res.locationid = location.locationid;");
-            System.out.println();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                //getting tuples from tourRes table where the id = code and storing it in an arrayList
+                DBConnectionSystem dbConnection = new DBConnectionSystem();
+                tourLocations = dbConnection.getLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
+                System.out.println();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
-        addAllTourPointViews();
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    MINIMUM_TIME_BETWEEN_UPDATES,
-                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
-                    new MyLocationListener()
-            );
-        }
-        catch(SecurityException e) {
-            Log.w("e", "error1");
-        }
-
-
     }
 
     public void addAllTourPointViews(){
@@ -204,6 +213,7 @@ public class TourActivity extends AppCompatActivity {
         {
             isInSquare = true;
         }
+
 
         return isInSquare;
     }
