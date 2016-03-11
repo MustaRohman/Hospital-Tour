@@ -85,15 +85,15 @@ public class TourActivity extends AppCompatActivity {
     }
 
     private void loadTourLocations(){
+        String inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
         tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
-        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");
 
         if (tourLocations == null) {
             Log.d("loadTourLocations", "Load from storage failed. Retrieving from database...");
             try {
                 //getting text from codeEdit in main class
-                String inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("codeEdit", " ");
 
                 //getting tuples from tourRes table where the id = code and storing it in an arrayList
                 DBConnectionSystem dbConnection = new DBConnectionSystem();
@@ -104,6 +104,8 @@ public class TourActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        } else {
+            Log.d("loadTourLocations", "Loading from storage successful!");
         }
     }
 
