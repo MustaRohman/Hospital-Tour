@@ -1,6 +1,10 @@
 package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,8 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
 import com.amazonaws.mobileconnectors.cognito.Dataset;
@@ -28,12 +35,22 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,46 +80,60 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
 
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(),
-                "eu-west-1:00e58264-33f5-422d-b7b3-7af17d77fa99", // Identity Pool ID
-                Regions.EU_WEST_1
-                // Region
-        );
+//        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+//                getApplicationContext(),
+//                "eu-west-1:720beb8f-1866-46e4-800d-abf26b39daa6", // Identity Pool ID
+//                Regions.EU_WEST_1 // Region
+//        );
+//
+//        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+//
+//// Set the region of your S3 bucket
+//        s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
+//
+//        TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+//
+//
+//        File file = new File("/Users/mustarohman/Desktop/");
+//
+//        TransferObserver observer = transferUtility.download(
+//                "storage.s3.website.com",     /* The bucket to download from */
+//                "1457788264.jpg",    /* The key for the object to download */
+//                file        /* The file to download the object to */
+//        );
+//
+//        observer.setTransferListener(new TransferListener() {
+//            @Override
+//            public void onStateChanged(int id, TransferState state) {
+//                Log.d("state", String.valueOf(state));
+//            }
+//
+//            @Override
+//            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+////                int percentage = (int) (bytesCurrent / bytesTotal * 100);
+////                Log.d("progress", String.valueOf(percentage));
+//            }
+//
+//            @Override
+//            public void onError(int id, Exception ex) {
+//                Log.d("Error", "error");
+//            }
+//        });
 
-        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+        S3Object object = null;
 
-// Set the region of your S3 bucket
-        s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
+        try {
+           object = new RetrieveImagesAsync().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-        TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+        File file = new File("/Users/mustarohman/Desktop/s3-image.jpg");
 
-        File file = new File(this.getFilesDir(), "image");
 
-        TransferObserver observer = transferUtility.download(
-                "storage.s3.website.com",     /* The bucket to download from */
-                "1457788264.jpg",    /* The key for the object to download */
-                file        /* The file to download the object to */
-        );
-        
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                Log.d("state", String.valueOf(state));
-            }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                int percentage = (int) (bytesCurrent/bytesTotal * 100);
-                Log.d("progress", String.valueOf(percentage));
-            }
-
-            @Override
-            public void onError(int id, Exception ex) {
-                Log.d("Error", "error");
-            }
-        });
-        Log.d("onCreate", "File downloaded");
     }
 
     @Override
@@ -166,5 +197,27 @@ public class MainActivity extends AppCompatActivity {
     public void onSignInBtn(View view) {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
+    }
+
+    public class RetrieveImagesAsync extends AsyncTask<Void, Bitmap, S3Object>{
+
+        @Override
+        protected S3Object doInBackground(Void... params) {
+            AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
+            AmazonS3Client s3Client = new AmazonS3Client(creden);
+            s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
+            S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", "1457788264.jpg"));
+
+            Bitmap bitmap = BitmapFactory.decodeStream(obj.getObjectContent());
+
+            publishProgress(bitmap);
+            return obj;
+        }
+
+        @Override
+        protected void onProgressUpdate(Bitmap... values) {
+            ImageView imageView = (ImageView) findViewById(R.id.image_view);
+            imageView.setImageBitmap(values[0]);
+        }
     }
 }

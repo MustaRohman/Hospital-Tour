@@ -71,4 +71,10 @@
         android:onClick="onSignInBtn"
         android:background="@android:color/transparent"/>
 
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sign_button" />
+
 </RelativeLayout>
