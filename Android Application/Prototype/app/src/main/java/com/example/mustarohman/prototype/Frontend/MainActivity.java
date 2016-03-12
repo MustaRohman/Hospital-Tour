@@ -9,19 +9,34 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
@@ -47,6 +62,47 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
+
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "eu-west-1:00e58264-33f5-422d-b7b3-7af17d77fa99", // Identity Pool ID
+                Regions.EU_WEST_1
+                // Region
+        );
+
+        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+
+// Set the region of your S3 bucket
+        s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
+
+        TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+
+        File file = new File(this.getFilesDir(), "image");
+
+        TransferObserver observer = transferUtility.download(
+                "storage.s3.website.com",     /* The bucket to download from */
+                "1457788264.jpg",    /* The key for the object to download */
+                file        /* The file to download the object to */
+        );
+        
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                Log.d("state", String.valueOf(state));
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                int percentage = (int) (bytesCurrent/bytesTotal * 100);
+                Log.d("progress", String.valueOf(percentage));
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.d("Error", "error");
+            }
+        });
+        Log.d("onCreate", "File downloaded");
     }
 
     @Override
