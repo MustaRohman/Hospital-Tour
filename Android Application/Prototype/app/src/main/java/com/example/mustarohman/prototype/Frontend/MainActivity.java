@@ -1,6 +1,7 @@
 package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
@@ -30,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
     public static final String TOUR_CODE =  "Tour Code";
+
     private CoordinatorLayout coordinatorLayout;
+    private ProgressBar progressBar;
+
     public static ArrayList<TourLocation> locationslist;
     private  ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
@@ -75,68 +81,29 @@ public class MainActivity extends AppCompatActivity {
         if (!inputTourCode.equals("")) {
             //Checks if tour code is stored on device
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
+            Log.d("onClickStartBtn", "Checking for stored tour code...");
             if (storedTourCode != null & inputTourCode.equals(storedTourCode)){
                 Log.d("onClickStartBtn", "Tour code exists in data");
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MainActivity.this);
                 ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
-            } else if (checkTourCode(inputTourCode)) {
-                //shared preference for getting code from EditText
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("inputTour", inputTourCode).commit();
-
-                retrieveAndSaveTourData(inputTourCode);
+            } else {
+                try {
+                    new DBAsyncTask().execute(inputTourCode).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+//                Log.d("onClickStartBtn", "Tour code not stored in data, retrieving from database...");
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MainActivity.this);
                 ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
-            } else {
-                Snackbar.make(coordinatorLayout, "Invalid tour code", Snackbar.LENGTH_SHORT).show();
+
             }
 
         } else {
             Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Checks if inputted tour code is in database
-     * @param inputTourCode
-     * @return
-     */
-    private boolean checkTourCode(String inputTourCode){
-        String query = "Select * from tour where tourid = '" + inputTourCode + "';";
-        DBQueryAsyncTask dbQueryAsyncTask = new DBQueryAsyncTask();
-        HashMap<String, String> tourIds = null;
-        try {
-            tourIds = dbQueryAsyncTask.execute(query).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        if (tourIds != null) {
-            if (tourIds.containsKey(inputTourCode)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public void retrieveAndSaveTourData(String inputTourCode){
-        ArrayList<TourLocation> tourLocations = null;
-        try {
-            tourLocations = dbConnection.getLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (tourLocations != null){
-            Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-            dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
         }
     }
 
@@ -148,4 +115,56 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LogInActivity.class);
         startActivity(intent);
     }
+
+    private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            String tourCode = params[0];
+
+            publishProgress("Checking tour code...");
+            if (checkTourCode(tourCode)){
+                publishProgress("Downloading tour data...");
+                retrieveAndSaveTourData(tourCode);
+                return true;
+            }
+
+            return false;
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            Snackbar.make(coordinatorLayout, values[0], Snackbar.LENGTH_SHORT).show();
+        }
+
+        /**
+         * Checks if inputted tour code is in database
+         * @param inputTourCode
+         * @return
+         */
+        private boolean checkTourCode(String inputTourCode) {
+            String query = "Select * from tour where tourid = '" + inputTourCode + "';";
+            HashMap<String, String> tourIds = null;
+            Log.d("checkTourCode", "Retrieving tourIds from database...");
+
+            tourIds = DBQueryAsyncTask.retrieveTours(inputTourCode);
+
+            Log.d("checkTourCode", "End of asynctask");
+            return tourIds.containsKey(inputTourCode);
+        }
+
+        public void retrieveAndSaveTourData(String inputTourCode){
+            PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
+            ArrayList<TourLocation> tourLocations = null;
+            tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
+
+            if (tourLocations != null){
+                Log.d("checkTourCode", "Saving relevant tour locations to storage...");
+                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
+            }
+        }
+    }
+
 }

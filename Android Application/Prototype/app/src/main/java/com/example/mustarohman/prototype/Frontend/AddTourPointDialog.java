@@ -80,7 +80,7 @@ public class AddTourPointDialog extends DialogFragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
+
+
 }

@@ -16,12 +16,10 @@ import java.util.HashMap;
  */
 
    public class DBQueryAsyncTask extends AsyncTask<String,Void,HashMap<String,String>> {
-    @Override
-    //This does the connection protocol in the background.
 
-    protected HashMap<String,String> doInBackground(String... params) {
+
+    public static HashMap<String,String> retrieveTours(String query) {
         // to retrive the query result.
-        String query = params[0];
         HashMap<String,String>  retval = new HashMap<String,String>();
         try {
             //opens the jar.
@@ -52,6 +50,11 @@ import java.util.HashMap;
             e.printStackTrace();
         }
         return retval;
+    }
+
+    @Override
+    protected HashMap<String, String> doInBackground(String... params) {
+        return null;
     }
 
     @Override
