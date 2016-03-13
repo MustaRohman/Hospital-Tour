@@ -117,12 +117,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
-
         @Override
         protected Boolean doInBackground(String... params) {
 
             String tourCode = params[0];
-
             publishProgress("Checking tour code...");
             if (checkTourCode(tourCode)){
                 publishProgress("Downloading tour data...");
