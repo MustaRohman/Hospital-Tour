@@ -48,7 +48,9 @@
         <activity
             android:name=".Frontend.PostLoginActivity"
             android:label="@string/title_activity_post_login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden"/>
         <activity android:name=".Frontend.ImageFullScreenActivity"
             android:label="ImageFullScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">
