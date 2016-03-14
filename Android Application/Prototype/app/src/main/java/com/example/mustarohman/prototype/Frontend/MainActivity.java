@@ -1,5 +1,8 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -117,24 +120,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle("Initialising Tour");
+            progressDialog.setMessage("Downloading");
+            progressDialog.setProgress(0);
+            progressDialog.setMax(100);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage("Are you sure?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    cancel(true);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    progressDialog.show();
+                                }
+                            });
+                    builder.create().show();
+                }
+            });
+            progressDialog.show();
+
+            Log.d("onPreExecute", "ProgressDialog displayed");
+        }
+
         @Override
         protected Boolean doInBackground(String... params) {
 
             String tourCode = params[0];
-            publishProgress("Checking tour code...");
+            publishProgress("Checking tour code...", "0");
             if (checkTourCode(tourCode)){
-                publishProgress("Downloading tour data...");
+                publishProgress("Downloading tour data...", "50");
                 retrieveAndSaveTourData(tourCode);
+                publishProgress("Done!", "100");
                 return true;
             }
 
             return false;
         }
 
-
         @Override
         protected void onProgressUpdate(String... values) {
-            Snackbar.make(coordinatorLayout, values[0], Snackbar.LENGTH_SHORT).show();
+            progressDialog.setMessage(values[0]);
+            progressDialog.setProgress(Integer.parseInt(values[1]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progressDialog.dismiss();
         }
 
         /**
