@@ -2,8 +2,11 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,6 +21,8 @@ import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+
+import database.DBQueryAsyncTask;
 
 /**
  * Created by mustarohman on 28/02/2016.
@@ -67,7 +72,7 @@ public class AddTourPointDialog extends DialogFragment {
 
         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
         try {
-           ArrayList<TourLocation> locationsList = dbConnectionSystem.getLocations("select * from location;");
+           ArrayList<TourLocation> locationsList = new DBAsyncTask().execute("select * from location;").get();
             for (TourLocation tourLocation : locationsList){
                 Button button = new Button(getContext());
                 button.setOnClickListener(listener);
@@ -81,6 +86,24 @@ public class AddTourPointDialog extends DialogFragment {
             e.printStackTrace();
         }
 
+    }
+
+    private class DBAsyncTask extends AsyncTask<String, String, ArrayList<TourLocation>> {
+        @Override
+        protected ArrayList<TourLocation> doInBackground(String... params) {
+            ArrayList<TourLocation> locations = null;
+            locations = DBConnectionSystem.retrieveTourLocations(params[0]);
+            return locations;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+
+        }
+
 
     }
+
+
 }

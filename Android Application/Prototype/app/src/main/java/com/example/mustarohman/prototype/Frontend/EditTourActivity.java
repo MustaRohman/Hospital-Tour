@@ -49,7 +49,8 @@ public class EditTourActivity extends AppCompatActivity {
 
         try {
             getTourCodes = new DBQueryAsyncTask();
-          tourCode = getTourCodes.execute("Select * from tour where tourid = '"+ tourCodeString + "';").get();
+            String query = "Select * from tour where tourid = '"+ tourCodeString + "';";
+            tourCode = getTourCodes.execute(query).get();
         } catch (ExecutionException e) {
             Log.w("e", "TourRetive error in activity EditTourActivity");
         } catch (InterruptedException e) {
@@ -152,7 +153,9 @@ public class EditTourActivity extends AppCompatActivity {
         loggedInString += " " + LogInActivity.USER_NAME;
         loggedInText.setText(loggedInString);
 
-         tourNameEdit = (EditText) findViewById(R.id.tourname_edit);
+        tourNameEdit = (EditText) findViewById(R.id.tourname_edit);
         tourNameEdit.setText(tourCode.get(tourCodeString));
     }
+
+
 }
