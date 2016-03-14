@@ -32,7 +32,7 @@ import java.util.concurrent.ExecutionException;
 public class TourActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2000; // in Milliseconds
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 1500; // in Milliseconds
     protected LocationManager locationManager;
     private LinearLayout tourPointsLinear;
     private DataCaching dataCaching;
@@ -170,12 +170,12 @@ public class TourActivity extends AppCompatActivity {
 
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
 
-            checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00005);
+            checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
             Log.d("current loc","current latitude: "+location.getLatitude() + "longitude: "+ location.getLongitude()+"");
-            Log.d("la+",location.getLatitude()+0.00005+"");
-            Log.d("la-", location.getLatitude() - 0.00005 + "");
-            Log.d("lo+",location.getLongitude()+0.00005+"");
-            Log.d("lo-",location.getLongitude()-0.00005+"");
+            Log.d("la+",location.getLatitude()+0.00008+"");
+            Log.d("la-", location.getLatitude() - 0.00008 + "");
+            Log.d("lo+",location.getLongitude()+0.00008+"");
+            Log.d("lo-",location.getLongitude()-0.00008+"");
         }
 
         public void onStatusChanged(String s, int i, Bundle b) {
@@ -211,10 +211,9 @@ public class TourActivity extends AppCompatActivity {
 
     public void checkInGeofence(double la, double lo, double sensitivity) {
 
-        ArrayList<TourLocation> nodesList = MainActivity.locationslist;
+        ArrayList<TourLocation> nodesList = tourLocations;
+        Log.w("list",""+nodesList.size());
         for (int i = 0; i <nodesList.size() ; i++) {
-
-            MainActivity.locationslist.get(i);
 
             double currentLa = la;
             double currentLo = lo;
@@ -222,8 +221,9 @@ public class TourActivity extends AppCompatActivity {
             double geoloNode = nodesList.get(i).getLongitude();; //get Longitude
 
             if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
-                //Toast.makeText(CurrentActivity.this, "you have Near your locations: "+nodesList.get(i).getName(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, LogInActivity.class);
+                Log.w("in square","in square");
+                Toast.makeText(TourActivity.this, "you have entered your locations: "+nodesList.get(i).getName(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, TourPointMediaActivity.class);
                 startActivity(intent);
 
             }
