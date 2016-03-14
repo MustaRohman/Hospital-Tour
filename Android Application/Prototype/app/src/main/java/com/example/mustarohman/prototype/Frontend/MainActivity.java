@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             //Checks if tour code is stored on device
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
             Log.d("onClickStartBtn", "Checking for stored tour code...");
-            if (storedTourCode != null & inputTourCode.equals(storedTourCode)){
+            if (storedTourCode != null && inputTourCode.equals(storedTourCode)){
                 Log.d("onClickStartBtn", "Tour code exists in data");
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MainActivity.this);
@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-//                Log.d("onClickStartBtn", "Tour code not stored in data, retrieving from database...");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this);
-                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+////                Log.d("onClickStartBtn", "Tour code not stored in data, retrieving from database...");
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        MainActivity.this);
+//                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
 
             }
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             HashMap<String, String> tourIds = null;
             Log.d("checkTourCode", "Retrieving tourIds from database...");
 
-            tourIds = DBQueryAsyncTask.retrieveTours(inputTourCode);
+            tourIds = DBQueryAsyncTask.retrieveTours(query);
 
             Log.d("checkTourCode", "End of asynctask");
             return tourIds.containsKey(inputTourCode);
