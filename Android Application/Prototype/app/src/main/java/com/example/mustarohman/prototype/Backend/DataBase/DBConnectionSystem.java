@@ -20,8 +20,8 @@ import java.util.concurrent.ExecutionException;
  * Created by yezenalnafei on 25/02/2016.
  */
 public class DBConnectionSystem {
-     Connection conn;
-    Statement st;
+    private static Connection conn;
+    private static Statement st;
 
 
     public DBConnectionSystem() {
@@ -29,7 +29,7 @@ public class DBConnectionSystem {
     }
 
 
-    public void connectionDriver() {
+    public static void connectionDriver() {
 
         try {
             //opens the jar.
@@ -59,11 +59,6 @@ public class DBConnectionSystem {
         return loginQuery.execute(query).get();
     }
 
-    public   ArrayList<TourLocation> getLocations(String query) throws ExecutionException, InterruptedException {
-
-        TourLocationsQuery getTourlocations = new TourLocationsQuery();
-        return getTourlocations.execute(query).get();
-    }
     //this method used to pass update queries to the database
     public boolean UpdateDatabase(String query) throws ExecutionException, InterruptedException {
         UpdateQuery updateQuery = new UpdateQuery();
@@ -106,12 +101,9 @@ public class DBConnectionSystem {
 }
 
 
-    private  class TourLocationsQuery extends AsyncTask<String,Void,ArrayList<TourLocation>> {
-        @Override
-        //This does the connection protocol in the background.
-        protected ArrayList<TourLocation> doInBackground(String... params) {
+
+        public static ArrayList<TourLocation> retrieveTourLocations(String query) {
             // to retrieve the query result.
-            String query = params[0];
             ArrayList<TourLocation> retval = new ArrayList<>();
             try {
                 connectionDriver();
@@ -131,11 +123,7 @@ public class DBConnectionSystem {
             }
             return retval;
         }
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-    }
+
 
     private class UpdateQuery extends AsyncTask<String, Void, Boolean> {
         @Override
