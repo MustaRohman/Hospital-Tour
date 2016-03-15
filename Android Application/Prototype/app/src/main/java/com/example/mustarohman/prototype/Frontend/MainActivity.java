@@ -64,17 +64,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
 
-//        S3Object object = null;
-
-        try {
-            new DBAsyncTask().execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     @Override
@@ -199,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(String... values) {
+
             progressDialog.setMessage(values[0]);
             progressDialog.setProgress(Integer.parseInt(values[1]));
         }
@@ -234,16 +224,29 @@ public class MainActivity extends AppCompatActivity {
             return tourIds.containsKey(inputTourCode);
         }
 
-        public void retrieveAndSaveTourData(String inputTourCode){
+        private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             ArrayList<TourLocation> tourLocations = null;
             tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
 
+            //Add relevant media data to each tourLocation
+            //Query would be called to retrieve media data
+
+            ArrayList<TourLocation> tourLocations1 = DBConnectionSystem.locationMediaQuery(tourLocations);
+            String name = tourLocations1.get(0).getMediaList().get(0).getName();
+            Log.d("retrieveAndSaveTourData", name);
+            Log.d("retrieveAndSaveTourData","Media retrieved");
             if (tourLocations != null){
                 Log.d("checkTourCode", "Saving relevant tour locations to storage...");
                 dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
             }
+            return  tourLocations;
         }
+
+        private void retrieveMediaData(TourLocation tourLocation){
+            //
+        }
+
     }
 
 

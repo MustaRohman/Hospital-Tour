@@ -4,17 +4,25 @@ package com.example.mustarohman.prototype.Backend.Objects;
  * Created by yezenalnafei on 04/03/2016.
  */
 public class Media {
+
+    public enum DataType {
+        IMAGE, VIDEO
+    }
+
     private String name;
     private String directory;
     private String description;
-    private int order;
 
+    private int mediaID;
 
-    public Media (String name, String directory, String description, int order){
+    private DataType datatype;
+    private String inBucketName;
+    public Media (String name, String description, DataType datatype, String inBucketName, int mediaID){
         this.name = name;
-        this.directory = directory;
         this.description = description;
-        this.order = order;
+        this.datatype = datatype;
+        this.inBucketName = inBucketName;
+        this.mediaID = mediaID;
     }
 
     public String getName() {
@@ -23,14 +31,6 @@ public class Media {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public String getDirectory() {
@@ -48,5 +48,26 @@ public class Media {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public DataType getDatatype() {return datatype;}
+
+    public void setDatatype(DataType datatype) {this.datatype = datatype;}
+
+    public String getInBucketName() {
+        return inBucketName;
+    }
+
+    public void setInBucketName(String inBucketName) {
+        this.inBucketName = inBucketName;
+    }
+
+    public int getMediaID() {
+        return mediaID;
+    }
+
+    public void setMediaID(int mediaID) {
+        this.mediaID = mediaID;
+    }
+
 
 }
