@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             publishProgress("Retrieving media meta data...");
             DBConnectionSystem.locationMediaQuery(tourLocations);
             Log.d("retrieveAndSaveTourData", "Media retrieved");
-            publishProgress("Downloading media...");
+            publishProgress("Downloading media...", "1");
             retrieveMediaData();
             Log.d("retrieveAndSaveTourData", "Media data downloaded");
 
@@ -255,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
                 for (Media media: mediaArrayList){
                     Bitmap bitImage = turnS3ObjectIntoBitmap(media.getInBucketName());
                     bitmapMedia.add(bitImage);
-
                 }
                 counter++;
                 publishProgress("Downloading Media...", String.valueOf(counter));
