@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.mustarohman.prototype.ScrollingActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_about"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/add_menu_item"
+        android:orderInCategory="100"
+        android:title="@string/action_about"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_note_add_white_24dp"
+        android:onClick="onClickAddTourPoint"/>
+
+
+</menu>
