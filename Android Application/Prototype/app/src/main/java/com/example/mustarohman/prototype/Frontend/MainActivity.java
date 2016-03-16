@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... values) {
 
             progressDialog.setMessage(values[0]);
-            progressDialog.setProgress(Integer.parseInt(values[1]));
+//            progressDialog.setProgress(Integer.parseInt(values[1]));
         }
 
         @Override
@@ -227,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
-            PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             tourLocations = null;
             tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
 
@@ -244,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
             if (tourLocations != null){
                 Log.d("checkTourCode", "Saving relevant tour locations to storage...");
                 dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             }
             return  tourLocations;
         }
