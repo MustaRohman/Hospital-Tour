@@ -29,6 +29,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
+import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
@@ -128,7 +129,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
 
-        ProgressDialog progressDialog;
+        private ProgressDialog progressDialog;
+        private ArrayList<TourLocation> tourLocations;
+        private AmazonS3Client s3Client;
+        private ArrayList<Bitmap> bitmapMedia = new ArrayList<>();
+
+
 
         @Override
         protected void onPreExecute() {
@@ -170,16 +176,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
 
+            AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
+            s3Client = new AmazonS3Client(creden);
+            s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
+
             String tourCode = params[0];
             publishProgress("Checking tour code...", "0");
             if (checkTourCode(tourCode)){
                 publishProgress("Downloading tour data...", "50");
                 retrieveAndSaveTourData(tourCode);
-                publishProgress("Done!", "100");
-                AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
-                AmazonS3Client s3Client = new AmazonS3Client(creden);
-                s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
-                Bitmap bitmap = turnS3ObjectIntoBitmap(s3Client, "1457788264.jpg");
                 return true;
             }
 
@@ -199,13 +204,10 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
 
-        public Bitmap turnS3ObjectIntoBitmap(AmazonS3Client s3Client, String key){
+        public Bitmap turnS3ObjectIntoBitmap(String key){
+
             S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", key));
             return BitmapFactory.decodeStream(obj.getObjectContent());
-        }
-
-        public void createImageRes(Bitmap bitmap){
-
         }
 
         /**
@@ -226,16 +228,19 @@ public class MainActivity extends AppCompatActivity {
 
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
-            ArrayList<TourLocation> tourLocations = null;
+            tourLocations = null;
             tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
 
             //Add relevant media data to each tourLocation
             //Query would be called to retrieve media data
 
-            ArrayList<TourLocation> tourLocations1 = DBConnectionSystem.locationMediaQuery(tourLocations);
-            String name = tourLocations1.get(0).getMediaList().get(0).getName();
-            Log.d("retrieveAndSaveTourData", name);
-            Log.d("retrieveAndSaveTourData","Media retrieved");
+            publishProgress("Retrieving media meta data...");
+            DBConnectionSystem.locationMediaQuery(tourLocations);
+            Log.d("retrieveAndSaveTourData", "Media retrieved");
+            publishProgress("Downloading media...");
+            retrieveMediaData();
+            Log.d("retrieveAndSaveTourData", "Media data downloaded");
+
             if (tourLocations != null){
                 Log.d("checkTourCode", "Saving relevant tour locations to storage...");
                 dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
@@ -243,8 +248,18 @@ public class MainActivity extends AppCompatActivity {
             return  tourLocations;
         }
 
-        private void retrieveMediaData(TourLocation tourLocation){
-            //
+        private void retrieveMediaData(){
+            int counter = 0;
+            for (TourLocation tourLocation: tourLocations){
+                ArrayList<Media> mediaArrayList = tourLocation.getMediaList();
+                for (Media media: mediaArrayList){
+                    Bitmap bitImage = turnS3ObjectIntoBitmap(media.getInBucketName());
+                    bitmapMedia.add(bitImage);
+
+                }
+                counter++;
+                publishProgress("Downloading Media...", String.valueOf(counter));
+            }
         }
 
     }
