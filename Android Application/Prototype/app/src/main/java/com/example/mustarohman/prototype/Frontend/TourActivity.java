@@ -215,7 +215,17 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
-    //check if location is in square
+
+    /**
+     * Method that checks if current location is inside a specific location
+     *
+     * @param la current latitude
+     * @param lo current longitude
+     * @param sensitivity sensitivity that sets the are around the set location
+     * @param geoLa latitude of a location
+     * @param geoLo longitude of a lovation
+     * @return true if the current location is in  a square with geoLa:geoLo as it center and sensitivity as +/- distance
+     */
     public boolean isInSquare(double la, double lo, double sensitivity ,double geoLa ,double geoLo){
         Boolean isInSquare = false;
 
@@ -229,7 +239,13 @@ public class TourActivity extends AppCompatActivity {
         return isInSquare;
     }
 
-
+    /**
+     * This method calls InSquare for all the locations in a specific tour.
+     *
+     * @param la current latitude
+     * @param lo current longitude
+     * @param sensitivity sensitivity of the search for the in square method call
+     */
     public void checkInGeofence(double la, double lo, double sensitivity) {
 
         ArrayList<TourLocation> nodesList = tourLocations;
@@ -251,6 +267,9 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {

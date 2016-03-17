@@ -145,6 +145,9 @@ public class EditTourActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * sets the text of the diferrent vies in the activity
+     */
     public void setTextOfViews(){
         TextView tourCodeText = (TextView) findViewById(R.id.tour_code);
         tourCodeText.setText(tourCodeString);

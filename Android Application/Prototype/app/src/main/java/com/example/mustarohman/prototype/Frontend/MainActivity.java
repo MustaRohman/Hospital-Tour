@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method starts the location listener and proceeds with the client version of the app.
+     * @param view is the button to start the tour
+     */
     public void onClickStartBtn(View view) {
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
         String inputTourCode = codeEditText.getText().toString();
@@ -98,11 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-////                Log.d("onClickStartBtn", "Tour code not stored in data, retrieving from database...");
-//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        MainActivity.this);
-//                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
-
             }
 
         } else {
@@ -203,6 +202,10 @@ public class MainActivity extends AppCompatActivity {
             return tourIds.containsKey(inputTourCode);
         }
 
+        /**
+         * retrieves and saves the data related to the tour code in the cache.
+         * @param inputTourCode code linked to the data that has to be saved
+         */
         public void retrieveAndSaveTourData(String inputTourCode){
             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             ArrayList<TourLocation> tourLocations = null;
