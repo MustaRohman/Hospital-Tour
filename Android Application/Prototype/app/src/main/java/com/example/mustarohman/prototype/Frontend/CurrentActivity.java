@@ -62,6 +62,9 @@ public class CurrentActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method retrieves the last knwn location of the network provider
+     */
     protected void showCurrentLocation() {
 
         try {
@@ -80,7 +83,7 @@ public class CurrentActivity extends AppCompatActivity {
 
                     String latitude = String.valueOf(location.getLatitude());
                     String longitude = String.valueOf(location.getLongitude());
-                    addButtonConformation(latitude,longitude);
+                    addButtonConfirmation(latitude,longitude);
                 }else{
                     Toast.makeText(CurrentActivity.this,"Please Enter Location Name",
                             Toast.LENGTH_SHORT).show();
@@ -91,18 +94,25 @@ public class CurrentActivity extends AppCompatActivity {
             {
                 Log.w("e", "previous location is null");
             }
-
         }
         catch(SecurityException e) {
             Log.w("e", "error2");
         }
     }
 
-
-    public void addButtonConformation(final String latitude,final String longitude ){
+    /**
+     * This method inserts the current location to the database and prints a toast with the name given by the user in the confirmation popup.
+     *
+     * @param latitude : latitude (double) of the location to add
+     * @param longitude : longitude (double) of the location to add
+     */
+    public void addButtonConfirmation(final String latitude,final String longitude ){
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
+            /**
+             * onClick to open dialog box when adding rooms to the database
+             */
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
@@ -143,19 +153,16 @@ public class CurrentActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Location Listener that updates the last known location
+     */
     private class MyLocationListener implements LocationListener {
 
+
         public void onLocationChanged(Location location) {
-            String message = "location updated";
 
+            //String message = "location updated";
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
-
-//            checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00005);
-//            Log.d("current loc","current latitude: "+location.getLatitude() + "longitude: "+ location.getLongitude()+"");
-//            Log.d("la+",location.getLatitude()+0.00005+"");
-//            Log.d("la-", location.getLatitude() - 0.00005 + "");
-//            Log.d("lo+",location.getLongitude()+0.00005+"");
-//            Log.d("lo-",location.getLongitude()-0.00005+"");
         }
 
         public void onStatusChanged(String s, int i, Bundle b) {
@@ -172,42 +179,5 @@ public class CurrentActivity extends AppCompatActivity {
         public void onProviderEnabled(String s) {
 
         }
-
     }
-//
-//    //check if location is in square
-//    public boolean isInSquare(double la, double lo, double sensitivity ,double geoLa ,double geoLo){
-//        Boolean isInSquare = false;
-//
-//        //check if we are in square
-//        if((la <= geoLa+sensitivity && la >= geoLa-sensitivity) && (lo <= geoLo+sensitivity&& lo >= geoLo-sensitivity))
-//        {
-//            isInSquare = true;
-//        }
-//
-//        return isInSquare;
-//    }
-//
-//
-//    public void checkInGeofence(double la, double lo, double sensitivity) {
-//
-//        ArrayList<TourLocation> nodesList = MainActivity.locationslist;
-//        for (int i = 0; i <nodesList.size() ; i++) {
-//
-//            MainActivity.locationslist.get(i);
-//
-//            double currentLa = la;
-//            double currentLo = lo;
-//            double geoLaNoe = nodesList.get(i).getLatitude(); //get Latitude;
-//            double geoloNode = nodesList.get(i).getLongitude();; //get Longitude
-//
-//            if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
-//                //Toast.makeText(CurrentActivity.this, "you have Near your locations: "+nodesList.get(i).getName(), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(this, LogInActivity.class);
-//                startActivity(intent);
-//
-//            }
-//        }
-//    }
-
 }

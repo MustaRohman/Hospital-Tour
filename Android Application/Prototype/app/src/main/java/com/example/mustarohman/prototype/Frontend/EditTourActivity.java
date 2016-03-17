@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
 
+
 public class EditTourActivity extends AppCompatActivity {
 
     private String tourCodeString;
@@ -106,6 +107,10 @@ public class EditTourActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method that save the changed state of the tour in the database
+     * @param view is a button that triggers the onClick
+     */
     public void onClickSaveTour(View view) {
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
