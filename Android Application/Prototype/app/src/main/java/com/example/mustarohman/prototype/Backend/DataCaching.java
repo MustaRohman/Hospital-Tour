@@ -67,7 +67,7 @@ public class DataCaching {
             e.fillInStackTrace();
             Log.e("File not Found", e.getMessage());
         }catch (IOException e){
-//            Log.e("InternalStorage", e.getMessage());
+            Log.e("InternalStorage", e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

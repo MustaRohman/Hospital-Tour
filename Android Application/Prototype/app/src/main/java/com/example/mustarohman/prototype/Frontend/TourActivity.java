@@ -94,6 +94,7 @@ public class TourActivity extends AppCompatActivity {
 
     private void loadTourLocations(){
         String inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
+        Log.d("loadTourLocations", "Retrieved tour code: " + inputTourCode);
         tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
         tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");

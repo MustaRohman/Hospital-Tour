@@ -26,14 +26,21 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.Media;
+import com.example.mustarohman.prototype.Backend.Objects.SerialBitmap;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -93,10 +100,6 @@ public class MainActivity extends AppCompatActivity {
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
             Log.d("onClickStartBtn", "Checking for stored tour code...");
             if (storedTourCode != null && inputTourCode.equals(storedTourCode)){
-                Log.d("onClickStartBtn", "Tour code exists in data");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this);
-                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
             } else {
                 try {
                     new DBAsyncTask().execute(inputTourCode).get();
@@ -105,12 +108,12 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-////                Log.d("onClickStartBtn", "Tour code not stored in data, retrieving from database...");
-//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        MainActivity.this);
-//                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
-
             }
+
+            Log.d("onClickStartBtn", "Tour code exists in data");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    MainActivity.this);
+            ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
 
         } else {
             Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();
@@ -180,7 +183,10 @@ public class MainActivity extends AppCompatActivity {
             s3Client = new AmazonS3Client(creden);
             s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
 
+            //Remove all white space
             String tourCode = params[0];
+            tourCode = tourCode.replace("//s+", "");
+
             publishProgress("Checking tour code...", "0");
             if (checkTourCode(tourCode)){
                 publishProgress("Downloading tour data...", "50");
@@ -196,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
             progressDialog.setMessage(values[0]);
 //            progressDialog.setProgress(Integer.parseInt(values[1]));
+            progressDialog.show();
         }
 
         @Override
@@ -204,10 +211,24 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
 
-        public Bitmap turnS3ObjectIntoBitmap(String key){
-
+        public byte[] turnS3ObjectIntoBitmap(String key){
             S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", key));
-            return BitmapFactory.decodeStream(obj.getObjectContent());
+//            return obj.getObjectContent();
+            if (obj == null) {
+                Log.d("turnS3ObjectIntoBitmap", "S3Object is NULLLLL!");
+            } else {
+                Log.d("turnS3ObjectIntoBitmap", "S3Object is Not NULLLLL!");
+            }
+
+            Log.d("turnS3ObjectIntoBitmap", obj.getKey());
+            byte[] bytes = null;
+            try {
+                bytes = IOUtils.toByteArray(obj.getObjectContent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            return bytes;
         }
 
         /**
@@ -242,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tourLocations != null){
                 Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
+                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode + ".tourLocations", tourLocations);
                 PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             }
             return  tourLocations;
@@ -253,8 +274,10 @@ public class MainActivity extends AppCompatActivity {
             for (TourLocation tourLocation: tourLocations){
                 ArrayList<Media> mediaArrayList = tourLocation.getMediaList();
                 for (Media media: mediaArrayList){
-                    Bitmap bitImage = turnS3ObjectIntoBitmap(media.getInBucketName());
-                    bitmapMedia.add(bitImage);
+                    byte[] bytes = turnS3ObjectIntoBitmap(media.getInBucketName());
+//                    SerialBitmap serialBitmap = new SerialBitmap(bytes, media.getInBucketName());
+                    Log.d("retrieveMediaData", "SerialBitmap created");
+                    media.setBitmapBytes(bytes);
                 }
                 counter++;
                 publishProgress("Downloading Media...", String.valueOf(counter));

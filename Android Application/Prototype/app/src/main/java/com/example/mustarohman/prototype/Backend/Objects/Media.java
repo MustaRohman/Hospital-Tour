@@ -1,9 +1,16 @@
 package com.example.mustarohman.prototype.Backend.Objects;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+
+import java.io.Serializable;
+
 /**
  * Created by yezenalnafei on 04/03/2016.
  */
-public class Media {
+public class Media implements Serializable{
 
     public enum DataType {
         IMAGE, VIDEO
@@ -12,11 +19,14 @@ public class Media {
     private String name;
     private String directory;
     private String description;
-
     private int mediaID;
 
+    private byte[] bitmapBytes;
+
     private DataType datatype;
+
     private String inBucketName;
+
     public Media (String name, String description, DataType datatype, String inBucketName, int mediaID){
         this.name = name;
         this.description = description;
@@ -28,11 +38,9 @@ public class Media {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getDirectory() {
         return directory;
     }
@@ -67,6 +75,14 @@ public class Media {
 
     public void setMediaID(int mediaID) {
         this.mediaID = mediaID;
+    }
+
+    public void setBitmapBytes(byte[] bytes){
+        this.bitmapBytes = bytes;
+    }
+
+    public Bitmap returnBitmap(){
+        return BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
     }
 
 
