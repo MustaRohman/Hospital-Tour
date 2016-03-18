@@ -275,9 +275,9 @@ public class TourActivity extends AppCompatActivity {
      * @param sensitivity area sensitivity
      * @param la2 latitude of location 2
      * @param lo2 longitude of location 2
-     * @return
+     * @return true if the locations are overlapping
      */
-    public boolean areOverlaping (double la1 , double lo1 , double sensitivity , double la2 , double lo2)
+    public boolean areOverlapping (double la1 , double lo1 , double sensitivity , double la2 , double lo2)
     {
         boolean bottomLeftCornerIn = isInSquare(la1-sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
         boolean bottomRightCornerIn = isInSquare(la1+sensitivity, lo1-sensitivity, sensitivity, la2, lo2);

@@ -18,6 +18,7 @@
         <activity
             android:name=".Frontend.MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,22 +29,28 @@
         <activity
             android:name=".Frontend.TourActivity"
             android:label="@string/title_activity_tour"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.TourPointMediaActivity"
             android:label="@string/title_activity_tour_point"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.CurrentActivity"
             android:label="@string/title_activity_current"
+            android:screenOrientation="portrait"
+
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".Frontend.LogInActivity"
             android:label="@string/title_activity_log_in"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.EditTourActivity"
             android:label="@string/title_activity_add_node"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.PostLoginActivity"
