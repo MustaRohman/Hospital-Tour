@@ -268,6 +268,30 @@ public class TourActivity extends AppCompatActivity {
     }
 
     /**
+     * Checks if two location areas are overlapping
+     *
+     * @param la1 latitude of location 1
+     * @param lo1 longitude of location 1
+     * @param sensitivity area sensitivity
+     * @param la2 latitude of location 2
+     * @param lo2 longitude of location 2
+     * @return
+     */
+    public boolean areOverlaping (double la1 , double lo1 , double sensitivity , double la2 , double lo2)
+    {
+        boolean bottomLeftCornerIn = isInSquare(la1-sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
+        boolean bottomRightCornerIn = isInSquare(la1+sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
+        boolean topRightCornerIn = isInSquare(la1+sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
+        boolean topLeftCornerIn = isInSquare(la1-sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
+
+        if (bottomLeftCornerIn||bottomRightCornerIn||topLeftCornerIn||topRightCornerIn)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      *
      */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean> {

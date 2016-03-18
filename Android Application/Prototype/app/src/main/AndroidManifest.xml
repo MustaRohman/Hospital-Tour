@@ -47,14 +47,18 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Frontend.PostLoginActivity"
+            android:configChanges="keyboardHidden"
             android:label="@string/title_activity_post_login"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden"/>
-        <activity android:name=".Frontend.ImageFullScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Frontend.ImageFullScreenActivity"
             android:label="ImageFullScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Frontend.VideoActivity"
+            android:label="@string/title_activity_video"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
