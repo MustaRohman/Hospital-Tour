@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
@@ -24,6 +25,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.mustarohman.prototype.Backend.DataCaching;
+import com.example.mustarohman.prototype.Backend.Objects.Media;
+import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
@@ -32,8 +36,10 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private ArrayList<String> imageFilePaths;
+    private String inputTourCode;
     private String tourLocationName;
 
+    private ArrayList<Bitmap> bitmapArrayList;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
     private FrameLayout mainFrame;
@@ -43,7 +49,9 @@ public class TourPointMediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_point_media);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tourLocationName = getIntent().getStringExtra("tour-location-name");
+        Intent intent = getIntent();
+        inputTourCode = intent.getStringExtra(TourActivity.TOUR_CODE);
+        tourLocationName = intent.getStringExtra(TourActivity.TOUR_LOCATION);
         toolbar.setTitle(tourLocationName);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -67,39 +75,62 @@ public class TourPointMediaActivity extends AppCompatActivity {
         //Which will changed
         imageFilePaths = new ArrayList<>();
 
-        addImageViews(imageFilePaths);
+        loadBitmapImages();
+
+        addImageViews(bitmapArrayList);
         addVideoViews();
 
     }
 
-    private void addImageViews(ArrayList<String> filePaths){
+    public void loadBitmapImages(){
+        bitmapArrayList = new ArrayList<>();
+
+        DataCaching dataCaching = new DataCaching(this);
+        ArrayList<TourLocation> tourLocations = null;
+        Log.d("loadTourLocations", "Attempting to load from storage...");
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");
+        TourLocation currentTourLocation = null;
+        for (TourLocation tourLocation: tourLocations){
+            if (tourLocation.getName().equals(tourLocationName)){
+                currentTourLocation = tourLocation;
+            }
+        }
+        ArrayList<Media> mediaArrayList = currentTourLocation.getMediaList();
+
+        for (Media media: mediaArrayList){
+            if (media.getDatatype() == Media.DataType.IMAGE){
+                bitmapArrayList.add(media.returnBitmap());
+            }
+        }
+
+        Log.d("loadBitmapImages", String.valueOf(bitmapArrayList.size()));
+
+    }
+
+    private void addImageViews(ArrayList<Bitmap> bitmapArrayList){
         //TODO
         //Loop thru image file paths in arrayList and create views using layoutinflater and add them to the main layout
         LayoutInflater inflater = getLayoutInflater();
 
-        for (int i = 0; i < 3; i++){
-            int imageResource = R.drawable.cardiac5;
-            if (i == 1) imageResource = R.drawable.hospital;
-            setImageButton(inflater, imageResource);
+        for (Bitmap bitmap: bitmapArrayList){
+            setImageButton(inflater, bitmap);
         }
     }
 
-    /**
-     * Sets up image button and image view for enlarging animation
-     * @param inflater
-     * @param res
-     */
-    private void setImageButton(LayoutInflater inflater, final int res){
+
+    private void setImageButton(LayoutInflater inflater, Bitmap bitmap){
         final View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
-        imageButton.setImageResource(res);
+        imageButton.setImageBitmap(bitmap);
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
         param.gravity = Gravity.CENTER;
         param.setMargins(30, 30, 30, 30);
         imageView.setLayoutParams(param);
 
         final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
-        intent.putExtra("image-res", res);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("images", bitmapArrayList);
+        intent.putExtras(bundle);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +155,8 @@ public class TourPointMediaActivity extends AppCompatActivity {
         Log.d("TourPointMediaActivity", "view added");
 
     }
+
+
 
     private void zoomImage(final View imageButton, int res) {
         if (mCurrentAnimator != null) {

@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.VideoView;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -274,10 +276,17 @@ public class MainActivity extends AppCompatActivity {
             for (TourLocation tourLocation: tourLocations){
                 ArrayList<Media> mediaArrayList = tourLocation.getMediaList();
                 for (Media media: mediaArrayList){
-                    byte[] bytes = turnS3ObjectIntoBitmap(media.getInBucketName());
+                    if (media.getDatatype() == Media.DataType.IMAGE) {
+                        byte[] bytes = turnS3ObjectIntoBitmap(media.getInBucketName());
 //                    SerialBitmap serialBitmap = new SerialBitmap(bytes, media.getInBucketName());
-                    Log.d("retrieveMediaData", "SerialBitmap created");
-                    media.setBitmapBytes(bytes);
+                        Log.d("retrieveMediaData", "SerialBitmap created");
+                        media.setBitmapBytes(bytes);
+                    } else {
+                        //retrieve and convert to video
+
+//                        VideoView videoView = new VideoView(MainActivity.this);
+//                        videoView.setvid
+                    }
                 }
                 counter++;
                 publishProgress("Downloading Media...", String.valueOf(counter));

@@ -216,10 +216,14 @@ public class DBConnectionSystem {
                     String name = result.getString("media_name");
                     String description = result.getString("description");
                     String inBucketName = result.getString("ext_name");
+                    String mediaType = result.getString("media_type");
                     int mediaID = result.getInt("mediaid");
 
                     //Check datatype
-                    Media.DataType dataType = Media.DataType.IMAGE;
+                    Media.DataType dataType;
+                    if (mediaType.toUpperCase().equals("IMAGE")){
+                        dataType = Media.DataType.IMAGE;
+                    } else dataType = Media.DataType.VIDEO;
 
 //                    String[] nameSplit = name.split(".");
 //                    String extension = MimeTypeMap.getFileExtensionFromUrl(name);

@@ -39,6 +39,10 @@ public class TourActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 1500; // in Milliseconds
+    public static final String TOUR_LOCATION= "tour-location-name";
+    public static final String TOUR_CODE = "tour-code";
+
+    private String inputTourCode;
     protected LocationManager locationManager;
     private LinearLayout tourPointsLinear;
     private CoordinatorLayout coordinatorLayout;
@@ -93,7 +97,7 @@ public class TourActivity extends AppCompatActivity {
     }
 
     private void loadTourLocations(){
-        String inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
+        inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
         Log.d("loadTourLocations", "Retrieved tour code: " + inputTourCode);
         tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
@@ -126,7 +130,8 @@ public class TourActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                intent.putExtra("tour-location-name", nameView.getText().toString());
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                intent.putExtra(TOUR_LOCATION, nameView.getText().toString());
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);

@@ -19,7 +19,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_full_screen);
 
         imageView = (ImageView) findViewById(R.id.image_view);
-        imageView.setImageResource(getIntent().getIntExtra("image-res", 0));
+//        imageView.setImageResource(getIntent().getIntExtra("image-res", 0));
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
