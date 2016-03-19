@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.VideoView;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -28,21 +27,21 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.Media;
-import com.example.mustarohman.prototype.Backend.Objects.SerialBitmap;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -213,16 +212,15 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
 
-        public byte[] turnS3ObjectIntoBitmap(String key){
-            S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", key));
+        private byte[] turnS3ObjIntoByteArray(S3Object obj){
 //            return obj.getObjectContent();
             if (obj == null) {
-                Log.d("turnS3ObjectIntoBitmap", "S3Object is NULLLLL!");
+                Log.d("turnS3ObjIntoByteArray", "S3Object is NULL!");
             } else {
-                Log.d("turnS3ObjectIntoBitmap", "S3Object is Not NULLLLL!");
+                Log.d("turnS3ObjIntoByteArray", "S3Object is Not NULL!");
             }
 
-            Log.d("turnS3ObjectIntoBitmap", obj.getKey());
+            Log.d("turnS3ObjIntoByteArray", obj.getKey());
             byte[] bytes = null;
             try {
                 bytes = IOUtils.toByteArray(obj.getObjectContent());
@@ -232,6 +230,35 @@ public class MainActivity extends AppCompatActivity {
 //            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             return bytes;
         }
+
+        public File storeS3ObjInVidFile(String name, byte[] bytes){
+            String ext = name.split("\\.")[1];
+
+            String root = Environment.getExternalStorageDirectory().toString();
+            File path = new File(root + "/videos");
+            path.mkdirs();
+
+            File vidFilePath = new File(path, name);
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+            OutputStream out = null;
+            try {
+                out = new FileOutputStream(vidFilePath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            byte data[] = new byte[4096];
+            int count;
+            try {
+                while ((count = inputStream.read(data)) != -1) {
+                    out.write(data, 0, count);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return vidFilePath;
+        }
+
 
         /**
          * Checks if inputted tour code is in database
@@ -276,16 +303,15 @@ public class MainActivity extends AppCompatActivity {
             for (TourLocation tourLocation: tourLocations){
                 ArrayList<Media> mediaArrayList = tourLocation.getMediaList();
                 for (Media media: mediaArrayList){
+                    S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", media.getInBucketName()));
+                    byte[] bytes = turnS3ObjIntoByteArray(obj);
                     if (media.getDatatype() == Media.DataType.IMAGE) {
-                        byte[] bytes = turnS3ObjectIntoBitmap(media.getInBucketName());
-//                    SerialBitmap serialBitmap = new SerialBitmap(bytes, media.getInBucketName());
+                        //                    SerialBitmap serialBitmap = new SerialBitmap(bytes, media.getInBucketName());
                         Log.d("retrieveMediaData", "SerialBitmap created");
                         media.setBitmapBytes(bytes);
                     } else {
-                        //retrieve and convert to video
-
-//                        VideoView videoView = new VideoView(MainActivity.this);
-//                        videoView.setvid
+                        File vidFilePath = storeS3ObjInVidFile(media.getInBucketName(), bytes);
+                        media.setVidFile(vidFilePath);
                     }
                 }
                 counter++;
@@ -294,6 +320,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 }

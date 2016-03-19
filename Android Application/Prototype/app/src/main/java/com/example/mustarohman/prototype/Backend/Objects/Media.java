@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -23,10 +24,10 @@ public class Media implements Serializable{
 
     private byte[] bitmapBytes;
 
+    private File vidFile;
+
     private DataType datatype;
-
     private String inBucketName;
-
     public Media (String name, String description, DataType datatype, String inBucketName, int mediaID){
         this.name = name;
         this.description = description;
@@ -38,13 +39,13 @@ public class Media implements Serializable{
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
     public String getDirectory() {
         return directory;
     }
-
     public void setDirectory(String directory) {
         this.directory = directory;
     }
@@ -83,6 +84,18 @@ public class Media implements Serializable{
 
     public Bitmap returnBitmap(){
         return BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+    }
+
+    public byte[] getBitmapBytes(){
+        return bitmapBytes;
+    }
+
+    public File getVidFile() {
+        return vidFile;
+    }
+
+    public void setVidFile(File vidFile) {
+        this.vidFile = vidFile;
     }
 
 

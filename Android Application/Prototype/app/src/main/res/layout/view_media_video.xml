@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/view_image_media"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    android:background="@android:drawable/dialog_holo_light_frame">
+
+    <FrameLayout
+        android:id="@+id/main_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/MediaPreview"
+            android:layout_width="267dp"
+            android:layout_height="201dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:elevation="2dp"
+            android:translationZ="7dp"
+            android:src="@drawable/default_image" />
+
+        <ImageView
+            android:id="@+id/VideoPreviewPlayButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility="visible"
+            android:elevation="10dp"
+            android:src="@drawable/ic_play_arrow_black_36dp" />
+
+    </FrameLayout>
+
+</RelativeLayout>

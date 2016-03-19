@@ -6,13 +6,14 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,7 +31,9 @@ import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TourPointMediaActivity extends AppCompatActivity {
 
@@ -39,7 +42,8 @@ public class TourPointMediaActivity extends AppCompatActivity {
     private String inputTourCode;
     private String tourLocationName;
 
-    private ArrayList<Bitmap> bitmapArrayList;
+
+    private HashMap<Media.DataType,Object> galleryHashMap;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
     private FrameLayout mainFrame;
@@ -76,14 +80,13 @@ public class TourPointMediaActivity extends AppCompatActivity {
         imageFilePaths = new ArrayList<>();
 
         loadBitmapImages();
-
-        addImageViews(bitmapArrayList);
+//        addImageViews(galleryHashMap);
         addVideoViews();
 
     }
 
     public void loadBitmapImages(){
-        bitmapArrayList = new ArrayList<>();
+        galleryHashMap = new HashMap<>();
 
         DataCaching dataCaching = new DataCaching(this);
         ArrayList<TourLocation> tourLocations = null;
@@ -96,14 +99,48 @@ public class TourPointMediaActivity extends AppCompatActivity {
             }
         }
         ArrayList<Media> mediaArrayList = currentTourLocation.getMediaList();
-
+        LayoutInflater inflater = getLayoutInflater();
+        Bitmap thumb;
         for (Media media: mediaArrayList){
             if (media.getDatatype() == Media.DataType.IMAGE){
-                bitmapArrayList.add(media.returnBitmap());
+                thumb = media.returnBitmap();
+                galleryHashMap.put(Media.DataType.IMAGE, thumb);
+                setImageThumbButton(inflater, thumb, galleryHashMap.size() - 1);
+            } else{
+                File file = media.getVidFile();
+                galleryHashMap.put(Media.DataType.VIDEO, file);
+//                thumb = ThumbnailUtils.createVideoThumbnail(file.toString(),
+//                        MediaStore.Images.Thumbnails.MINI_KIND);
+                setVidThumbButton(inflater, media.getVidFile().getPath());
+//                String name = media.getInBucketName();
+//                String ext = name.split("\\.")[1];
+//                byte[] bytes = media.getBitmapBytes();
+//
+//                String root = Environment.getExternalStorageDirectory().toString();
+//                File path = new File(root + "/videos");
+//                path.mkdirs();
+//                File file = new File(path, name);
+//                InputStream inputStream = new ByteArrayInputStream(bytes);
+//                OutputStream out = null;
+//                try {
+//                    out = new FileOutputStream(file);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                byte data[] = new byte[4096];
+//                int count;
+//                try {
+//                    while ((count = inputStream.read(data)) != -1) {
+//                        out.write(data, 0, count);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
+
         }
 
-        Log.d("loadBitmapImages", String.valueOf(bitmapArrayList.size()));
+        Log.d("loadBitmapImages", String.valueOf(galleryHashMap.size()));
 
     }
 
@@ -113,39 +150,66 @@ public class TourPointMediaActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         for (Bitmap bitmap: bitmapArrayList){
-            setImageButton(inflater, bitmap);
+//            setImageThumbButton(inflater, bitmap);
         }
     }
 
-
-    private void setImageButton(LayoutInflater inflater, Bitmap bitmap){
-        final View imageView =  inflater.inflate(R.layout.view_media_image_visible, null);
+    private void setVidThumbButton(LayoutInflater inflater, String filename){
+        final View imageView =  inflater.inflate(R.layout.view_media_image, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
-        imageButton.setImageBitmap(bitmap);
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        byte[] bytes = byteArrayOutputStream.toByteArray();
+//        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
         param.gravity = Gravity.CENTER;
-        param.setMargins(30, 30, 30, 30);
+        param.setMargins(20, 30, 30, 30);
         imageView.setLayoutParams(param);
 
-        final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("images", bitmapArrayList);
-        intent.putExtras(bundle);
+        final Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        String split[] = filename.split("\\.");
+        Uri data = Uri.parse(filename);
+        if (split[split.length-1].toLowerCase().equals("avi")) {
+            intent.setDataAndType(data, "video/avi");
+            Log.d("setVidThumbButton", "vidtype set to avi");
+        } else{
+            intent.setDataAndType(data, "video/mp4");
+            Log.d("setVidThumbButton", "vidtype is not avi");
+        }
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    v.setTransitionName(String.valueOf(R.string.transition_name));
-//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                            TourPointMediaActivity.this,
-//                            new Pair<View, String>(v, getString(R.string.transition_name)));
-//                    ActivityCompat.startActivity(TourPointMediaActivity.this, intent, options.toBundle());
-//                    Log.d("setImageButton", "Build version sdk is >= lollipop");
-//                } else {
-//                  zoomImage(imageView, res);
-//                  startActivity(intent);
-//                }
+                startActivity(intent);
+            }
+        });
+
+        linearLayout.addView(imageView);
+        Log.d("TourPointMediaActivity", "view added");
+    }
+
+
+    private void setImageThumbButton(LayoutInflater inflater, Bitmap bitmap, int  bitmapIndex){
+        final View imageView =  inflater.inflate(R.layout.view_media_image, null);
+        final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        byte[] bytes = byteArrayOutputStream.toByteArray();
+//        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+        imageButton.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 500, 370, false));
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
+        param.gravity = Gravity.CENTER;
+        param.setMargins(20, 30, 30, 30);
+        imageView.setLayoutParams(param);
+
+        final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("media", galleryHashMap);
+        intent.putExtra("image-index", bitmapIndex);
+        intent.putExtras(bundle);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
                 startActivity(intent);
             }
