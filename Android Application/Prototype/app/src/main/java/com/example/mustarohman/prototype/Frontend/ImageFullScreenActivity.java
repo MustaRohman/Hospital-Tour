@@ -12,11 +12,12 @@ import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.R;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ImageFullScreenActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private HashMap<Media.DataType, Object> gallerHashMap;
+    private LinkedHashMap<Media.DataType, Object> gallerHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +26,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("bundle");
-        gallerHashMap = (HashMap< Media.DataType, Object>) bundle.getSerializable("media");
-
+        gallerHashMap = (LinkedHashMap< Media.DataType, Object>) bundle.getSerializable("media");
 //        gallerHashMap.
         imageView = (ImageView) findViewById(R.id.image_view);
 //        imageView.setImageResource(getIntent().getIntExtra("image-res", 0));

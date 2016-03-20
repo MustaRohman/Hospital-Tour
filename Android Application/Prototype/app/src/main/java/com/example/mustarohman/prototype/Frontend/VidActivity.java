@@ -30,7 +30,7 @@ public class VidActivity extends Activity {
         setContentView(R.layout.activity_vid);
 
         Intent intent = getIntent();
-        String filePath = intent.getStringExtra("file");
+        String filePath = intent.getStringExtra("filepath");
 
         //set the media controller buttons
         if (mediaControls == null) {
@@ -57,7 +57,7 @@ public class VidActivity extends Activity {
 
             //set the uri of the video to be played
             Log.d("VidActivity", filePath);
-            myVideoView.setVideoPath(Environment.getExternalStorageDirectory() + "/videos/" + filePath);
+            myVideoView.setVideoPath(filePath);
 
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
@@ -72,10 +72,11 @@ public class VidActivity extends Activity {
                 // close the progress bar and play the video
                 progressDialog.dismiss();
                 mediaControls.setVisibility(View.VISIBLE);
+                mediaPlayer.setVolume(0f, 0f);
                 //if we have a position on savedInstanceState, the video playback should start from here
                 myVideoView.seekTo(position);
                 if (position == 0) {
-//                    myVideoView.start();
+                    myVideoView.start();
                 } else {
                     //if we come from a resumed activity, video playback will be paused
                     myVideoView.pause();
