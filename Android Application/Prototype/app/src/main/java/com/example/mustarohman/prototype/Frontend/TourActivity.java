@@ -221,7 +221,17 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
-    //check if location is in square
+
+    /**
+     * Method that checks if current location is inside a specific location
+     *
+     * @param la current latitude
+     * @param lo current longitude
+     * @param sensitivity sensitivity that sets the are around the set location
+     * @param geoLa latitude of a location
+     * @param geoLo longitude of a lovation
+     * @return true if the current location is in  a square with geoLa:geoLo as it center and sensitivity as +/- distance
+     */
     public boolean isInSquare(double la, double lo, double sensitivity ,double geoLa ,double geoLo){
         Boolean isInSquare = false;
 
@@ -235,7 +245,13 @@ public class TourActivity extends AppCompatActivity {
         return isInSquare;
     }
 
-
+    /**
+     * This method calls InSquare for all the locations in a specific tour.
+     *
+     * @param la current latitude
+     * @param lo current longitude
+     * @param sensitivity sensitivity of the search for the in square method call
+     */
     public void checkInGeofence(double la, double lo, double sensitivity) {
 
         ArrayList<TourLocation> nodesList = tourLocations;
@@ -257,6 +273,33 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if two location areas are overlapping
+     *
+     * @param la1 latitude of location 1
+     * @param lo1 longitude of location 1
+     * @param sensitivity area sensitivity
+     * @param la2 latitude of location 2
+     * @param lo2 longitude of location 2
+     * @return true if the locations are overlapping
+     */
+    public boolean areOverlapping (double la1 , double lo1 , double sensitivity , double la2 , double lo2)
+    {
+        boolean bottomLeftCornerIn = isInSquare(la1-sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
+        boolean bottomRightCornerIn = isInSquare(la1+sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
+        boolean topRightCornerIn = isInSquare(la1+sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
+        boolean topLeftCornerIn = isInSquare(la1-sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
+
+        if (bottomLeftCornerIn||bottomRightCornerIn||topLeftCornerIn||topRightCornerIn)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {

@@ -90,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method starts the location listener and proceeds with the client version of the app.
+     * @param view is the button to start the tour
+     */
     public void onClickStartBtn(View view) {
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
         String inputTourCode = codeEditText.getText().toString();
@@ -137,8 +141,6 @@ public class MainActivity extends AppCompatActivity {
         private ArrayList<TourLocation> tourLocations;
         private AmazonS3Client s3Client;
         private ArrayList<Bitmap> bitmapMedia = new ArrayList<>();
-
-
 
         @Override
         protected void onPreExecute() {
@@ -276,28 +278,6 @@ public class MainActivity extends AppCompatActivity {
             return tourIds.containsKey(inputTourCode);
         }
 
-        private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
-            tourLocations = null;
-            tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
-
-            //Add relevant media data to each tourLocation
-            //Query would be called to retrieve media data
-
-            publishProgress("Retrieving media meta data...");
-            DBConnectionSystem.locationMediaQuery(tourLocations);
-            Log.d("retrieveAndSaveTourData", "Media retrieved");
-            publishProgress("Downloading media...", "1");
-            retrieveMediaData();
-            Log.d("retrieveAndSaveTourData", "Media data downloaded");
-
-            if (tourLocations != null){
-                Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode + ".tourLocations", tourLocations);
-                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
-            }
-            return  tourLocations;
-        }
-
         private void retrieveMediaData(){
             int counter = 0;
             for (TourLocation tourLocation: tourLocations){
@@ -317,6 +297,32 @@ public class MainActivity extends AppCompatActivity {
                 counter++;
                 publishProgress("Downloading Media...", String.valueOf(counter));
             }
+        }
+        /**
+         * retrieves and saves the data related to the tour code in the cache.
+         * @param inputTourCode code linked to the data that has to be saved
+         */
+        private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
+
+            tourLocations = null;
+            tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
+
+            //Add relevant media data to each tourLocation
+            //Query would be called to retrieve media data
+
+            publishProgress("Retrieving media meta data...");
+            DBConnectionSystem.locationMediaQuery(tourLocations);
+            Log.d("retrieveAndSaveTourData", "Media retrieved");
+            publishProgress("Downloading media...", "1");
+            retrieveMediaData();
+            Log.d("retrieveAndSaveTourData", "Media data downloaded");
+
+            if (tourLocations != null){
+                Log.d("checkTourCode", "Saving relevant tour locations to storage...");
+                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode + ".tourLocations", tourLocations);
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
+            }
+            return  tourLocations;
         }
 
     }

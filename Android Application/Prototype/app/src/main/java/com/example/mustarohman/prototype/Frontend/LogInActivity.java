@@ -47,6 +47,10 @@ public class LogInActivity extends AppCompatActivity {
         passEditText = (EditText) findViewById(R.id.pass_edit);
     }
 
+    /**
+     * OnClick listener for the login button. When called the credentials inserted are checked to identify the account.
+     * @param view is the button that triggers the onLogInBtn
+     */
     public void onLogInBtn(View view) {
         //TODO
         //Check database if username and password combination is correct

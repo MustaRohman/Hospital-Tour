@@ -33,6 +33,10 @@ public class AddTourPointDialog extends DialogFragment {
     private LinearLayout linearLayout;
     @NonNull
     @Override
+
+    /**
+     *
+     */
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -60,7 +64,9 @@ public class AddTourPointDialog extends DialogFragment {
 
     }
 
-
+    /**
+     *
+     */
     public void getExsitingLocatons(){
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -88,6 +94,9 @@ public class AddTourPointDialog extends DialogFragment {
 
     }
 
+    /**
+     *
+     */
     private class DBAsyncTask extends AsyncTask<String, String, ArrayList<TourLocation>> {
         @Override
         protected ArrayList<TourLocation> doInBackground(String... params) {

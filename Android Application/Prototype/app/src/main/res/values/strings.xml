@@ -116,4 +116,5 @@
     <string name="add_new_location">Add new location</string>
 
     <string name="transition_name">transition:NAME</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>
