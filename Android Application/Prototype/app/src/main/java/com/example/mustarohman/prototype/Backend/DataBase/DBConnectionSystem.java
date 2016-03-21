@@ -114,14 +114,12 @@ public class DBConnectionSystem {
             //this logs in to get data from database.
             String sql;
             //this is query.
-            sql = "SELECT DISTINCT ON (location.locationid) * from usertour, tour_res, location_res, location where usertour.tourid = ? and " +
-                    "usertour.tourid = tour_res.tourid and tour_res.locationid = location_res.locationid " +
-                    "and location_res.username = usertour.username and location_res.locationid = location.locationid; ";
+            sql = "SELECT DISTINCT ON (location.locationid) * from usertour, tour_res, location_res, location where usertour.tourid = ? and usertour.tourid = tour_res.tourid and tour_res.locationid = location_res.locationid and location_res.username = usertour.username and location_res.locationid = location.locationid;";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, tourCode);
             result = statement.executeQuery();
             while (result.next()) {
-                retval.add(new TourLocation(result.getInt("locationid"), result.getString("lname"), result.getFloat("latitude"), result.getFloat("logitude")));
+                retval.add(new TourLocation(result.getInt("locationid"), result.getString("lname"), result.getFloat("latitude"), result.getFloat("longitude")));
             }
             result.close();
             st.close();
