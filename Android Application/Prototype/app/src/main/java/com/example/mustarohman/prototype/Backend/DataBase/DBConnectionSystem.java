@@ -2,7 +2,6 @@ package com.example.mustarohman.prototype.Backend.DataBase;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
@@ -14,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -24,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 public class DBConnectionSystem {
     private static Connection conn;
     private static Statement st;
+    public static String tourCodeGlobal = "";
 
 
     public DBConnectionSystem() {
@@ -105,20 +104,26 @@ public class DBConnectionSystem {
     }
 
 
-    public static ArrayList<TourLocation> retrieveTourLocations(String query) {
+    public static ArrayList<TourLocation> retrieveTourLocations(String tourCode) {
         // to retrieve the query result.
         ArrayList<TourLocation> retval = new ArrayList<>();
+        ResultSet result = null;
+        tourCodeGlobal = tourCode;
         try {
             connectionDriver();
             //this logs in to get data from database.
             String sql;
             //this is query.
-            sql = query;
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-                retval.add(new TourLocation(rs.getInt("locationid"), rs.getString("lname"), rs.getFloat("latitude"), rs.getFloat("logitude")));
+            sql = "SELECT DISTINCT ON (location.locationid) * from usertour, tour_res, location_res, location where usertour.tourid = ? and " +
+                    "usertour.tourid = tour_res.tourid and tour_res.locationid = location_res.locationid " +
+                    "and location_res.username = usertour.username and location_res.locationid = location.locationid; ";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, tourCode);
+            result = statement.executeQuery();
+            while (result.next()) {
+                retval.add(new TourLocation(result.getInt("locationid"), result.getString("lname"), result.getFloat("latitude"), result.getFloat("logitude")));
             }
-            rs.close();
+            result.close();
             st.close();
             conn.close();
         } catch (SQLException e) {
@@ -205,12 +210,15 @@ public class DBConnectionSystem {
         ResultSet result = null;
 
         try {
-            PreparedStatement statement = conn.prepareStatement("select * from location_res, media where locationid = ? and location_res.mediaid= media.mediaid");
+            PreparedStatement statement = conn.prepareStatement("select location_res.locationid, media.mediaid, ext_name, description, media_type, media_name " +
+                    "from usertour, tour_res, location_res, media where usertour.tourid ='TOR124' and " +
+                    "usertour.tourid = tour_res.tourid and tour_res.locationid = location_res.locationid and location_res.mediaid = media.mediaid and " +
+                    "location_res.username = usertour.username and location_res.locationid = ?;");
+
             for (TourLocation arrayListLocation : arrayList) {
                 statement.setInt(1, arrayListLocation.getId());
                 result = statement.executeQuery();
                 ArrayList<Media> mediaArray = new ArrayList<>();
-
 
                 while (result.next()) {
                     String name = result.getString("media_name");

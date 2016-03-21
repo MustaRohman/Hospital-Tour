@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
 
             tourLocations = null;
-            tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
+            tourLocations = DBConnectionSystem.retrieveTourLocations(inputTourCode);
 
             //Add relevant media data to each tourLocation
             //Query would be called to retrieve media data
