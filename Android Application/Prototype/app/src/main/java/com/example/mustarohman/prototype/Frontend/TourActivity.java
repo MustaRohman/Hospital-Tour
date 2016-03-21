@@ -130,8 +130,8 @@ public class TourActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                intent.putExtra(TOUR_CODE, inputTourCode);
-                intent.putExtra(TOUR_LOCATION, nameView.getText().toString());
+                intent.putExtra(TOUR_CODE , inputTourCode);
+                intent.putExtra(TOUR_LOCATION , nameView.getText().toString());
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
@@ -139,12 +139,33 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        for (TourLocation tourLoc: tourLocations){
-            addSingleTourPoint(tourLoc, inflater, listener);
+        for(int i = 0; i<tourLocations.size(); i++)
+        {
+            TourLocation firstLoc = tourLocations.get(i);
+
+            for(int j=0; i<tourLocations.size();j++)
+            {
+                TourLocation secondLoc = tourLocations.get(j);
+
+                if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
+                {
+                    addDoubleTourPoint(tourLocations.get(i),tourLocations.get(j), inflater, listener);
+                }
+                else
+                {
+                    addSingleTourPoint(tourLocations.get(i), inflater, listener);
+                }
+            }
         }
+
+//        for (TourLocation tourLoc: tourLocations){
+//            if()
+//            addSingleTourPoint(tourLoc, inflater, listener);
+//        }
     }
 
-    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener){
+    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener)
+    {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
@@ -152,6 +173,20 @@ public class TourActivity extends AppCompatActivity {
         TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
         location.setText("Some place");
         Log.d("TourLocation", tourLoc.getName());
+
+        tourPointsLinear.addView(tourPointView);
+        tourViewsList.add(tourPointView);
+    }
+
+    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener)
+    {
+        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
+        tourPointView.setOnClickListener(listener);
+        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
+        name.setText(firstLoc.getName()+ "+" +secondLoc.getName());
+        TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
+        location.setText("Some place");
+        Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
 
         tourPointsLinear.addView(tourPointView);
         tourViewsList.add(tourPointView);
@@ -197,7 +232,7 @@ public class TourActivity extends AppCompatActivity {
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
 
             checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
-            Log.d("current loc","current latitude: "+location.getLatitude() + "longitude: "+ location.getLongitude()+"");
+            Log.d("current loc","current latitude: " + location.getLatitude() + "longitude: " + location.getLongitude()+"");
             Log.d("la+",location.getLatitude()+0.00008+"");
             Log.d("la-", location.getLatitude() - 0.00008 + "");
             Log.d("lo+",location.getLongitude()+0.00008+"");
@@ -295,6 +330,24 @@ public class TourActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    public void checkOverlapping (ArrayList<TourLocation> tours)
+    {
+        for(int i = 0; i<tours.size(); i++)
+        {
+            TourLocation firstLoc = tours.get(i);
+
+            for(int j=0; i<tours.size();j++)
+            {
+                TourLocation secondLoc = tours.get(j);
+
+                if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
+                {
+
+                }
+            }
+        }
     }
 
     /**
