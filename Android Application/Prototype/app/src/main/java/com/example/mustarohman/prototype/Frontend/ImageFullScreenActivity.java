@@ -48,7 +48,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(TourPointMediaActivity.BUNDLE_NAME);
 
-        index = intent.getIntExtra("image-index", 0);
+        index = intent.getIntExtra(TourPointMediaActivity.MEDIA_INDEX_TAG, 0);
         Log.d("ImageFullScreenActivity", "image-index is " + index);
         mediaArrayList = (ArrayList<Media>) bundle.getSerializable("media");
 
@@ -189,4 +189,5 @@ public class ImageFullScreenActivity extends AppCompatActivity {
     public void onClickExit(View view) {
         finish();
     }
+
 }
