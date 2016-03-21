@@ -49,7 +49,7 @@ public class VidActivity extends Activity {
         //set the progress bar not cancelable on users' touch
         progressDialog.setCancelable(false);
         // show the progress bar
-        progressDialog.show();
+//        progressDialog.show();
 
         try {
             //set the media controller in the VideoView

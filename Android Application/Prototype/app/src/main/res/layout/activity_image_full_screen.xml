@@ -14,12 +14,38 @@
         <!--android:layout_alignParentTop="true"-->
         <!--android:onClick="onClickExit"/>-->
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:transitionName="@string/transition_name"
+
+    <!--<ImageView-->
+        <!--android:id="@+id/image_view"-->
+        <!--android:transitionName="@string/transition_name"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:src="@drawable/default_image"/>-->
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:src="@drawable/default_image"/>
+        android:foregroundGravity="center">
+
+    </ViewFlipper>
+
+    <Button
+        android:id="@+id/previous_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/ic_keyboard_arrow_left_white_24dp"/>
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ic_keyboard_arrow_right_white_24dp"/>
 
 </RelativeLayout>
