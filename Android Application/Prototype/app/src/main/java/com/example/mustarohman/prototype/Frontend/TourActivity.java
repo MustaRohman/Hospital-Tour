@@ -76,7 +76,6 @@ public class TourActivity extends AppCompatActivity {
         catch(SecurityException e) {
             Log.w("e", "error1");
         }
-
     }
 
     private void setUpToolbar(){
@@ -101,7 +100,7 @@ public class TourActivity extends AppCompatActivity {
         Log.d("loadTourLocations", "Retrieved tour code: " + inputTourCode);
         tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
-        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
 
         //In case the tourLocation data is not in local storage
         if (tourLocations == null) {

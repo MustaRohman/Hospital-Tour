@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tourLocations != null){
                 Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode + ".tourLocations", tourLocations);
+                dataCaching.saveDataToInternalStorage(PACKAGE + ".tourLocations", tourLocations);
                 PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             }
             return  tourLocations;
