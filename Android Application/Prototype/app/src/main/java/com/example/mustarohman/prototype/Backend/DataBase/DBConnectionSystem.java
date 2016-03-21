@@ -1,5 +1,6 @@
 package com.example.mustarohman.prototype.Backend.DataBase;
 
+<<<<<<< HEAD
         import android.os.AsyncTask;
         import android.util.Log;
 
@@ -15,6 +16,23 @@ package com.example.mustarohman.prototype.Backend.DataBase;
         import java.util.ArrayList;
         import java.util.HashMap;
         import java.util.concurrent.ExecutionException;
+=======
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.example.mustarohman.prototype.Backend.Objects.Media;
+import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+>>>>>>> 681320a01b75abd1239159bfc6d46aef6c81ebcb
 
 /**
  * Created by yezenalnafei on 25/02/2016.
