@@ -143,8 +143,10 @@ public class TourActivity extends AppCompatActivity {
         {
             TourLocation firstLoc = tourLocations.get(i);
 
-            for(int j=0; i<tourLocations.size();j++)
+            for(int j=0; j<tourLocations.size();j++)
             {
+                if(i==j){continue;}
+
                 TourLocation secondLoc = tourLocations.get(j);
 
                 if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
