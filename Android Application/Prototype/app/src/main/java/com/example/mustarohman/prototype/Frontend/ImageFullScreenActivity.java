@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.media.MediaPlayer;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -28,7 +26,6 @@ import com.example.mustarohman.prototype.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class ImageFullScreenActivity extends AppCompatActivity {
 
@@ -39,6 +36,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
     private int position = 0;
     private int index;
     private Animation slideLeft, slideRight;
+    TourPointMediaActivity tourPointMediaActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +80,8 @@ public class ImageFullScreenActivity extends AppCompatActivity {
             }
         });
 
+        tourPointMediaActivity = new TourPointMediaActivity();
+
 
 
     }
@@ -99,8 +99,12 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         for (Media media: mediaArrayList){
             if (media.getDatatype() == Media.DataType.IMAGE){
                 Bitmap bitmap = media.returnBitmap();
+
 //                ImageView imageView = createImageView(Bitmap.createScaledBitmap(bitmap,size.x, 500, false));
                 ImageView imageView = createImageView(bitmap);
+                if(media.returnBitmap() ==)
+
+
                 viewFlipper.addView(imageView);
 
             } else {
