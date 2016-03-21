@@ -209,7 +209,7 @@ public class DBConnectionSystem {
 
         try {
             PreparedStatement statement = conn.prepareStatement("select location_res.locationid, media.mediaid, ext_name, description, media_type, media_name " +
-                    "from usertour, tour_res, location_res, media where usertour.tourid ='TOR124' and " +
+                    "from usertour, tour_res, location_res, media where usertour.tourid ='"+tourCodeGlobal+"' and " +
                     "usertour.tourid = tour_res.tourid and tour_res.locationid = location_res.locationid and location_res.mediaid = media.mediaid and " +
                     "location_res.username = usertour.username and location_res.locationid = ?;");
 
