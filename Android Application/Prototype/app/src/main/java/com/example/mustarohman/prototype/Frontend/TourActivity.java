@@ -179,7 +179,8 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        ArrayList<TourLocation> localStopList = tourLocations;
+        ArrayList<TourLocation> localStopList = new ArrayList<>();
+        localStopList = tourLocations;
 
         for(int i = 0; i<localStopList.size(); i++)
         {
@@ -197,8 +198,8 @@ public class TourActivity extends AppCompatActivity {
                     overlapingLocs[0] = firstLoc.getName();
                     overlapingLocs[1] = secondLoc.getName();
                     addDoubleTourPoint(tourLocations.get(i), tourLocations.get(j), inflater, doublelistener);
-                    localStopList.remove(j);
                     localStopList.remove(i);
+                    localStopList.remove(j);
                 }
                 else
                 {
@@ -229,7 +230,7 @@ public class TourActivity extends AppCompatActivity {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
-        name.setText(firstLoc.getName()+ " or " +secondLoc.getName());
+        name.setText(firstLoc.getName() + " or " + secondLoc.getName());
         TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
         location.setText("Some place");
         Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
