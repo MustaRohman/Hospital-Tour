@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -51,7 +53,7 @@ import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
     public static final String TOUR_CODE =  "Tour Code";
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
 
-    private String[] permissions =
+    private String[] permissionsNeeded =
             {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -80,10 +82,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
-        if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE)!= PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(permissions,0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE)!= PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            {
+                requestPermissions(permissionsNeeded,0);
+            }
+        }
+        else {
+           Snackbar.make(coordinatorLayout,
+                        "please check if you have allowed your phone to check your loacation and to modify your storage",
+                        Snackbar.LENGTH_LONG).show();
         }
 
         locationslist = new ArrayList<>();
@@ -94,6 +103,39 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        Log.w("permissionrequestcode", requestCode + "");
+//        Log.w("permissions", permissions.toString());
+//        Log.w("result", grantResults.length + "");
+//
+//
+//        for (int i = 0; i< grantResults.length; i++) {
+//            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+//
+//                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+//                builder.setMessage("This permission is requiered to run the app. Are you sure you wish to deny access?")
+//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                MainActivity.this.finish();
+//                                System.exit(0);
+//                            }
+//                        })
+//                        .setNegativeButton("no", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//                // Create the AlertDialog object and return it
+//                builder.create();
+//                builder.show();
+//            }
+//        }
+//    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
