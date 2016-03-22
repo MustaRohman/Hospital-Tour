@@ -104,11 +104,17 @@ public class MainActivity extends AppCompatActivity {
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
             Log.d("onClickStartBtn", "Checking for stored tour code...");
             if (storedTourCode != null && inputTourCode.equals(storedTourCode)){
+                Intent intent = new Intent(MainActivity.this, TourActivity.class);
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this);
+                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+                Log.d("onClickStartBtn", "Tour code exists in data");
             } else {
-                    new DBAsyncTask().execute(inputTourCode);
+                new DBAsyncTask().execute(inputTourCode);
             }
 
-            Log.d("onClickStartBtn", "Tour code exists in data");
+
 
         } else {
             Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();

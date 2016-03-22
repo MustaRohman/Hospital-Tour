@@ -74,7 +74,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
         DataCaching dataCaching = new DataCaching(this);
         ArrayList<TourLocation> tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
-        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
         TourLocation currentTourLocation = null;
         for (TourLocation tourLocation: tourLocations){
             if (tourLocation.getName().equals(tourLocationName)){
