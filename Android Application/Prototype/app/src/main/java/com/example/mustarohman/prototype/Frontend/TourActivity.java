@@ -105,19 +105,12 @@ public class TourActivity extends AppCompatActivity {
         //In case the tourLocation data is not in local storage
         if (tourLocations == null) {
             Log.d("loadTourLocations", "Load from storage failed. Retrieving from database...");
-            try {
                 //getting text from codeEdit in main class
 
                 //getting tuples from tourRes table where the id = code and storing it in an arrayList
                 String query = "SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;";
-                new DBAsyncTask().execute(query).get();
-                System.out.println();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
+                new DBAsyncTask().execute(query);
+        }else {
             Log.d("loadTourLocations", "Loading from storage successful!");
         }
     }
