@@ -141,7 +141,7 @@ public class CurrentActivity extends AppCompatActivity {
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.cancel();
+                        dialog.dismiss();
                 }
             }
         };

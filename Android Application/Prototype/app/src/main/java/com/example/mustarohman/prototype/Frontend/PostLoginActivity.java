@@ -97,15 +97,15 @@ public class PostLoginActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickCreateTourBtn(View view) {
-        Intent intent = new Intent(this, EditTourActivity.class);
-
-        //Random code generator
-        //putExtra(code)
-        intent.putExtra("username", username);
-
-        startActivity(intent);
-    }
+//    public void onClickCreateTourBtn(View view) {
+//        Intent intent = new Intent(this, EditTourActivity.class);
+//
+//        //Random code generator
+//        //putExtra(code)
+//        intent.putExtra("username", username);
+//
+//        startActivity(intent);
+//    }
 
     public void onClickAddRoom(View view) {
         Intent intent = new Intent(this, CurrentActivity.class);
