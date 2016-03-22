@@ -1,9 +1,11 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -59,11 +62,29 @@ public class MainActivity extends AppCompatActivity {
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
 
+    private String[] permissions =
+            {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.LOCATION_HARDWARE,
+            Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
+        if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE)!= PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(permissions,0);
+        }
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
@@ -72,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
-
     }
 
     @Override
@@ -298,10 +318,12 @@ public class MainActivity extends AppCompatActivity {
                 publishProgress("Downloading Media...", String.valueOf(counter));
             }
         }
+
         /**
          * retrieves and saves the data related to the tour code in the cache.
          * @param inputTourCode code linked to the data that has to be saved
          */
+
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
 
             tourLocations = null;
@@ -324,7 +346,5 @@ public class MainActivity extends AppCompatActivity {
             }
             return  tourLocations;
         }
-
     }
-
 }
