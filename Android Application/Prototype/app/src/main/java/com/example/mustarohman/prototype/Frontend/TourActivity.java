@@ -74,7 +74,7 @@ public class TourActivity extends AppCompatActivity {
             );
         }
         catch(SecurityException e) {
-            Log.w("e", "error1");
+            Log.w("e", "app needs location permissions");
         }
 
     }
@@ -139,23 +139,33 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        for(int i = 0; i<tourLocations.size(); i++)
-        {
-            TourLocation firstLoc = tourLocations.get(i);
+        ArrayList<TourLocation> localStopList = new ArrayList<TourLocation>();
+        localStopList = tourLocations;
 
-            for(int j=0; j<tourLocations.size();j++)
+        for(int i = 0; i<localStopList.size(); i++)
+        {
+            int counter1 = i;
+            TourLocation firstLoc = localStopList.get(i);
+
+            for(int j=0; j<localStopList.size();j++)
             {
+                int counter2 = j;
+
+                //don't check with yourself
                 if(i==j){continue;}
 
-                TourLocation secondLoc = tourLocations.get(j);
+                TourLocation secondLoc = localStopList.get(j);
 
                 if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
                 {
-                    addDoubleTourPoint(tourLocations.get(i),tourLocations.get(j), inflater, listener);
+                    addDoubleTourPoint(tourLocations.get(i), tourLocations.get(j), inflater, listener);
+                    localStopList.remove(j);
+                    localStopList.remove(i);
                 }
                 else
                 {
                     addSingleTourPoint(tourLocations.get(i), inflater, listener);
+                    localStopList.remove(i);
                 }
             }
         }
