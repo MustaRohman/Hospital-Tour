@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -59,18 +59,20 @@ public class LogInActivity extends AppCompatActivity {
         USER_NAME = userString;
         Intent intent = new Intent(this, PostLoginActivity.class);
         intent.putExtra("username", userString);
-        HashMap<String, String> hashMap = null;
+        HashMap<String, ArrayList<String>> hashMap = null;
         DBConnectionSystem query = new DBConnectionSystem();
 
         try {
-            hashMap = query.loginQueryFetch("select * from users where username = '" + userString + "';");
+            hashMap = query.loginQueryFetch(userString);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
         if (!hashMap.isEmpty()) {
-            if (hashMap.get(userString).equals(passEditText.getText().toString())) {
+            ArrayList<String> details = hashMap.get(userString);
+            if (details.get(0).equals(passEditText.getText().toString()) && details.get(1).equals("1")) {
+
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         LogInActivity.this);
                 ActivityCompat.startActivity(LogInActivity.this, intent, options.toBundle());
