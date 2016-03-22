@@ -2,9 +2,11 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,11 +44,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
-import database.DBQueryAsyncTask;
+import com.example.mustarohman.prototype.Backend.DataBase.DBQueryAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,6 +92,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
+
+            if (ipAddr.equals("")) {
+                return false;
+            } else {
+                return true;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
     /**
      * This method starts the location listener and proceeds with the client version of the app.
      * @param view is the button to start the tour
@@ -97,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClickStartBtn(View view) {
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
         String inputTourCode = codeEditText.getText().toString();
-
 
         if (!inputTourCode.equals("")) {
             //Checks if tour code is stored on device
@@ -111,11 +128,13 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
                 Log.d("onClickStartBtn", "Tour code exists in data");
             } else {
-                new DBAsyncTask().execute(inputTourCode);
+
+
+                if (isInternetAvailable()) {
+                    Log.d("onClickStartBtn", "Network is connected");
+                    new DBAsyncTask().execute(inputTourCode);
+                } else Snackbar.make(coordinatorLayout, "No network connection. Please try again later", Snackbar.LENGTH_SHORT).show();
             }
-
-
-
         } else {
             Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();
         }
@@ -131,12 +150,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
+    private class DBAsyncTask extends AsyncTask<String, String, Void>{
 
         private ProgressDialog progressDialog;
         private ArrayList<TourLocation> tourLocations;
         private AmazonS3Client s3Client;
         private ArrayList<Bitmap> bitmapMedia = new ArrayList<>();
+        private boolean tourCheckSuccess;
         String tourCode;
 
         @Override
@@ -177,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
 
             AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
             s3Client = new AmazonS3Client(creden);
@@ -191,16 +211,17 @@ public class MainActivity extends AppCompatActivity {
             if (checkTourCode(tourCode)){
                 publishProgress("Downloading tour data...", "50");
                 retrieveAndSaveTourData(tourCode);
-                return true;
+                tourCheckSuccess =  true;
+            } else {
+                tourCheckSuccess = false;
             }
+            tourCheckSuccess = false;
+            return null;
 
-
-            return false;
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
-
             progressDialog.setMessage(values[0]);
             if (values.length > 1) {
                 int currentProgress = progressDialog.getProgress();
@@ -211,15 +232,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
             Intent intent = new Intent(MainActivity.this, TourActivity.class);
             intent.putExtra(TOUR_CODE, tourCode);
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    MainActivity.this);
-            ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+            if (tourCheckSuccess){
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this);
+                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+            } else {
+                progressDialog.dismiss();
+                Snackbar.make(coordinatorLayout, "Unable to retrieve data", Snackbar.LENGTH_SHORT).show();
+            }
+
         }
 
         private byte[] turnS3ObjIntoByteArray(S3Object obj){
@@ -263,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
                     out.write(data, 0, count);
                 }
             } catch (IOException e) {
+                Snackbar.make(coordinatorLayout, "Failed to download store media on SD card", Snackbar.LENGTH_SHORT);
                 e.printStackTrace();
             }
 
@@ -282,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
 
             tourIds = DBQueryAsyncTask.retrieveTours(query);
 
+            if (tourIds == null) return false;
             Log.d("checkTourCode", "End of asynctask");
             return tourIds.containsKey(inputTourCode);
         }

@@ -30,10 +30,6 @@ import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-
-import database.DBQueryAsyncTask;
 
 public class TourActivity extends AppCompatActivity {
 
