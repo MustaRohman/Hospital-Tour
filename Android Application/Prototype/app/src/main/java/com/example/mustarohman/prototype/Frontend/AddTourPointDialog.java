@@ -30,9 +30,7 @@ public class AddTourPointDialog extends DialogFragment {
     @NonNull
     @Override
 
-    /**
-     *
-     */
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -61,7 +59,7 @@ public class AddTourPointDialog extends DialogFragment {
     }
 
     /**
-     *
+     * Retrives existing locations
      */
     public void getExsitingLocatons(){
 
@@ -91,7 +89,7 @@ public class AddTourPointDialog extends DialogFragment {
     }
 
     /**
-     *
+     * Async Task for database
      */
     private class DBAsyncTask extends AsyncTask<String, String, ArrayList<TourLocation>> {
         @Override

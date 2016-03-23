@@ -68,6 +68,9 @@ public class TourPointMediaActivity extends AppCompatActivity {
         loadBitmapImages();
     }
 
+    /**
+     *
+     */
     public void loadBitmapImages(){
         galleryHashMap = new HashMap<>();
 
@@ -99,7 +102,11 @@ public class TourPointMediaActivity extends AppCompatActivity {
         Log.d("loadBitmapImages", String.valueOf(galleryHashMap.size()));
     }
 
-
+    /**
+     *
+     * @param inflater
+     * @param filepath
+     */
     private void setVidThumbButton(LayoutInflater inflater, String filepath){
         final View imageView =  inflater.inflate(R.layout.view_media_image, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
@@ -133,6 +140,12 @@ public class TourPointMediaActivity extends AppCompatActivity {
     }
 
 
+    /**
+     *
+     * @param inflater
+     * @param bitmap
+     * @param bitmapIndex
+     */
     private void setImageThumbButton(LayoutInflater inflater, Bitmap bitmap, int  bitmapIndex){
         final View imageView =  inflater.inflate(R.layout.view_media_image, null);
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);

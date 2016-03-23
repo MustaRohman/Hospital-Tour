@@ -1,5 +1,7 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,7 +47,8 @@ public class TourActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private DataCaching dataCaching;
     private ArrayList<View> tourViewsList;
-    private  ArrayList<TourLocation> tourLocations;
+    private ArrayList<TourLocation> tourLocations;
+    private String[] overlapingLocs = new String[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,13 @@ public class TourActivity extends AppCompatActivity {
             );
         }
         catch(SecurityException e) {
-            Log.w("e", "error1");
+            Log.w("e", "app needs location permissions");
         }
     }
 
+    /**
+     * This method controls the tool bar that shows what user is loged in
+     */
     private void setUpToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,6 +98,10 @@ public class TourActivity extends AppCompatActivity {
         toolbar.setTitle("Royal Brompton Hospital");
     }
 
+
+    /**
+     * This method loads the specific locations to certain tour
+     */
     private void loadTourLocations(){
         inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
         Log.d("loadTourLocations", "Retrieved tour code: " + inputTourCode);
@@ -99,15 +110,18 @@ public class TourActivity extends AppCompatActivity {
         tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
     }
 
+    /**
+     * This method adds all the views to the tourActivity activity
+     */
     public void addAllTourPointViews(){
         LayoutInflater inflater = getLayoutInflater();
-        View.OnClickListener listener = new View.OnClickListener() {
+        View.OnClickListener singlelistener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                intent.putExtra(TOUR_CODE, inputTourCode);
-                intent.putExtra(TOUR_LOCATION, nameView.getText().toString());
+                intent.putExtra(TOUR_CODE , inputTourCode);
+                intent.putExtra(TOUR_LOCATION , nameView.getText().toString());
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
@@ -115,12 +129,87 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        for (TourLocation tourLoc: tourLocations){
-            addSingleTourPoint(tourLoc, inflater, listener);
+        View.OnClickListener doublelistener = new View.OnClickListener(){
+
+            /**
+             * This on click triggers the dialog box for overlapping locations to allow te user to select the correct room.
+             * @param v button that represents overlaping locations
+             */
+            @Override
+            public void onClick(View v) {
+                Log.w("pressed","open dialogbox");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
+                builder.setMessage("Please pick a room")
+                        .setPositiveButton(overlapingLocs[0], new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                                intent.putExtra(TOUR_CODE , inputTourCode);
+                                intent.putExtra(TOUR_LOCATION , overlapingLocs[0]);
+
+                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                        TourActivity.this);
+                                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+                            }
+                        })
+                        .setNegativeButton(overlapingLocs[1], new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                                intent.putExtra(TOUR_CODE , inputTourCode);
+                                intent.putExtra(TOUR_LOCATION , overlapingLocs[1]);
+
+                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                        TourActivity.this);
+                                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create();
+                builder.show();
+            }
+        };
+
+        ArrayList<TourLocation> localStopList = new ArrayList<>();
+        localStopList = tourLocations;
+
+        for(int i = 0; i<localStopList.size(); i++)
+        {
+            TourLocation firstLoc = localStopList.get(i);
+
+            for(int j=0; j<localStopList.size();j++)
+            {
+                //don't check with yourself
+                if(i==j){continue;}
+
+                TourLocation secondLoc = localStopList.get(j);
+
+                if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
+                {
+                    overlapingLocs[0] = firstLoc.getName();
+                    overlapingLocs[1] = secondLoc.getName();
+                    addDoubleTourPoint(tourLocations.get(i), tourLocations.get(j), inflater, doublelistener);
+                    localStopList.remove(i);
+                    localStopList.remove(j);
+                }
+                else
+                {
+                    addSingleTourPoint(tourLocations.get(i), inflater, singlelistener);
+                    localStopList.remove(i);
+                }
+            }
         }
+
     }
 
-    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener){
+    /**
+     * This method calls an inflater for a tourlocation that doesn't overlap
+     *
+     * @param tourLoc location that is beeing added
+     * @param inflater inflater for the view
+     * @param listener listener for the view
+     */
+    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener)
+    {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
@@ -128,6 +217,28 @@ public class TourActivity extends AppCompatActivity {
         TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
         location.setText("Some place");
         Log.d("TourLocation", tourLoc.getName());
+
+        tourPointsLinear.addView(tourPointView);
+        tourViewsList.add(tourPointView);
+    }
+
+    /**
+     * This method calls the inflater for locations that do overlap
+     *
+     * @param firstLoc first location
+     * @param secondLoc second location
+     * @param inflater inflater for the view
+     * @param listener listener for the view
+     */
+    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener)
+    {
+        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
+        tourPointView.setOnClickListener(listener);
+        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
+        name.setText(firstLoc.getName() + " or " + secondLoc.getName());
+        TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
+        location.setText("Some place");
+        Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
 
         tourPointsLinear.addView(tourPointView);
         tourViewsList.add(tourPointView);
@@ -162,9 +273,11 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
-    public void onClickAddNewLocation(View view) {
-    }
 
+
+    /**
+     * This class is the listener that updates the current location and check if the user is in a location or not
+     */
     private class MyLocationListener implements LocationListener {
 
         public void onLocationChanged(Location location) {
@@ -173,7 +286,7 @@ public class TourActivity extends AppCompatActivity {
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
 
             checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
-            Log.d("current loc","current latitude: "+location.getLatitude() + "longitude: "+ location.getLongitude()+"");
+            Log.d("current loc","current latitude: " + location.getLatitude() + "longitude: " + location.getLongitude()+"");
             Log.d("la+",location.getLatitude()+0.00008+"");
             Log.d("la-", location.getLatitude() - 0.00008 + "");
             Log.d("lo+",location.getLongitude()+0.00008+"");
@@ -196,8 +309,6 @@ public class TourActivity extends AppCompatActivity {
         }
 
     }
-
-
     /**
      * Method that checks if current location is inside a specific location
      *

@@ -118,7 +118,7 @@ public class CurrentActivity extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         String locationName = locationNameEt.getText().toString();
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
-                        String query = "Insert into location (lname,latitude,logitude) values('"+locationName+"',"+latitude+","+longitude+");";
+                        String query = "Insert into location (lname,latitude,longitude) values('"+locationName+"',"+latitude+","+longitude+");";
                         try {
                             //Check for successful query added toast for validation.
                           boolean checkQuery =  dbConnectionSystem.UpdateDatabase(query);

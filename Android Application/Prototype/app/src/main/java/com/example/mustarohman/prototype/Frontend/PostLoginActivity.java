@@ -61,6 +61,9 @@ public class PostLoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method adds the tours to the post login Activity list
+     */
     public void addToursToList(){
         //TODO
         //Loop through Tour objects related to user and add them to the list
@@ -97,16 +100,10 @@ public class PostLoginActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickCreateTourBtn(View view) {
-        Intent intent = new Intent(this, EditTourActivity.class);
-
-        //Random code generator
-        //putExtra(code)
-        intent.putExtra("username", username);
-
-        startActivity(intent);
-    }
-
+    /**
+     * This method gets the last known location of the user and adds it as a room in the database. It will first ask the user for a name
+     * @param view button that adds current location as a room in the database
+     */
     public void onClickAddRoom(View view) {
         Intent intent = new Intent(this, CurrentActivity.class);
         startActivity(intent);
