@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //put snackbar  if not level 23
         else {
             Snackbar.make(coordinatorLayout,
-                    "please check if you have allowed your phone to check your loacation and to modify your storage",
-                    Snackbar.LENGTH_INDEFINITE).show();
+                    "Please check location and storage permissions",
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
