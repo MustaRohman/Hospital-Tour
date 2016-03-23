@@ -61,16 +61,20 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
     }
 
-    public void loadBitmapImages() {
 
+    /**
+     *
+     */
+    public void loadBitmapImages(){
 
         DataCaching dataCaching = new DataCaching(this);
         ArrayList<TourLocation> tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
-        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + inputTourCode + ".tourLocations");
-        currentTourLocation = null;
-        for (TourLocation tourLocation : tourLocations) {
-            if (tourLocation.getName().equals(tourLocationName)) {
+
+        tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
+        TourLocation currentTourLocation = null;
+        for (TourLocation tourLocation: tourLocations){
+            if (tourLocation.getName().equals(tourLocationName)){
                 currentTourLocation = tourLocation;
             }
         }
@@ -136,7 +140,6 @@ public class TourPointMediaActivity extends AppCompatActivity {
 
     private void setImageThumbButton(LayoutInflater inflater, Bitmap bitmap, final int mediaIndex) {
         final View imageView = inflater.inflate(R.layout.view_media_image, null);
-
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
 
         imageButton.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 500, 370, false));

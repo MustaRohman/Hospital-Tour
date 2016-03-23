@@ -30,7 +30,9 @@ public class DBConnectionSystem {
 
     }
 
-
+    /**
+     * Initialises the Postgresql driver Lib.
+     */
     public static void connectionDriver() {
 
         try {
@@ -54,8 +56,14 @@ public class DBConnectionSystem {
         }
     }
 
-
-    public HashMap<String, String> loginQueryFetch(String query) throws ExecutionException, InterruptedException {
+    /**
+     * Get User login security details
+     * @param query
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public HashMap<String, ArrayList<String>> loginQueryFetch(String query) throws ExecutionException, InterruptedException {
 
         loginQuery loginQuery = new loginQuery();
         return loginQuery.execute(query).get();
@@ -68,27 +76,34 @@ public class DBConnectionSystem {
         return updateQuery.execute(query).get();
     }
 
-    public ArrayList<String> getTourCodes() throws ExecutionException, InterruptedException {
-        return new TourCodesListQuery().execute().get();
+    public HashMap<String,String> getTourCodes(String query) throws ExecutionException, InterruptedException {
+        return new TourCodesListQuery().execute(query).get();
     }
 
-    private class loginQuery extends AsyncTask<String, Void, HashMap<String, String>> {
+    private class loginQuery extends AsyncTask<String, Void, HashMap<String, ArrayList<String>>> {
         @Override
         //This does the connection protocol in the background.
-        protected HashMap<String, String> doInBackground(String... params) {
+        protected HashMap<String, ArrayList<String>> doInBackground(String... params) {
             // to retrive the query result.
-            String query = params[0];
-            HashMap<String, String> retval = new HashMap<>();
+            String query = "select * from users where username = ?;";
+            ResultSet rs = null;
+            HashMap<String, ArrayList<String>> retval = new HashMap<>();
             try {
                 connectionDriver();
                 //this logs in to get data from database.
                 String sql;
                 //this is query.
                 sql = query;
-                ResultSet rs = st.executeQuery(sql);
+                PreparedStatement statement = conn.prepareStatement(sql);
+                statement.setString(1, params[0]);
+                rs = statement.executeQuery();
+                ArrayList<String> loginData = new ArrayList<>();
                 while (rs.next()) {
-                    retval.put(rs.getString("username"), rs.getString("password"));
+                    loginData.add(rs.getString("password"));
+                    loginData.add(rs.getString("active"));
+                    retval.put(rs.getString("username"),loginData);
                 }
+                System.out.println("Test111" + loginData.toString());
                 rs.close();
                 st.close();
                 conn.close();
@@ -104,6 +119,11 @@ public class DBConnectionSystem {
         }
     }
 
+    /**
+     * retrieve the data for input tour code,
+     * @param tourCode
+     * @return
+     */
 
     public static ArrayList<TourLocation> retrieveTourLocations(String tourCode) {
         // to retrieve the query result.
@@ -131,7 +151,9 @@ public class DBConnectionSystem {
         return retval;
     }
 
-
+    /**
+     * This used for all update queries need to be executed by the app.
+     */
     private class UpdateQuery extends AsyncTask<String, Void, Boolean> {
         @Override
         protected void onPreExecute() {
@@ -143,9 +165,7 @@ public class DBConnectionSystem {
         protected Boolean doInBackground(String... params) {
             connectionDriver();
             boolean check = false;
-
             try {
-
                 PreparedStatement statement = conn.prepareStatement(params[0]);
                 int rowsUpdated = statement.executeUpdate();
 
@@ -169,20 +189,28 @@ public class DBConnectionSystem {
 //        }
     }
 
-    private class TourCodesListQuery extends AsyncTask<Void, Void, ArrayList<String>> {
+    /**
+     * This gets the tours code for the logged in user.
+     */
+
+    private class TourCodesListQuery extends AsyncTask<String, Void, HashMap<String,String>> {
         @Override
         //This does the connection protocol in the background.
-        protected ArrayList<String> doInBackground(Void... params) {
+        protected HashMap<String,String> doInBackground(String... params) {
             // to retrieve the query result.
-            String query = "Select * from tour;";
-            ArrayList<String> retval = new ArrayList<>();
+            String query = "select * from usertour, tour  where usertour.username = ? and usertour.tourid = tour.tourid; ";
+            HashMap<String,String> retval = new HashMap<>();
+            ResultSet rs = null;
             try {
                 connectionDriver();
                 //this logs in to get data from database.
                 //this is query.
-                ResultSet rs = st.executeQuery(query);
+                String sql = query;
+                PreparedStatement statement = conn.prepareStatement(sql);
+                statement.setString(1, params[0]);
+                rs = statement.executeQuery();
                 while (rs.next()) {
-                    retval.add(rs.getString("tourid"));
+                    retval.put(rs.getString("tourid"), rs.getString("tour_name"));
                 }
                 rs.close();
                 st.close();
@@ -198,6 +226,12 @@ public class DBConnectionSystem {
             super.onProgressUpdate(values);
         }
     }
+
+    /**
+     * Get the locations that belongs to tour code.
+     * @param arrayList
+     * @return
+     */
 
     public static ArrayList<TourLocation> locationMediaQuery(ArrayList<TourLocation> arrayList) {
 

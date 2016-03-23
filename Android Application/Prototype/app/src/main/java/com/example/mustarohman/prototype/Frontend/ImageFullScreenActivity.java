@@ -136,7 +136,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
         });
 
-
         for (Media media : mediaArrayList) {
 
 

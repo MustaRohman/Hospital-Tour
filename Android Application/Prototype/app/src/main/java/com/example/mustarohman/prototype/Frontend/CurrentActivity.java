@@ -118,7 +118,7 @@ public class CurrentActivity extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         String locationName = locationNameEt.getText().toString();
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
-                        String query = "Insert into location (lname,latitude,logitude) values('"+locationName+"',"+latitude+","+longitude+");";
+                        String query = "Insert into location (lname,latitude,longitude) values('"+locationName+"',"+latitude+","+longitude+");";
                         try {
                             //Check for successful query added toast for validation.
                           boolean checkQuery =  dbConnectionSystem.UpdateDatabase(query);
@@ -127,7 +127,7 @@ public class CurrentActivity extends AppCompatActivity {
                                 Toast.makeText(CurrentActivity.this,
                                         "Successful",
                                         Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 Toast.makeText(CurrentActivity.this,
                                         "Unsuccessful",
                                         Toast.LENGTH_SHORT).show();
@@ -142,7 +142,7 @@ public class CurrentActivity extends AppCompatActivity {
 
                     case DialogInterface.BUTTON_NEGATIVE:
                         //No button clicked
-                        break;
+                        dialog.cancel();
                 }
             }
         };
@@ -152,6 +152,16 @@ public class CurrentActivity extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
 
     }
+
+    /**
+     * This method terminates the current Activity
+     * @param view button that calls method
+     */
+    public void onViewStopsBtnClick (View view)
+    {
+        finish();
+    }
+
 
     /**
      * Location Listener that updates the last known location

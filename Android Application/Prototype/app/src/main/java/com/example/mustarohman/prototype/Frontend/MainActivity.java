@@ -1,18 +1,28 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,26 +54,38 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
-import database.DBQueryAsyncTask;
+import com.example.mustarohman.prototype.Backend.DataBase.DBQueryAsyncTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
-    public static final String TOUR_CODE =  "Tour Code";
+    public static final String TOUR_CODE = "Tour Code";
 
     private CoordinatorLayout coordinatorLayout;
     public static ArrayList<TourLocation> locationslist;
-    private  ArrayList<String> tourCodes;
-    private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
+
+    private String[] permissionsNeeded =
+            {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.LOCATION_HARDWARE,
+                    Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
+        AskPermissions(coordinatorLayout);
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
@@ -72,23 +94,51 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
+    }
+
+    private boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return  (networkInfo != null && networkInfo.isConnected());
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings){
-            return true;
+
+    /**
+     *This method checks for Location and Storage permission. If these permissions are given the app will run normally.
+     *If not a popup will appear to ask for permissions. On a positive response the permissions will change but nothing will happen on a negative response.
+     *
+     *
+     * @param coordLayout the coordinatorLayout  for the snack bar to appear
+     */
+    public void AskPermissions(CoordinatorLayout coordLayout) {
+
+        //use API23 for permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE) != PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(permissionsNeeded, 0);
+            }
         }
-        return super.onOptionsItemSelected(item);
+
+        //put snackbar  if not level 23
+        else {
+            Snackbar.make(coordinatorLayout,
+                    "Please check location and storage permissions",
+                    Snackbar.LENGTH_LONG).show();
+        }
     }
+
 
     /**
      * This method starts the location listener and proceeds with the client version of the app.
@@ -97,29 +147,24 @@ public class MainActivity extends AppCompatActivity {
     public void onClickStartBtn(View view) {
         EditText codeEditText = (EditText) findViewById(R.id.code_edit);
         String inputTourCode = codeEditText.getText().toString();
-        Intent intent = new Intent(this, TourActivity.class);
-        intent.putExtra(TOUR_CODE, inputTourCode);
 
         if (!inputTourCode.equals("")) {
             //Checks if tour code is stored on device
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
             Log.d("onClickStartBtn", "Checking for stored tour code...");
             if (storedTourCode != null && inputTourCode.equals(storedTourCode)){
+                Intent intent = new Intent(MainActivity.this, TourActivity.class);
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this);
+                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+                Log.d("onClickStartBtn", "Tour code exists in data");
             } else {
-                try {
-                    new DBAsyncTask().execute(inputTourCode).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                if (isConnected()) {
+                    Log.d("onClickStartBtn", "Network is connected");
+                    new DBAsyncTask().execute(inputTourCode);
+                } else Snackbar.make(coordinatorLayout, "No network connection. Please try again later", Snackbar.LENGTH_SHORT).show();
             }
-
-            Log.d("onClickStartBtn", "Tour code exists in data");
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    MainActivity.this);
-            ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
-
         } else {
             Snackbar.make(coordinatorLayout, "Please enter tour code", Snackbar.LENGTH_SHORT).show();
         }
@@ -135,12 +180,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
+    private class DBAsyncTask extends AsyncTask<String, String, Void>{
 
         private ProgressDialog progressDialog;
         private ArrayList<TourLocation> tourLocations;
         private AmazonS3Client s3Client;
         private ArrayList<Bitmap> bitmapMedia = new ArrayList<>();
+        private boolean tourCheckSuccess;
+        String tourCode;
 
         @Override
         protected void onPreExecute() {
@@ -180,40 +227,61 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
 
             AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
             s3Client = new AmazonS3Client(creden);
             s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
 
             //Remove all white space
-            String tourCode = params[0];
+            tourCode = params[0];
             tourCode = tourCode.replace("//s+", "");
 
             publishProgress("Checking tour code...", "0");
             if (checkTourCode(tourCode)){
                 publishProgress("Downloading tour data...", "50");
                 retrieveAndSaveTourData(tourCode);
-                return true;
+                tourCheckSuccess =  true;
+            } else {
+                tourCheckSuccess = false;
             }
+            return null;
 
-            return false;
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
-
             progressDialog.setMessage(values[0]);
-//            progressDialog.setProgress(Integer.parseInt(values[1]));
-            progressDialog.show();
+            if (values.length > 1) {
+                int currentProgress = progressDialog.getProgress();
+                currentProgress += Integer.parseInt(values[1]);
+                Log.d("onProgressUpdate", String.valueOf(currentProgress));
+                progressDialog.setProgress(currentProgress);
+            }
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
+            Intent intent = new Intent(MainActivity.this, TourActivity.class);
+            intent.putExtra(TOUR_CODE, tourCode);
+
+            if (tourCheckSuccess) {
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this);
+                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+            } else {
+                progressDialog.dismiss();
+                Snackbar.make(coordinatorLayout, "Unable to retrieve tour data. Please check tour code", Snackbar.LENGTH_SHORT).show();
+            }
+
         }
 
+        /**
+         *
+         * @param obj
+         * @return
+         */
         private byte[] turnS3ObjIntoByteArray(S3Object obj){
 //            return obj.getObjectContent();
             if (obj == null) {
@@ -233,6 +301,14 @@ public class MainActivity extends AppCompatActivity {
             return bytes;
         }
 
+        /**
+         *
+         *
+         *
+         * @param name
+         * @param bytes
+         * @return
+         */
         public File storeS3ObjInVidFile(String name, byte[] bytes){
             String ext = name.split("\\.")[1];
 
@@ -255,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
                     out.write(data, 0, count);
                 }
             } catch (IOException e) {
+                Snackbar.make(coordinatorLayout, "Failed to download store media on SD card", Snackbar.LENGTH_SHORT);
                 e.printStackTrace();
             }
 
@@ -274,10 +351,14 @@ public class MainActivity extends AppCompatActivity {
 
             tourIds = DBQueryAsyncTask.retrieveTours(query);
 
+            if (tourIds == null) return false;
             Log.d("checkTourCode", "End of asynctask");
             return tourIds.containsKey(inputTourCode);
         }
 
+        /**
+         * This method retrieves the media data from the database
+         */
         private void retrieveMediaData(){
             int counter = 0;
             for (TourLocation tourLocation: tourLocations){
@@ -286,22 +367,23 @@ public class MainActivity extends AppCompatActivity {
                     S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", media.getInBucketName()));
                     byte[] bytes = turnS3ObjIntoByteArray(obj);
                     if (media.getDatatype() == Media.DataType.IMAGE) {
-                        //                    SerialBitmap serialBitmap = new SerialBitmap(bytes, media.getInBucketName());
-                        Log.d("retrieveMediaData", "SerialBitmap created");
                         media.setBitmapBytes(bytes);
                     } else {
                         File vidFilePath = storeS3ObjInVidFile(media.getInBucketName(), bytes);
                         media.setVidFile(vidFilePath);
                     }
                 }
+                int progress = (counter/50) * 100;
                 counter++;
-                publishProgress("Downloading Media...", String.valueOf(counter));
+                publishProgress("Downloading Media...", String.valueOf(progress));
             }
         }
+
         /**
          * retrieves and saves the data related to the tour code in the cache.
          * @param inputTourCode code linked to the data that has to be saved
          */
+
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
 
             tourLocations = null;
@@ -313,18 +395,30 @@ public class MainActivity extends AppCompatActivity {
             publishProgress("Retrieving media meta data...");
             DBConnectionSystem.locationMediaQuery(tourLocations);
             Log.d("retrieveAndSaveTourData", "Media retrieved");
-            publishProgress("Downloading media...", "1");
+            publishProgress("Downloading media...");
             retrieveMediaData();
             Log.d("retrieveAndSaveTourData", "Media data downloaded");
 
             if (tourLocations != null){
-                Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-                dataCaching.saveDataToInternalStorage(PACKAGE + inputTourCode + ".tourLocations", tourLocations);
+                Log.d("retrieveAndSaveTourData", "Saving relevant tour locations to storage...");
+                dataCaching.saveDataToInternalStorage(PACKAGE + ".tourLocations", tourLocations);
                 PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("inputTour", inputTourCode).commit();
             }
             return  tourLocations;
         }
-
     }
 
+    public void needHelpnClick (View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Please write the unique tour code given by your guide.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+    }
 }

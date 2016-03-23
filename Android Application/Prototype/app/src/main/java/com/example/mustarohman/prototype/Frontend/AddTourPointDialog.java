@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -22,8 +20,6 @@ import com.example.mustarohman.prototype.R;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import database.DBQueryAsyncTask;
-
 /**
  * Created by mustarohman on 28/02/2016.
  */
@@ -34,9 +30,7 @@ public class AddTourPointDialog extends DialogFragment {
     @NonNull
     @Override
 
-    /**
-     *
-     */
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -65,7 +59,7 @@ public class AddTourPointDialog extends DialogFragment {
     }
 
     /**
-     *
+     * Retrives existing locations
      */
     public void getExsitingLocatons(){
 
@@ -95,7 +89,7 @@ public class AddTourPointDialog extends DialogFragment {
     }
 
     /**
-     *
+     * Async Task for database
      */
     private class DBAsyncTask extends AsyncTask<String, String, ArrayList<TourLocation>> {
         @Override
