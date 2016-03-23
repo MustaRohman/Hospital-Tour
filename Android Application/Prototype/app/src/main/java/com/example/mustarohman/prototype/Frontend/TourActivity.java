@@ -120,8 +120,8 @@ public class TourActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView nameView = (TextView) v.findViewById(R.id.text_pointname);
                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                intent.putExtra(TOUR_CODE , inputTourCode);
-                intent.putExtra(TOUR_LOCATION , nameView.getText().toString());
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                intent.putExtra(TOUR_LOCATION, nameView.getText().toString());
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
@@ -155,8 +155,8 @@ public class TourActivity extends AppCompatActivity {
                         .setNegativeButton(overlapingLocs[1], new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                                intent.putExtra(TOUR_CODE , inputTourCode);
-                                intent.putExtra(TOUR_LOCATION , overlapingLocs[1]);
+                                intent.putExtra(TOUR_CODE, inputTourCode);
+                                intent.putExtra(TOUR_LOCATION, overlapingLocs[1]);
 
                                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                         TourActivity.this);
@@ -169,34 +169,33 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        ArrayList<TourLocation> localStopList = new ArrayList<>();
-        localStopList = tourLocations;
+        ArrayList<TourLocation> localList = tourLocations;
 
-        for(int i = 0; i<localStopList.size(); i++)
+        for(int i = 0; i<localList.size(); i++)
         {
-            TourLocation firstLoc = localStopList.get(i);
-
-            for(int j=0; j<localStopList.size();j++)
+//            TourLocation firstLoc = localList.get(i);
+            for(int j=0; j<localList.size();j++)
             {
+
+//                TourLocation secondLoc = localList.get(j);
+
                 //don't check with yourself
                 if(i==j){continue;}
 
-                TourLocation secondLoc = localStopList.get(j);
+                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
+                {
+                    overlapingLocs[0] = localList.get(i).getName();
+                    overlapingLocs[1] = localList.get(j).getName();
+                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
 
-                if(areOverlapping(firstLoc.getLatitude(),firstLoc.getLongitude(),0.00008,secondLoc.getLatitude(),secondLoc.getLongitude()))
-                {
-                    overlapingLocs[0] = firstLoc.getName();
-                    overlapingLocs[1] = secondLoc.getName();
-                    addDoubleTourPoint(tourLocations.get(i), tourLocations.get(j), inflater, doublelistener);
-                    localStopList.remove(i);
-                    localStopList.remove(j);
-                }
-                else
-                {
-                    addSingleTourPoint(tourLocations.get(i), inflater, singlelistener);
-                    localStopList.remove(i);
+                    localList.remove(j);
+                    localList.remove(i);
                 }
             }
+        }
+        for(int a =0 ;a< localList.size();a++)
+        {
+            addSingleTourPoint(localList.get(a), inflater, singlelistener);
         }
 
     }

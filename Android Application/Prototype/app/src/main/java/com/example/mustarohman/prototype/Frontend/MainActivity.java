@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          * @return
          */
         private byte[] turnS3ObjIntoByteArray(S3Object obj){
-//            return obj.getObjectContent();
+        //return obj.getObjectContent();
             if (obj == null) {
                 Log.d("turnS3ObjIntoByteArray", "S3Object is NULL!");
             } else {
