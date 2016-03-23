@@ -127,7 +127,7 @@ public class CurrentActivity extends AppCompatActivity {
                                 Toast.makeText(CurrentActivity.this,
                                         "Successful",
                                         Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 Toast.makeText(CurrentActivity.this,
                                         "Unsuccessful",
                                         Toast.LENGTH_SHORT).show();
@@ -141,6 +141,8 @@ public class CurrentActivity extends AppCompatActivity {
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        dialog.cancel();
                 }
             }
         };

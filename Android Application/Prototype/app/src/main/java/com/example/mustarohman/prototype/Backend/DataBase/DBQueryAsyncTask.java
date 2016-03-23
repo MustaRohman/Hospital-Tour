@@ -1,6 +1,9 @@
-package database;
+package com.example.mustarohman.prototype.Backend.DataBase;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnect;
 
@@ -15,8 +18,7 @@ import java.util.HashMap;
  * Created by mustarohman on 24/02/2016.
  */
 
-   public class DBQueryAsyncTask extends AsyncTask<String,Void,HashMap<String,String>> {
-
+   public class DBQueryAsyncTask {
 
     public static HashMap<String,String> retrieveTours(String query) {
         // to retrive the query result.
@@ -48,20 +50,8 @@ import java.util.HashMap;
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return retval;
     }
-
-    @Override
-    protected HashMap<String, String> doInBackground(String... params) {
-        return null;
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values){
-        super.onProgressUpdate(values);
-    }
-
-
-
 }

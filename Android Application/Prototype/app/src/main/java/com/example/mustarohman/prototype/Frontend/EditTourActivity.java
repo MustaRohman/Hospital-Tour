@@ -20,7 +20,7 @@ import com.example.mustarohman.prototype.R;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-import database.DBQueryAsyncTask;
+import com.example.mustarohman.prototype.Backend.DataBase.DBQueryAsyncTask;
 
 
 public class EditTourActivity extends AppCompatActivity {
@@ -48,15 +48,15 @@ public class EditTourActivity extends AppCompatActivity {
         tourCodeString = getIntent().getStringExtra("tourcode");
 
 
-        try {
+//        try {
             getTourCodes = new DBQueryAsyncTask();
             String query = "Select * from tour where tourid = '"+ tourCodeString + "';";
-            tourCode = getTourCodes.execute(query).get();
-        } catch (ExecutionException e) {
-            Log.w("e", "TourRetive error in activity EditTourActivity");
-        } catch (InterruptedException e) {
-            Log.w(""+e, "TourRetive error in activity EditTourActivity");
-        }
+//            tourCode = getTourCodes.execute(query).get();
+//        } catch (ExecutionException e) {
+//            Log.w("e", "TourRetive error in activity EditTourActivity");
+//        } catch (InterruptedException e) {
+//            Log.w(""+e, "TourRetive error in activity EditTourActivity");
+//        }
 
         setTextOfViews();
     }
