@@ -56,25 +56,26 @@ import database.DBQueryAsyncTask;
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
-    public static final String TOUR_CODE =  "Tour Code";
+    public static final String TOUR_CODE = "Tour Code";
 
     private CoordinatorLayout coordinatorLayout;
     public static ArrayList<TourLocation> locationslist;
-    private  ArrayList<String> tourCodes;
+    private ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
 
     private String[] permissionsNeeded =
             {
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.INTERNET,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.LOCATION_HARDWARE,
-            Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.LOCATION_HARDWARE,
+                    Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +83,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE)!= PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-            {
-                requestPermissions(permissionsNeeded,0);
-            }
-        }
-        else {
-           Snackbar.make(coordinatorLayout,
-                        "please check if you have allowed your phone to check your loacation and to modify your storage",
-                        Snackbar.LENGTH_LONG).show();
-        }
+        AskPermissions(coordinatorLayout);
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
@@ -103,38 +93,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        Log.w("permissionrequestcode", requestCode + "");
-//        Log.w("permissions", permissions.toString());
-//        Log.w("result", grantResults.length + "");
-//
-//
-//        for (int i = 0; i< grantResults.length; i++) {
-//            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-//
-//                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-//                builder.setMessage("This permission is requiered to run the app. Are you sure you wish to deny access?")
-//                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                MainActivity.this.finish();
-//                                System.exit(0);
-//                            }
-//                        })
-//                        .setNegativeButton("no", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//                // Create the AlertDialog object and return it
-//                builder.create();
-//                builder.show();
-//            }
-//        }
-//    }
-
 
 
     @Override
@@ -146,11 +104,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void AskPermissions(CoordinatorLayout coorLayout) {
+
+        //use API23 for permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE) != PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(permissionsNeeded, 0);
+            }
+        }
+
+        //put snackbar  if not level 23
+        else {
+            Snackbar.make(coordinatorLayout,
+                    "please check if you have allowed your phone to check your loacation and to modify your storage",
+                    Snackbar.LENGTH_INDEFINITE).show();
+        }
+    }
+
 
     /**
      * This method starts the location listener and proceeds with the client version of the app.
