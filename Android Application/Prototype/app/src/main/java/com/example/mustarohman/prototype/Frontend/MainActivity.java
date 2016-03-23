@@ -110,7 +110,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return super.onOptionsItemSelected(item);
     }
 
-    public void AskPermissions(CoordinatorLayout coorLayout) {
+
+    /**
+     *This method checks for Location and Storage permission. If these permissions are given the app will run normally.
+     *If not a popup will appear to ask for permissions. On a positive response the permissions will change but nothing will happen on a negative response.
+     *
+     *
+     * @param coordLayout the coordinatorLayout  for the snack bar to appear
+     */
+    public void AskPermissions(CoordinatorLayout coordLayout) {
 
         //use API23 for permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -174,6 +182,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
+    /**
+     * This class is the Async task for the database
+     */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
 
         private ProgressDialog progressDialog;
@@ -253,6 +264,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             progressDialog.dismiss();
         }
 
+        /**
+         *
+         * @param obj
+         * @return
+         */
         private byte[] turnS3ObjIntoByteArray(S3Object obj){
 //            return obj.getObjectContent();
             if (obj == null) {
@@ -272,6 +288,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return bytes;
         }
 
+        /**
+         *
+         *
+         *
+         * @param name
+         * @param bytes
+         * @return
+         */
         public File storeS3ObjInVidFile(String name, byte[] bytes){
             String ext = name.split("\\.")[1];
 
@@ -317,6 +341,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return tourIds.containsKey(inputTourCode);
         }
 
+        /**
+         * This method retrieves the media data from the database
+         */
         private void retrieveMediaData(){
             int counter = 0;
             for (TourLocation tourLocation: tourLocations){

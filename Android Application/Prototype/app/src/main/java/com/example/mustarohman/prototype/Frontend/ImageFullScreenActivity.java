@@ -39,9 +39,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
     public void onClickExit(View view) {
