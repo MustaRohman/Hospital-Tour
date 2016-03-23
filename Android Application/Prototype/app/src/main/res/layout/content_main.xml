@@ -29,7 +29,7 @@
                 android:textColor="@android:color/tab_indicator_text"
                 android:background="@android:color/transparent"
                 android:layout_marginRight="25dp"
-                android:onClick="onClickHelpBtn"/>
+                android:onClick="needHelpnClick"/>
 
             <Button
                 android:layout_width="wrap_content"
