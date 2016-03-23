@@ -141,7 +141,6 @@ public class CurrentActivity extends AppCompatActivity {
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.dismiss();
                 }
             }
         };
@@ -151,6 +150,16 @@ public class CurrentActivity extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
 
     }
+
+    /**
+     * This method terminates the current Activity
+     * @param view button that calls method
+     */
+    public void onViewStopsBtnClick (View view)
+    {
+        finish();
+    }
+
 
     /**
      * Location Listener that updates the last known location

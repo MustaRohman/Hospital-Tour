@@ -55,10 +55,10 @@
                 android:text="Add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickSaveTour"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/border" />
         </LinearLayout>
+
     </RelativeLayout>
 
     <TextView
