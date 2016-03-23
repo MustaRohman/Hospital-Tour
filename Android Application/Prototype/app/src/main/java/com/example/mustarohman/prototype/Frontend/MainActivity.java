@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
     public static final String TOUR_CODE =  "Tour Code";
-    private boolean isRunning;
-    private boolean isInternetRunning;
 
     private CoordinatorLayout coordinatorLayout;
     public static ArrayList<TourLocation> locationslist;
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
-        isRunning = true;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
