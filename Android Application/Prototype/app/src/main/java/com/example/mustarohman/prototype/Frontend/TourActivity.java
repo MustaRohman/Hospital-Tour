@@ -97,18 +97,6 @@ public class TourActivity extends AppCompatActivity {
         tourLocations = null;
         Log.d("loadTourLocations", "Attempting to load from storage...");
         tourLocations = dataCaching.readFromInternalStorage(MainActivity.PACKAGE + ".tourLocations");
-
-        //In case the tourLocation data is not in local storage
-        if (tourLocations == null) {
-            Log.d("loadTourLocations", "Load from storage failed. Retrieving from database...");
-                //getting text from codeEdit in main class
-
-                //getting tuples from tourRes table where the id = code and storing it in an arrayList
-                String query = "SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;";
-                new DBAsyncTask().execute(query);
-        }else {
-            Log.d("loadTourLocations", "Loading from storage successful!");
-        }
     }
 
     public void addAllTourPointViews(){
@@ -284,37 +272,4 @@ public class TourActivity extends AppCompatActivity {
         }
         return false;
     }
-
-    /**
-     *
-     */
-    private class DBAsyncTask extends AsyncTask<String, String, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            String tourCode = params[0];
-            publishProgress("Downloading tour data...");
-            retrieveAndSaveTourData(tourCode);
-            return true;
-
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            Snackbar.make(coordinatorLayout, values[0], Snackbar.LENGTH_SHORT).show();
-        }
-
-
-        public void retrieveAndSaveTourData(String inputTourCode){
-            PreferenceManager.getDefaultSharedPreferences(TourActivity.this).edit().putString("inputTour", inputTourCode).commit();
-            ArrayList<TourLocation> tourLocations = null;
-            tourLocations = DBConnectionSystem.retrieveTourLocations("SELECT * from tour_res, location where tourid ='" + inputTourCode + "'and tour_res.locationid = location.locationid;");
-
-            if (tourLocations != null){
-                Log.d("checkTourCode", "Saving relevant tour locations to storage...");
-                dataCaching.saveDataToInternalStorage(MainActivity.PACKAGE + inputTourCode +  ".tourLocations", tourLocations);
-            }
-        }
-    }
-
 }
