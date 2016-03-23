@@ -5,19 +5,28 @@
     android:orientation="vertical"
     android:gravity="center">
 
-
-    <RelativeLayout
-        android:id="@+id/video_frame"
+    <ImageView
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" >
-    </RelativeLayout>
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+
+        />
+
 
 
     <TextView
-        android:id="@+id/video_text"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:textColor="#6e6e6e"
+        android:layout_margin="5dp"
+        android:gravity="center"/>
+
+
+
 
 
 
