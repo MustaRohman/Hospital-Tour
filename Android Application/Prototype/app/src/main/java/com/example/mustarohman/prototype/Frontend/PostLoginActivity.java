@@ -17,14 +17,14 @@ import android.widget.TextView;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.R;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class PostLoginActivity extends AppCompatActivity {
 
     private String username;
     private DBConnectionSystem dbConnectionSystem;
-    private ArrayList<String> tourCodes;
+    private HashMap<String,String> tourCodes;
     private LinearLayout tourCodesLinear;
     SharedPreferences sharedPreferences;
 
@@ -38,7 +38,7 @@ public class PostLoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         username = getIntent().getStringExtra("username");
-        tourCodes = new ArrayList<>();
+        tourCodes = new HashMap<>();
         dbConnectionSystem = new DBConnectionSystem();
 
         tourCodesLinear = (LinearLayout) findViewById(R.id.modify_tourlist);
@@ -49,7 +49,7 @@ public class PostLoginActivity extends AppCompatActivity {
         loggedIn.setText(loggedMsg);
 
         try {
-            tourCodes = dbConnectionSystem.getTourCodes();
+            tourCodes = dbConnectionSystem.getTourCodes(username);
             System.out.println(tourCodes.toString());
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -89,9 +89,9 @@ public class PostLoginActivity extends AppCompatActivity {
             }
         };
 
-        for (String tourCode: tourCodes){
+        for (HashMap.Entry<String, String> tourCode : tourCodes.entrySet()){
             Button btn = new Button(this);
-            btn.setText(tourCode);
+            btn.setText(tourCode.getKey()+" "+tourCode.getValue());
             btn.setGravity(Gravity.LEFT);
             btn.setPadding(40, 10, 10, 10);
             btn.setBackgroundColor(Color.TRANSPARENT);
