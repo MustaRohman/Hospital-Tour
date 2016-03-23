@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mustarohman.prototype.Frontend.ImageFullScreenActivity"
-    android:background="@android:color/black">
+    tools:context=".MainActivity"
+    android:id="@+id/image_Layout"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="#000000">
+
+
+
+
 
     <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@drawable/ic_fullscreen_exit_white_24dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:onClick="onClickExit"/>-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/ic_fullscreen_exit_white_24dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:onClick="onClickExit"/>-->
 
 
     <!--<ImageView-->
-        <!--android:id="@+id/image_view"-->
-        <!--android:transitionName="@string/transition_name"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:src="@drawable/default_image"/>-->
+    <!--android:id="@+id/image_view"-->
+    <!--android:transitionName="@string/transition_name"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:src="@drawable/default_image"/>-->
 
-    <ViewFlipper
-        android:id="@+id/view_flipper"
+
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:foregroundGravity="center_horizontal|center_vertical">
+        android:gravity="center"
+        android:layout_weight="0.09" >
+        <ViewFlipper
+            android:id="@+id/view_flipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+        </ViewFlipper></LinearLayout>
 
-    </ViewFlipper>
 
-    <Button
-        android:id="@+id/previous_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/ic_keyboard_arrow_left_white_24dp"/>
 
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/ic_keyboard_arrow_right_white_24dp"/>
 
-</RelativeLayout>
+
+</LinearLayout>
