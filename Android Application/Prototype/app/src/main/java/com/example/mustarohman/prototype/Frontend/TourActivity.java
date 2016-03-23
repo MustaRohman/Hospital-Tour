@@ -83,6 +83,9 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method controls the tool bar that shows what user is loged in
+     */
     private void setUpToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,6 +103,10 @@ public class TourActivity extends AppCompatActivity {
         toolbar.setTitle("Royal Brompton Hospital");
     }
 
+
+    /**
+     * This method loads the specific locations to certain tour
+     */
     private void loadTourLocations(){
         inputTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
         Log.d("loadTourLocations", "Retrieved tour code: " + inputTourCode);
@@ -127,6 +134,9 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method adds all the views to the tourActivity activity
+     */
     public void addAllTourPointViews(){
         LayoutInflater inflater = getLayoutInflater();
         View.OnClickListener singlelistener = new View.OnClickListener() {
@@ -145,6 +155,10 @@ public class TourActivity extends AppCompatActivity {
 
         View.OnClickListener doublelistener = new View.OnClickListener(){
 
+            /**
+             * This on click triggers the dialog box for overlapping locations to allow te user to select the correct room.
+             * @param v button that represents overlaping locations
+             */
             @Override
             public void onClick(View v) {
                 Log.w("pressed","open dialogbox");
@@ -211,6 +225,13 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method calls an inflater for a tourlocation that doesn't overlap
+     *
+     * @param tourLoc location that is beeing added
+     * @param inflater inflater for the view
+     * @param listener listener for the view
+     */
     public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener)
     {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
@@ -225,6 +246,14 @@ public class TourActivity extends AppCompatActivity {
         tourViewsList.add(tourPointView);
     }
 
+    /**
+     * This method calls the inflater for locations that do overlap
+     *
+     * @param firstLoc first location
+     * @param secondLoc second location
+     * @param inflater inflater for the view
+     * @param listener listener for the view
+     */
     public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener)
     {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
@@ -268,9 +297,11 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
-    public void onClickAddNewLocation(View view) {
-    }
 
+
+    /**
+     * This class is the listener that updates the current location and check if the user is in a location or not
+     */
     private class MyLocationListener implements LocationListener {
 
         public void onLocationChanged(Location location) {
@@ -379,7 +410,7 @@ public class TourActivity extends AppCompatActivity {
 
 
     /**
-     *
+     *Async task for database
      */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean> {
         @Override

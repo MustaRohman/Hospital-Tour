@@ -1,18 +1,23 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -48,22 +53,37 @@ import java.util.concurrent.ExecutionException;
 
 import database.DBQueryAsyncTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
-    public static final String TOUR_CODE =  "Tour Code";
+    public static final String TOUR_CODE = "Tour Code";
 
     private CoordinatorLayout coordinatorLayout;
     public static ArrayList<TourLocation> locationslist;
-    private  ArrayList<String> tourCodes;
+    private ArrayList<String> tourCodes;
     private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
+
+    private String[] permissionsNeeded =
+            {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.LOCATION_HARDWARE,
+                    Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
+        AskPermissions(coordinatorLayout);
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
@@ -72,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,11 +104,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     *This method checks for Location and Storage permission. If these permissions are given the app will run normally.
+     *If not a popup will appear to ask for permissions. On a positive response the permissions will change but nothing will happen on a negative response.
+     *
+     *
+     * @param coordLayout the coordinatorLayout  for the snack bar to appear
+     */
+    public void AskPermissions(CoordinatorLayout coordLayout) {
+
+        //use API23 for permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.LOCATION_HARDWARE) != PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(permissionsNeeded, 0);
+            }
+        }
+
+        //put snackbar  if not level 23
+        else {
+            Snackbar.make(coordinatorLayout,
+                    "please check if you have allowed your phone to check your loacation and to modify your storage",
+                    Snackbar.LENGTH_INDEFINITE).show();
+        }
+    }
+
 
     /**
      * This method starts the location listener and proceeds with the client version of the app.
@@ -135,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This class is the Async task for the database
+     */
     private class DBAsyncTask extends AsyncTask<String, String, Boolean>{
 
         private ProgressDialog progressDialog;
@@ -214,6 +264,11 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
 
+        /**
+         *
+         * @param obj
+         * @return
+         */
         private byte[] turnS3ObjIntoByteArray(S3Object obj){
 //            return obj.getObjectContent();
             if (obj == null) {
@@ -233,6 +288,14 @@ public class MainActivity extends AppCompatActivity {
             return bytes;
         }
 
+        /**
+         *
+         *
+         *
+         * @param name
+         * @param bytes
+         * @return
+         */
         public File storeS3ObjInVidFile(String name, byte[] bytes){
             String ext = name.split("\\.")[1];
 
@@ -278,6 +341,9 @@ public class MainActivity extends AppCompatActivity {
             return tourIds.containsKey(inputTourCode);
         }
 
+        /**
+         * This method retrieves the media data from the database
+         */
         private void retrieveMediaData(){
             int counter = 0;
             for (TourLocation tourLocation: tourLocations){
@@ -298,10 +364,12 @@ public class MainActivity extends AppCompatActivity {
                 publishProgress("Downloading Media...", String.valueOf(counter));
             }
         }
+
         /**
          * retrieves and saves the data related to the tour code in the cache.
          * @param inputTourCode code linked to the data that has to be saved
          */
+
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
 
             tourLocations = null;
@@ -324,7 +392,5 @@ public class MainActivity extends AppCompatActivity {
             }
             return  tourLocations;
         }
-
     }
-
 }
