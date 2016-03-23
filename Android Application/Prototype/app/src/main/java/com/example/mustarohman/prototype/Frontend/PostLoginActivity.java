@@ -91,7 +91,7 @@ public class PostLoginActivity extends AppCompatActivity {
 
         for (HashMap.Entry<String, String> tourCode : tourCodes.entrySet()){
             Button btn = new Button(this);
-            btn.setText(tourCode.getKey()+" "+tourCode.getValue());
+            btn.setText(tourCode.getValue()+"   ("+tourCode.getKey()+")");
             btn.setGravity(Gravity.LEFT);
             btn.setPadding(40, 10, 10, 10);
             btn.setBackgroundColor(Color.TRANSPARENT);
