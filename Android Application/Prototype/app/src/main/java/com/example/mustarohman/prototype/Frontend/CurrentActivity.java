@@ -154,6 +154,16 @@ public class CurrentActivity extends AppCompatActivity {
     }
 
     /**
+     * This method terminates the current Activity
+     * @param view button that calls method
+     */
+    public void onViewStopsBtnClick (View view)
+    {
+        finish();
+    }
+
+
+    /**
      * Location Listener that updates the last known location
      */
     private class MyLocationListener implements LocationListener {
