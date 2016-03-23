@@ -50,6 +50,7 @@ import java.util.HashMap;
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return retval;
     }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PACKAGE = "com.example.mustarohman.prototype.";
     public static final String TOUR_CODE =  "Tour Code";
+    private boolean isRunning;
+    private boolean isInternetRunning;
 
     private CoordinatorLayout coordinatorLayout;
     public static ArrayList<TourLocation> locationslist;
-    private  ArrayList<String> tourCodes;
-    private DBConnectionSystem dbConnection = new DBConnectionSystem();
     private DataCaching dataCaching;
 
     @Override
@@ -69,11 +69,19 @@ public class MainActivity extends AppCompatActivity {
 
         locationslist = new ArrayList<>();
         dataCaching = new DataCaching(this);
+        isRunning = true;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
         setSupportActionBar(toolbar);
+
+    }
+
+    private boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return  (networkInfo != null && networkInfo.isConnected());
 
     }
 
@@ -90,22 +98,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean isInternetAvailable() {
-        try {
-            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
-
-            if (ipAddr.equals("")) {
-                return false;
-            } else {
-                return true;
-            }
-
-        } catch (Exception e) {
-            return false;
-        }
-
     }
 
     /**
@@ -128,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
                 Log.d("onClickStartBtn", "Tour code exists in data");
             } else {
-
-
-                if (isInternetAvailable()) {
+                if (isConnected()) {
                     Log.d("onClickStartBtn", "Network is connected");
                     new DBAsyncTask().execute(inputTourCode);
                 } else Snackbar.make(coordinatorLayout, "No network connection. Please try again later", Snackbar.LENGTH_SHORT).show();
@@ -215,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 tourCheckSuccess = false;
             }
-            tourCheckSuccess = false;
             return null;
 
         }
@@ -237,13 +226,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, TourActivity.class);
             intent.putExtra(TOUR_CODE, tourCode);
 
-            if (tourCheckSuccess){
+            if (tourCheckSuccess) {
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MainActivity.this);
                 ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
             } else {
                 progressDialog.dismiss();
-                Snackbar.make(coordinatorLayout, "Unable to retrieve data", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(coordinatorLayout, "Unable to retrieve tour data. Please check tour code", Snackbar.LENGTH_SHORT).show();
             }
 
         }
