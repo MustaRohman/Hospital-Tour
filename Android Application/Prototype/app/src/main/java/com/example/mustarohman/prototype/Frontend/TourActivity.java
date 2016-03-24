@@ -344,7 +344,7 @@ public class TourActivity extends AppCompatActivity {
      * @param sensitivity sensitivity of the search for the in square method call
      */
     public void checkInGeofence(double la, double lo, double sensitivity) {
-        ArrayList<String> locationsFound = new ArrayList<>();
+        final ArrayList<String> locationsFound = new ArrayList<>();
         ArrayList<TourLocation> nodesList = tourLocations;
         Log.w("list",""+nodesList.size());
         for (int i = 0; i <nodesList.size() ; i++) {
@@ -382,13 +382,29 @@ public class TourActivity extends AppCompatActivity {
 
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
-                for (String string: locationsFound){
+                for (int i = 0; i < locationsFound.size(); i++){
+                    final int counter = i;
                     TextView textView = new TextView(this);
-                    textView.setText(string);
+                    textView.setText(locationsFound.get(i));
                     textView.setGravity(Gravity.LEFT);
                     textView.setPadding(40, 10, 10, 10);
                     textView.setBackgroundColor(Color.TRANSPARENT);
                     linearLayout.addView(textView);
+
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                            intent.putExtra(TOUR_CODE, inputTourCode);
+                            intent.putExtra(TOUR_LOCATION, locationsFound.get(counter));
+
+                            checkingLocation = false;
+
+                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    TourActivity.this);
+                            ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+                        }
+                    });
                 }
                 builder.setView(linearLayout);
 
