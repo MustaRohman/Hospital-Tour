@@ -113,7 +113,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         //code used to test the orientation and return values based upon it
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-        //code for portrait mode
+            //code for portrait mode
             width = size.x;
             height = size.y / 2;
 
@@ -132,7 +132,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         viewFlipper.setOutAnimation(slideRight);
 
 
-
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -145,68 +144,69 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         //this method is used to create media from the array list and add it to the view flipper
         for (Media media : mediaArrayList) {
 
-        //description of the media
-        String description = media.getDescription();
-
-        if (media.getDatatype() == Media.DataType.IMAGE) {
-
-        //creating the image
-        Bitmap bitmap = Bitmap.createScaledBitmap(media.returnBitmap(), width, height, false);
-
-        //we use a layout inflater to add the image and description, then add the instance of the layout to the
-        //view flipper
-
-        LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
-        screen = inflater.inflate(R.layout.image_full_screen_content, null);
-
-        textname = (TextView) screen.findViewById(R.id.name);
-        image = (ImageView) screen.findViewById(R.id.img);
+            //description of the media
+            String description = media.getDescription();
 
 
-        //handling the exception in case the description online is empty/has no value
-        if (description != null) {
-        textname.setText(description);
-        } else {
-        Toast.makeText(this, "no description available", Toast.LENGTH_LONG).show();
+            if (media.getDatatype() == Media.DataType.IMAGE) {
+
+                //creating the image
+                Bitmap bitmap = Bitmap.createScaledBitmap(media.returnBitmap(), width, height, false);
+
+                //we use a layout inflater to add the image and description, then add the instance of the layout to the
+                //view flipper
+
+                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+                screen = inflater.inflate(R.layout.image_full_screen_content, null);
+
+                textname = (TextView) screen.findViewById(R.id.name);
+                image = (ImageView) screen.findViewById(R.id.img);
+
+
+                //handling the exception in case the description online is empty/has no value
+
+                if (description != null) {
+                    textname.setText(description);
+                } else {
+                    textname.setText(R.string.No_text_availible);
+                }
+
+
+                image.setImageBitmap(bitmap);
+                viewFlipper.addView(screen);
+
+
+                //same process as above but for the videos
+
+            } else {
+
+                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+                Videoscreen = inflater.inflate(R.layout.content_video, null);
+
+                VideoTextname = (TextView) Videoscreen.findViewById(R.id.video_text);
+                relativeLayout = (RelativeLayout) Videoscreen.findViewById(R.id.video_frame);
+
+                if (description != null) {
+                    VideoTextname.setText(R.string.No_text_availible);
+
+
+                } else {
+                    Toast.makeText(this, "no description available(check online)", Toast.LENGTH_LONG).show();
+
+                }
+
+                //getting the video file
+                VideoView videoView = createVideoView(media.getVidFile());
+                relativeLayout.addView(videoView);
+                viewFlipper.addView(Videoscreen);
+            }
         }
-
-
-        image.setImageBitmap(bitmap);
-        viewFlipper.addView(screen);
-
-
-        //same process as above but for the videos
-
-        } else {
-
-        LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
-        Videoscreen = inflater.inflate(R.layout.content_video, null);
-
-        VideoTextname = (TextView) Videoscreen.findViewById(R.id.video_text);
-        relativeLayout = (RelativeLayout) Videoscreen.findViewById(R.id.video_frame);
-
-        if (description != null) {
-        VideoTextname.setText(description);
-
-
-        } else {
-        Toast.makeText(this, "no description available(check online)", Toast.LENGTH_LONG).show();
-
-        }
-
-        //getting the video file
-        VideoView videoView = createVideoView(media.getVidFile());
-        relativeLayout.addView(videoView);
-
-        viewFlipper.addView(Videoscreen);
-        }}
 
         //hiding system bar
         hideSystemUI();
         showSystemUI();
 
     }
-
 
     /**
      * @param touchevent

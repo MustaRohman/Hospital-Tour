@@ -36,7 +36,7 @@ public class mediaTest extends AndroidTestCase {
 
     public void testMedia() throws Exception {
 
-
+        //using datacaching to retrieve media from the storage and storing it as an arrayList
         DataCaching dataCaching = new DataCaching(this.getContext());
         ArrayList<TourLocation> tourLocations = null;
 
@@ -48,19 +48,26 @@ public class mediaTest extends AndroidTestCase {
             }
         }
 
+
+        //media arraylist data
         mediaArrayList = currentTourLocation.getMediaList();
 
+        //retrieving the media image(bitmap), video(file) if they were successfully retrieved then they will not return null,
+        //this is because they were retrieved from online so if they contain data, they will not return null
         Bitmap bitmap=null;
         File file = null;
 
+        //loop to check whether they return null
         for (Media media : mediaArrayList) {
             if (media.getDatatype() == Media.DataType.IMAGE) {
                  bitmap = media.returnBitmap();
 
 
             }
-          file = media.getVidFile();
+            else {
 
+                file = media.getVidFile();
+            }
 
         }
 
@@ -70,7 +77,6 @@ public class mediaTest extends AndroidTestCase {
 
 
         assertEquals(expected,actual);
-
 
 
 

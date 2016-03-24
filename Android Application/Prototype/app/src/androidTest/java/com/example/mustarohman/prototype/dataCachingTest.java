@@ -41,25 +41,24 @@ public class dataCachingTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 
-
-
-
-
+    /**
+     * @throws Exception
+     */
     @Test
     public void testDataCaching() throws Exception {
         context = mActivityRule.getActivity().getBaseContext();
         //dummy test file
         file = new File(fileName);
-
+        //adding dummy data
         dummyList.add(new TourLocation(1234, dummyName, 22, 44));
         dataCaching = new DataCaching(context);
 
         //saving to the internal storage
         dataCaching.saveDataToInternalStorage(fileName, dummyList);
 
-
+        //reading from the storage
         outputDummyList = dataCaching.readFromInternalStorage(fileName);
-
+        //checking if an element e stored ,can be retrieved from the array list
         if (outputDummyList.get(0).getId() == 1234  && outputDummyList.get(0).getLatitude()==22 &&
                 outputDummyList.get(0).getLongitude()== 44
 

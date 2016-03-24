@@ -18,19 +18,28 @@ import java.util.concurrent.ExecutionException;
 
 public class insertAndRetrieveQueryTest extends AndroidTestCase {
 
+    //dummy data to be inserted
     public String data_to_be_inserted = "12345";
+    //query
     String query = "Insert into tour (tourid) values('"+data_to_be_inserted+"');";
     DBConnectionSystem dbConnectionSystem;
     private ArrayList<String > tourCodes;
     boolean check = false;
     boolean expected = true;
 
+
+    /**
+     * @throws Exception
+     */
     @Test
     public void insertionAndRetrieval() throws Exception {
 
+
+        //DB query returns an arrayList
         tourCodes = new ArrayList<>();
         dbConnectionSystem = new DBConnectionSystem();
 
+        //update database
         try {
             dbConnectionSystem.UpdateDatabase(query);
         } catch (ExecutionException e) {
@@ -40,6 +49,7 @@ public class insertAndRetrieveQueryTest extends AndroidTestCase {
         }
 
 
+        //downloading the data
         try {
             tourCodes = dbConnectionSystem.getTestingTourCodes();
         } catch (ExecutionException e) {
@@ -47,6 +57,7 @@ public class insertAndRetrieveQueryTest extends AndroidTestCase {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
 
 
         if (tourCodes.contains(data_to_be_inserted)){

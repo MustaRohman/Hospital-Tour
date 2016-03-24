@@ -94,6 +94,7 @@
     <string name="action_about">About</string>
     <string name="enter_code">Enter Tour Code</string>
     <string name="button_help">Need Help?</string>
+    <string name="No_text_availible">no text available</string>
     <string name="button_start">Start</string>
     <string name="title_activity_tour">TourActivity</string>
     <string name="hint_text">Tour Code</string>
