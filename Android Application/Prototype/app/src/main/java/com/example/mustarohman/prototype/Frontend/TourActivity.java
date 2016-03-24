@@ -1,13 +1,11 @@
 package com.example.mustarohman.prototype.Frontend;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;

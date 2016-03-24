@@ -103,15 +103,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-//    }
 
 
     /**
@@ -153,11 +144,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             String storedTourCode = PreferenceManager.getDefaultSharedPreferences(this).getString("inputTour", " ");
             Log.d("onClickStartBtn", "Checking for stored tour code...");
             if (storedTourCode != null && inputTourCode.equals(storedTourCode)){
-                Intent intent = new Intent(MainActivity.this, TourActivity.class);
-                intent.putExtra(TOUR_CODE, inputTourCode);
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this);
-                ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+                new DBAsyncTask().execute(inputTourCode);
                 Log.d("onClickStartBtn", "Tour code exists in data");
             } else {
                 if (isConnected()) {
