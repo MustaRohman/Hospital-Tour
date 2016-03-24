@@ -1,12 +1,11 @@
 package com.example.mustarohman.prototype.Frontend;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
@@ -37,9 +36,11 @@ import java.util.ArrayList;
 public class TourActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 1500; // in Milliseconds
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2500; // in Milliseconds
     public static final String TOUR_LOCATION= "tour-location-name";
     public static final String TOUR_CODE = "tour-code";
+    private boolean checkingLocation;
+
 
     private String inputTourCode;
     protected LocationManager locationManager;
@@ -69,7 +70,10 @@ public class TourActivity extends AppCompatActivity {
                     .show();
         }
 
+        checkingLocation = true;
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        
         try {
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
@@ -82,6 +86,13 @@ public class TourActivity extends AppCompatActivity {
             Log.w("e", "app needs location permissions");
         }
         
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkingLocation = false;
+        locationManager = null;
     }
 
     /**
@@ -175,33 +186,33 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        ArrayList<TourLocation> localList = tourLocations;
-
-        for(int i = 0; i<localList.size(); i++)
+//        ArrayList<TourLocation> localList = tourLocations;
+//
+//        for(int i = 0; i<localList.size(); i++)
+//        {
+////            TourLocation firstLoc = localList.get(i);
+//            for(int j=0; j<localList.size();j++)
+//            {
+//
+////                TourLocation secondLoc = localList.get(j);
+//
+//                //don't check with yourself
+//                if(i==j){continue;}
+//
+//                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
+//                {
+//                    overlapingLocs[0] = localList.get(i).getName();
+//                    overlapingLocs[1] = localList.get(j).getName();
+//                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
+//
+//                    localList.remove(j);
+//                    localList.remove(i);
+//                }
+//            }
+//        }
+        for(TourLocation tourLocation : tourLocations)
         {
-//            TourLocation firstLoc = localList.get(i);
-            for(int j=0; j<localList.size();j++)
-            {
-
-//                TourLocation secondLoc = localList.get(j);
-
-                //don't check with yourself
-                if(i==j){continue;}
-
-                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
-                {
-                    overlapingLocs[0] = localList.get(i).getName();
-                    overlapingLocs[1] = localList.get(j).getName();
-                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
-
-                    localList.remove(j);
-                    localList.remove(i);
-                }
-            }
-        }
-        for(int a = 0 ;a< localList.size();a++)
-        {
-            addSingleTourPoint(localList.get(a), inflater, singlelistener);
+            addSingleTourPoint(tourLocation, inflater, singlelistener);
         }
 
     }
@@ -281,7 +292,9 @@ public class TourActivity extends AppCompatActivity {
      */
     private class MyLocationListener implements LocationListener {
 
+
         public void onLocationChanged(Location location) {
+
             String message = "location updated";
 
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -341,7 +354,7 @@ public class TourActivity extends AppCompatActivity {
      * @param sensitivity sensitivity of the search for the in square method call
      */
     public void checkInGeofence(double la, double lo, double sensitivity) {
-
+        final ArrayList<String> locationsFound = new ArrayList<>();
         ArrayList<TourLocation> nodesList = tourLocations;
         Log.w("list",""+nodesList.size());
         for (int i = 0; i <nodesList.size() ; i++) {
@@ -354,10 +367,65 @@ public class TourActivity extends AppCompatActivity {
             if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
                 Log.w("in square","in square");
                 Toast.makeText(TourActivity.this, "you have entered your locations: "+nodesList.get(i).getName(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, TourPointMediaActivity.class);
-                startActivity(intent);
+                locationsFound.add(nodesList.get(i).getName());
+
+                Log.d("checkInGeofence", "" + locationsFound.size());
+                Log.d("",locationsFound.toString());
+            }
+        }
+
+        while (checkingLocation) {
+
+            if (locationsFound.size() == 1) {
+                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                intent.putExtra(TOUR_LOCATION, locationsFound.get(0));
+
+                checkingLocation = false;
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        TourActivity.this);
+                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+            } else if (locationsFound.size() > 1) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
+
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                for (int i = 0; i < locationsFound.size(); i++){
+                    final int counter = i;
+                    TextView textView = new TextView(this);
+                    textView.setText(locationsFound.get(i));
+                    textView.setGravity(Gravity.LEFT);
+                    textView.setPadding(40, 10, 10, 10);
+                    textView.setBackgroundColor(Color.TRANSPARENT);
+                    linearLayout.addView(textView);
+
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                            intent.putExtra(TOUR_CODE, inputTourCode);
+                            intent.putExtra(TOUR_LOCATION, locationsFound.get(counter));
+
+                            checkingLocation = false;
+
+                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    TourActivity.this);
+                            ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+                        }
+                    });
+                }
+                builder.setView(linearLayout);
+
+                builder.setMessage("Please pick a room");
+                // Create the AlertDialog object and return it
+                builder.create();
+                builder.show();
+                checkingLocation = false;
 
             }
+
         }
     }
 
@@ -383,5 +451,11 @@ public class TourActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        checkingLocation = true;
     }
 }
