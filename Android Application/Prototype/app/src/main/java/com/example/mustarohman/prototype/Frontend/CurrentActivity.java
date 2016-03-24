@@ -33,7 +33,7 @@ public class CurrentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current);
+        setContentView(R.layout.content_current);
 
         retrieveLocationButton = (Button) findViewById(R.id.retrieve_location_button);
 
@@ -117,6 +117,7 @@ public class CurrentActivity extends AppCompatActivity {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         String locationName = locationNameEt.getText().toString();
+                        locationName = locationName.replace(" ", "");
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
                         String query = "Insert into location (lname,latitude,longitude) values('"+locationName+"',"+latitude+","+longitude+");";
                         try {
