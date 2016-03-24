@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             publishProgress("Checking tour code...", "0");
             if (checkTourCode(tourCode)){
-                publishProgress("Downloading tour data...", "50");
+                publishProgress("Downloading tour data...");
                 retrieveAndSaveTourData(tourCode);
                 tourCheckSuccess =  true;
             } else {
@@ -302,9 +302,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         /**
-         *
-         *
-         *
          * @param name
          * @param bytes
          * @return
@@ -373,8 +370,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         media.setVidFile(vidFilePath);
                     }
                 }
-                int progress = (counter/50) * 100;
+                int progress = (100/tourLocations.size()) * counter;
                 counter++;
+                Log.d("retrieveMediaData", String.valueOf(progress));
                 publishProgress("Downloading Media...", String.valueOf(progress));
             }
         }
@@ -383,19 +381,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
          * retrieves and saves the data related to the tour code in the cache.
          * @param inputTourCode code linked to the data that has to be saved
          */
-
         private ArrayList<TourLocation> retrieveAndSaveTourData(String inputTourCode){
-
             tourLocations = null;
             tourLocations = DBConnectionSystem.retrieveTourLocations(inputTourCode);
 
             //Add relevant media data to each tourLocation
             //Query would be called to retrieve media data
 
-            publishProgress("Retrieving media meta data...");
+            publishProgress("Downloading media data...");
             DBConnectionSystem.locationMediaQuery(tourLocations);
-            Log.d("retrieveAndSaveTourData", "Media retrieved");
-            publishProgress("Downloading media...");
             retrieveMediaData();
             Log.d("retrieveAndSaveTourData", "Media data downloaded");
 
