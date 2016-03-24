@@ -17,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:layout_marginTop="78dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true">
 
@@ -61,13 +60,5 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Add a Room"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

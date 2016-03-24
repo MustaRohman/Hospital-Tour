@@ -97,6 +97,7 @@ public class TourActivity extends AppCompatActivity {
         super.onPause();
         checkingLocation = false;
         locationManager = null;
+        Log.d("onPause", "Thread stopping");
     }
 
     /**
@@ -104,6 +105,7 @@ public class TourActivity extends AppCompatActivity {
      */
     private void setUpToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Tour Locations");
         setSupportActionBar(toolbar);
         if (LogInActivity.LOGGED_IN){
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -203,14 +205,8 @@ public class TourActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        if (LogInActivity.LOGGED_IN){
-            menuInflater.inflate(R.menu.menu_tour_add, menu);
-            Log.d("onCreateOptionsMenu", "Loaded menu_tour_add");
-        } else {
             menuInflater.inflate(R.menu.menu_main, menu);
             Log.d("onCreateOptionsMenu", "Loaded menu_main");
-
-        }
         return true;
     }
 
@@ -307,9 +303,7 @@ public class TourActivity extends AppCompatActivity {
 
             if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
                 Log.w("in square","in square");
-                Toast.makeText(TourActivity.this, "you have entered your locations: "+nodesList.get(i).getName(), Toast.LENGTH_LONG).show();
                 locationsFound.add(nodesList.get(i).getName());
-
                 Log.d("checkInGeofence", "" + locationsFound.size());
                 Log.d("",locationsFound.toString());
             }

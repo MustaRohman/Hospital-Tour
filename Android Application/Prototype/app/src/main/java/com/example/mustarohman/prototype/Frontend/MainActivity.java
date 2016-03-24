@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         dataCaching = new DataCaching(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         toolbar.setTitle("Hive Tours");
+        toolbar.setLogo(R.drawable.ic_lightbulb_outline_white_24dp);
         setSupportActionBar(toolbar);
     }
 
