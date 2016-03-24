@@ -43,7 +43,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Frontend.CurrentActivity"
+            android:name=".Frontend.AddRoomActivity"
             android:label="Add a Room"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Dialog" />
@@ -64,12 +64,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Frontend.ImageFullScreenActivity"
+            android:name=".Frontend.MediaFullScreenActivity"
             android:label="ImageFullScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".Frontend.VidActivity"
-            android:label="VidActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

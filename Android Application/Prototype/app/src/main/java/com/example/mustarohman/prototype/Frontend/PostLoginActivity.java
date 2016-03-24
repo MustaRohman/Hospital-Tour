@@ -17,8 +17,6 @@ import android.widget.TextView;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.R;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -106,7 +104,7 @@ public class PostLoginActivity extends AppCompatActivity {
      * @param view button that adds current location as a room in the database
      */
     public void onClickAddRoom(View view) {
-        Intent intent = new Intent(this, CurrentActivity.class);
+        Intent intent = new Intent(this, AddRoomActivity.class);
         startActivity(intent);
     }
 

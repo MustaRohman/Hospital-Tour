@@ -18,7 +18,7 @@ import com.example.mustarohman.prototype.R;
 
 import java.util.concurrent.ExecutionException;
 
-public class CurrentActivity extends AppCompatActivity {
+public class AddRoomActivity extends AppCompatActivity {
 
     protected int toastTimer =1500;
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
@@ -76,7 +76,7 @@ public class CurrentActivity extends AppCompatActivity {
                         "Current Location: \n Longitude: %1$s \n Latitude: %2$s",
                         location.getLongitude(), location.getLatitude()
                 );
-                Toast.makeText(CurrentActivity.this, message,
+                Toast.makeText(AddRoomActivity.this, message,
                         Toast.LENGTH_SHORT).show();
 
                 if(locationNameEt!=null){
@@ -85,7 +85,7 @@ public class CurrentActivity extends AppCompatActivity {
                     String longitude = String.valueOf(location.getLongitude());
                     addButtonConfirmation(latitude,longitude);
                 }else{
-                    Toast.makeText(CurrentActivity.this,"Please Enter Location Name",
+                    Toast.makeText(AddRoomActivity.this,"Please Enter Location Name",
                             Toast.LENGTH_SHORT).show();
                 }
 
@@ -125,11 +125,11 @@ public class CurrentActivity extends AppCompatActivity {
                           boolean checkQuery =  dbConnectionSystem.UpdateDatabase(query);
 
                             if (checkQuery){
-                                Toast.makeText(CurrentActivity.this,
+                                Toast.makeText(AddRoomActivity.this,
                                         "Successful",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(CurrentActivity.this,
+                                Toast.makeText(AddRoomActivity.this,
                                         "Unsuccessful",
                                         Toast.LENGTH_SHORT).show();
                             }
@@ -173,16 +173,16 @@ public class CurrentActivity extends AppCompatActivity {
         public void onLocationChanged(Location location) {
 
             //String message = "location updated";
-            // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(AddRoomActivity.this, message, Toast.LENGTH_SHORT).show();
         }
 
         public void onStatusChanged(String s, int i, Bundle b) {
-//            Toast.makeText(CurrentActivity.this, "Provider status changed",
+//            Toast.makeText(AddRoomActivity.this, "Provider status changed",
 //                    Toast.LENGTH_SHORT).show();
         }
 
         public void onProviderDisabled(String s) {
-//            Toast.makeText(CurrentActivity.this,
+//            Toast.makeText(AddRoomActivity.this,
 //                    "Provider disabled by the user. GPS turned off",
 //                    Toast.LENGTH_SHORT).show();
         }

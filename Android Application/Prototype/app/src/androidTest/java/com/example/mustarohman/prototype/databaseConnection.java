@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
  * Created by Yahya on 15/03/16.
  * Test used to see if a connection to the database can be established
  */
-public class databaseConnection extends AndroidTestCase {
+public class DatabaseConnection extends AndroidTestCase {
 
     private static Connection conn;
     private static Statement st;

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 
 
-public class mediaTest extends AndroidTestCase {
+public class MediaTest extends AndroidTestCase {
 
     private ArrayList<Media> mediaArrayList;
     boolean expected= true;

@@ -31,7 +31,7 @@ import com.example.mustarohman.prototype.R;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageFullScreenActivity extends AppCompatActivity {
+public class MediaFullScreenActivity extends AppCompatActivity {
 
     private ViewFlipper viewFlipper;
     private TourLocation currentTourLocation;
@@ -89,7 +89,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra(TourPointMediaActivity.BUNDLE_NAME);
 
         index = intent.getIntExtra(TourPointMediaActivity.MEDIA_INDEX_TAG, 0);
-        Log.d("ImageFullScreenActivity", "image-index is " + index);
+        Log.d("MediaFullScreenActivity", "image-index is " + index);
         mediaArrayList = (ArrayList<Media>) bundle.getSerializable("media");
 
         //here we create dimensions for bitmap images/image views
@@ -143,7 +143,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
                 //we use a layout inflater to add the image and description, then add the instance of the layout to the
                 //view flipper
 
-                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+                LayoutInflater inflater = LayoutInflater.from(MediaFullScreenActivity.this);
                 screen = inflater.inflate(R.layout.image_full_screen_content, null);
 
                 textname = (TextView) screen.findViewById(R.id.name);
@@ -167,7 +167,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
             } else {
 
-                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+                LayoutInflater inflater = LayoutInflater.from(MediaFullScreenActivity.this);
                 Videoscreen = inflater.inflate(R.layout.content_video, null);
 
                 VideoTextname = (TextView) Videoscreen.findViewById(R.id.video_text);
@@ -267,14 +267,14 @@ public class ImageFullScreenActivity extends AppCompatActivity {
      */
     private VideoView createVideoView(File file) {
         if (mediaControls == null) {
-            mediaControls = new MediaController(ImageFullScreenActivity.this);
+            mediaControls = new MediaController(MediaFullScreenActivity.this);
         }
 
         //initialize the VideoView
         final VideoView videoView = new VideoView(this);
 
         // create a progress bar while the video file is loading
-        final ProgressDialog progressDialog = new ProgressDialog(ImageFullScreenActivity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(MediaFullScreenActivity.this);
         // set a title for the progress bar
         progressDialog.setTitle("Playing Video...");
         // set a message for the progress bar

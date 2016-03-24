@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 
-public class insertAndRetrieveQueryTest extends AndroidTestCase {
+public class InsertAndRetrieveQueryTest extends AndroidTestCase {
 
     //dummy data to be inserted
     public String data_to_be_inserted = "12345";

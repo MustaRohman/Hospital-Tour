@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 
 
-public class dataCachingTest {
+public class DataCachingTest {
 
 
     DataCaching dataCaching;

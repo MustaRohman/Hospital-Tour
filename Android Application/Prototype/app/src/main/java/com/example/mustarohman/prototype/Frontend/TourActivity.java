@@ -181,17 +181,6 @@ public class TourActivity extends AppCompatActivity {
     }
 
 
-//    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener) {
-//        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
-//        tourPointView.setOnClickListener(listener);
-//        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
-//        name.setText(firstLoc.getName() + " or " + secondLoc.getName());
-//        Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
-//
-//        tourPointsLinear.addView(tourPointView);
-//        tourViewsList.add(tourPointView);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -245,7 +234,7 @@ public class TourActivity extends AppCompatActivity {
 
             String message = "location updated";
 
-             Toast.makeText(TourActivity.this, message, Toast.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
 
             checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
             Log.d("current loc","current latitude: " + location.getLatitude() + "longitude: " + location.getLongitude()+"");
@@ -313,7 +302,7 @@ public class TourActivity extends AppCompatActivity {
             double geoloNode = nodesList.get(i).getLongitude();; //get Longitude
 
             if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
-                Log.w("in square","in square");
+                Log.w("in square", "in square");
                 locationsFound.add(nodesList.get(i).getName());
                 Log.d("checkInGeofence", "" + locationsFound.size());
                 Log.d("",locationsFound.toString());

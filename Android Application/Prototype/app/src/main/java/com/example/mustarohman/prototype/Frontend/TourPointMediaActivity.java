@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mustarohman.prototype.Backend.DataCaching;
@@ -20,7 +19,6 @@ import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -36,7 +34,6 @@ public class TourPointMediaActivity extends AppCompatActivity {
     ArrayList<Media> mediaArrayList;
 
     private final Bundle bundle = new Bundle();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +54,14 @@ public class TourPointMediaActivity extends AppCompatActivity {
         });
 
         linearLayout = (LinearLayout) findViewById(R.id.grid_views);
-
-        //Which will changed
-
-        loadBitmapImages();
+        loadMedia();
 
     }
-
 
     /**
      *
      */
-    public void loadBitmapImages(){
+    public void loadMedia(){
 
         DataCaching dataCaching = new DataCaching(this);
         ArrayList<TourLocation> tourLocations = null;
@@ -99,10 +92,11 @@ public class TourPointMediaActivity extends AppCompatActivity {
             indexCounter++;
         }
 
-        Log.d("loadBitmapImages", String.valueOf(indexCounter));
+        Log.d("loadMedia", String.valueOf(indexCounter));
     }
+
     /**
-     *
+     * Creates a thumbnail View object for a specific video
      * @param inflater
      * @param filepath
      */
@@ -112,10 +106,6 @@ public class TourPointMediaActivity extends AppCompatActivity {
         bMap = Bitmap.createScaledBitmap(bMap,500,370,false);
 
         final View imageView =  inflater.inflate(R.layout.view_media_image, null);
-
-
-
-
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
         imageButton.setImageBitmap(bMap);
 
@@ -124,7 +114,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
         param.setMargins(20, 30, 30, 30);
         imageView.setLayoutParams(param);
 
-        final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
+        final Intent intent = new Intent(TourPointMediaActivity.this, MediaFullScreenActivity.class);
         intent.putExtra(BUNDLE_NAME, bundle);
         intent.putExtra(MEDIA_INDEX_TAG, mediaIndex);
 
@@ -157,7 +147,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
         param.setMargins(20, 30, 30, 30);
         imageView.setLayoutParams(param);
 
-        final Intent intent = new Intent(TourPointMediaActivity.this, ImageFullScreenActivity.class);
+        final Intent intent = new Intent(TourPointMediaActivity.this, MediaFullScreenActivity.class);
         intent.putExtra(BUNDLE_NAME, bundle);
         intent.putExtra(MEDIA_INDEX_TAG, mediaIndex);
 
@@ -172,9 +162,4 @@ public class TourPointMediaActivity extends AppCompatActivity {
         linearLayout.addView(imageView);
         Log.d("TourPointMediaActivity", "view added");
     }
-
-
-
-
-
 }

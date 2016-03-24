@@ -35,7 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class signInTest  extends AndroidTestCase{
+public class SignInTest extends AndroidTestCase{
 
     DBConnectionSystem dbConnectionSystem;
     private static final String userName = "jimmy";

@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddTour {
+public class AddRoom {
 
 
     private static final String newRoom = "testing123";
@@ -67,8 +67,6 @@ public class AddTour {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
 
         if (tourNames.contains(newRoom)){
             test = true;

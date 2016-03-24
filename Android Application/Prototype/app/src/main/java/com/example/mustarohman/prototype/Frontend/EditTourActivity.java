@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,12 +82,12 @@ public class EditTourActivity extends AppCompatActivity {
     }
 
     public void onClickAddNode(View view) {
-        Intent intent = new Intent(this, CurrentActivity.class);
+        Intent intent = new Intent(this, AddRoomActivity.class);
         startActivity(intent);
     }
 
     public void onClickAddStopMenuItem(MenuItem item) {
-        Intent intent = new Intent(this, CurrentActivity.class);
+        Intent intent = new Intent(this, AddRoomActivity.class);
         startActivity(intent);
     }
 
