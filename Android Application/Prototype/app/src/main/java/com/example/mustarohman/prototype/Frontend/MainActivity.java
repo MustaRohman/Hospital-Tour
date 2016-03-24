@@ -402,8 +402,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    public void needHelpnClick (View view)
-    {
+    public void needHelpnClick (View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("Please write the unique tour code given by your guide.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

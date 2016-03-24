@@ -2,10 +2,12 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
@@ -23,11 +25,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mustarohman.prototype.Backend.DataCaching;
+import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
 
@@ -159,40 +163,42 @@ public class TourActivity extends AppCompatActivity {
      * @param inflater inflater for the view
      * @param listener listener for the view
      */
-    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener)
-    {
+    public void addSingleTourPoint(TourLocation tourLoc, LayoutInflater inflater, View.OnClickListener listener) {
+        Bitmap bitmap = null;
+        ArrayList<Media> mediaArrayList = tourLoc.getMediaList();
+        for (Media media: mediaArrayList){
+            if (media.getDatatype() == Media.DataType.IMAGE){
+                bitmap = media.returnBitmap();
+                break;
+            }
+        }
+
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
+        if (bitmap != null){
+            ImageView imageView = (ImageView) tourPointView.findViewById(R.id.thumbnail);
+            imageView.setImageBitmap(bitmap);
+        }
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
         name.setText(tourLoc.getName());
-        TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
-        location.setText("Some place");
+
         Log.d("TourLocation", tourLoc.getName());
 
         tourPointsLinear.addView(tourPointView);
         tourViewsList.add(tourPointView);
     }
 
-    /**
-     * This method calls the inflater for locations that do overlap
-     *
-     * @param firstLoc first location
-     * @param secondLoc second location
-     * @param inflater inflater for the view
-     * @param listener listener for the view
-     */
-    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener) {
-        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
-        tourPointView.setOnClickListener(listener);
-        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
-        name.setText(firstLoc.getName() + " or " + secondLoc.getName());
-        TextView location = (TextView) tourPointView.findViewById(R.id.text_pointloc);
-        location.setText("Some place");
-        Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
 
-        tourPointsLinear.addView(tourPointView);
-        tourViewsList.add(tourPointView);
-    }
+//    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener) {
+//        View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
+//        tourPointView.setOnClickListener(listener);
+//        TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
+//        name.setText(firstLoc.getName() + " or " + secondLoc.getName());
+//        Log.d("TourLocation", firstLoc.getName() + secondLoc.getName());
+//
+//        tourPointsLinear.addView(tourPointView);
+//        tourViewsList.add(tourPointView);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

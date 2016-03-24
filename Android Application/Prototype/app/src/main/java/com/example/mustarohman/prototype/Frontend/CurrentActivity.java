@@ -117,6 +117,7 @@ public class CurrentActivity extends AppCompatActivity {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         String locationName = locationNameEt.getText().toString();
+                        locationName = locationName.replace(" ", "");
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
                         String query = "Insert into location (lname,latitude,longitude) values('"+locationName+"',"+latitude+","+longitude+");";
                         try {
