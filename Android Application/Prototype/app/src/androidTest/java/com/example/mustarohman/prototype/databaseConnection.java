@@ -14,6 +14,7 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Created by Yahya on 15/03/16.
+ * Test used to see if a connection to the database can be established
  */
 public class databaseConnection extends AndroidTestCase {
 
@@ -43,6 +44,7 @@ public class databaseConnection extends AndroidTestCase {
         }
 
         try {
+            //if connection lasts x amount of time
             reachable = conn.isValid(5);
 
         } catch (SQLException e) {

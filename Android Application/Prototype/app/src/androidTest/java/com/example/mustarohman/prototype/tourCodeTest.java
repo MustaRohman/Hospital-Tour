@@ -25,12 +25,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by Yahya on 09/03/16.
+ * This test is used to check when entering the tour code in the main activity, it remains consistent with the ones created on the online
+ database
+ * using espresso API which allows simulation of application in real time
+
  */
 
-/*
-This test is used to check when entering the tour code in the main activity, it remains consistent with the ones created on the online
-database
-*/
+
 
 
 

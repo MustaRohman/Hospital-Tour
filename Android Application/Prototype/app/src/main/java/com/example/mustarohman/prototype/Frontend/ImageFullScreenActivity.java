@@ -56,6 +56,10 @@ public class ImageFullScreenActivity extends AppCompatActivity {
     private LinearLayout layout;
 
 
+    /**
+     * @param savedInstanceState
+     * used to save an instance of the screen upon rotating
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         int position = viewFlipper.getDisplayedChild();
@@ -64,6 +68,11 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * @param savedInstanceState
+     * used to restore the instance of the screen when rotating it
+     */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -71,26 +80,17 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         int position1 = savedInstanceState.getInt("TAB_NUMBER", position);
         viewFlipper.setDisplayedChild(position1);
 
-
-
     }
-
-
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_image_full_screen);
+
+        //initialising variables
         viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
-
-
-
-
-
-
 
         layout = (LinearLayout) findViewById(R.id.image_Layout);
         Intent intent = getIntent();
@@ -101,17 +101,19 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         mediaArrayList = (ArrayList<Media>) bundle.getSerializable("media");
 
 
+        //here we create dimensions for bitmap images/image views
         int height;
         int width;
 
+        //getting the display of the screen
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
-
+        //code used to test the orientation and return values based upon it
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            //code for portrait mode
+        //code for portrait mode
             width = size.x;
             height = size.y / 2;
 
@@ -123,12 +125,12 @@ public class ImageFullScreenActivity extends AppCompatActivity {
             height = size.y - 200;
         }
 
-
+        //setting animations for view flipper
         slideLeft = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
         viewFlipper.setInAnimation(slideLeft);
         viewFlipper.setOutAnimation(slideRight);
-        //setUpViewFlipper(index);
+
 
 
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
@@ -139,139 +141,143 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
         });
 
+
+        //this method is used to create media from the array list and add it to the view flipper
         for (Media media : mediaArrayList) {
 
+        //description of the media
+        String description = media.getDescription();
 
-            String description = media.getDescription();
+        if (media.getDatatype() == Media.DataType.IMAGE) {
 
+        //creating the image
+        Bitmap bitmap = Bitmap.createScaledBitmap(media.returnBitmap(), width, height, false);
 
-            if (media.getDatatype() == Media.DataType.IMAGE) {
+        //we use a layout inflater to add the image and description, then add the instance of the layout to the
+        //view flipper
 
+        LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+        screen = inflater.inflate(R.layout.image_full_screen_content, null);
 
-                Bitmap bitmap = Bitmap.createScaledBitmap(media.returnBitmap(), width, height, false);
-
-
-                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
-                screen = inflater.inflate(R.layout.image_full_screen_content, null);
-
-                textname = (TextView) screen.findViewById(R.id.name);
-                image = (ImageView) screen.findViewById(R.id.img);
-
-                if (description != null) {
-                    textname.setText(description);
-
-                } else {
-
-                    Toast.makeText(this, "no description available", Toast.LENGTH_LONG).show();
-
-                }
+        textname = (TextView) screen.findViewById(R.id.name);
+        image = (ImageView) screen.findViewById(R.id.img);
 
 
-                image.setImageBitmap(bitmap);
-
-                viewFlipper.addView(screen);
-            } else {
-
-
-                LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
-                Videoscreen = inflater.inflate(R.layout.content_video, null);
-
-                VideoTextname = (TextView) Videoscreen.findViewById(R.id.video_text);
-                relativeLayout = (RelativeLayout) Videoscreen.findViewById(R.id.video_frame);
-
-                if (description != null) {
+        //handling the exception in case the description online is empty/has no value
+        if (description != null) {
+        textname.setText(description);
+        } else {
+        Toast.makeText(this, "no description available", Toast.LENGTH_LONG).show();
+        }
 
 
-                    VideoTextname.setText(description);
-
-                } else {
-                    Toast.makeText(this, "no description availible(check online)", Toast.LENGTH_LONG).show();
-
-                }
-
-                VideoView videoView = createVideoView(media.getVidFile());
-                relativeLayout.addView(videoView);
-
-                viewFlipper.addView(Videoscreen);
+        image.setImageBitmap(bitmap);
+        viewFlipper.addView(screen);
 
 
-            }
+        //same process as above but for the videos
+
+        } else {
+
+        LayoutInflater inflater = LayoutInflater.from(ImageFullScreenActivity.this);
+        Videoscreen = inflater.inflate(R.layout.content_video, null);
+
+        VideoTextname = (TextView) Videoscreen.findViewById(R.id.video_text);
+        relativeLayout = (RelativeLayout) Videoscreen.findViewById(R.id.video_frame);
+
+        if (description != null) {
+        VideoTextname.setText(description);
+
+
+        } else {
+        Toast.makeText(this, "no description available(check online)", Toast.LENGTH_LONG).show();
 
         }
 
+        //getting the video file
+        VideoView videoView = createVideoView(media.getVidFile());
+        relativeLayout.addView(videoView);
+
+        viewFlipper.addView(Videoscreen);
+        }}
+
+        //hiding system bar
         hideSystemUI();
         showSystemUI();
 
     }
 
-//
 
-
-    // Using the following method, we will handle all screen swaps.
+    /**
+     * @param touchevent
+     * @return
+     *  Using the following method, we will handle all screen swaps.
+     */
+    @Override
     public boolean onTouchEvent(MotionEvent touchevent) {
         switch (touchevent.getAction()) {
 
-            case MotionEvent.ACTION_DOWN:
-                lastX = touchevent.getX();
-                break;
-            case MotionEvent.ACTION_UP:
-                float currentX = touchevent.getX();
+        case MotionEvent.ACTION_DOWN:
+        lastX = touchevent.getX();
+        break;
+        case MotionEvent.ACTION_UP:
+        float currentX = touchevent.getX();
 
-                // Handling left to right screen swap.
-                if (lastX < currentX) {
+        // Handling left to right screen swap.
+        if (lastX < currentX) {
 
-                    // If there aren't any other children, just break.
-                    if (viewFlipper.getDisplayedChild() == 0)
+        // If there aren't any other children, just break.
+        if (viewFlipper.getDisplayedChild() == 0)
+        break;
+
+        // Next screen comes in from left.
+        viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
+        // Current screen goes out from right.
+        viewFlipper.setOutAnimation(this, R.anim.slight_out_from_right);
+
+        // Display next screen.
+        viewFlipper.showNext();
+        }
+
+        // Handling right to left screen swap.
+        if (lastX > currentX) {
+
+        // If there is a child (to the left), kust break.
+         if (viewFlipper.getDisplayedChild() == 1)
                         break;
 
-                    // Next screen comes in from left.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
-                    // Current screen goes out from right.
-                    viewFlipper.setOutAnimation(this, R.anim.slight_out_from_right);
+         // Next screen comes in from right.
+        viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+        // Current screen goes out from left.
+        viewFlipper.setOutAnimation(this, R.anim.slide_out_from_left);
 
-                    // Display next screen.
-                    viewFlipper.showNext();
+        // Display previous screen.
+         viewFlipper.showPrevious();
                 }
-
-                // Handling right to left screen swap.
-                if (lastX > currentX) {
-
-                    // If there is a child (to the left), kust break.
-                    if (viewFlipper.getDisplayedChild() == 1)
-                        break;
-
-                    // Next screen comes in from right.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
-                    // Current screen goes out from left.
-                    viewFlipper.setOutAnimation(this, R.anim.slide_out_from_left);
-
-                    // Display previous screen.
-                    viewFlipper.showPrevious();
-                }
-                break;
+         break;
         }
         return false;
-
     }
 
 
-    public void setUpViewFlipper() {
-
-
+        public void setUpViewFlipper() {
         viewFlipper.setOnTouchListener(new View.OnTouchListener()
 
-                                       {
-                                           @Override
-                                           public boolean onTouch(View v, MotionEvent event) {
-                                               onBackPressed();
-                                               return false;
-                                           }
-                                       }
-
-        );
+        {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+        onBackPressed();
+        return false;
+         }});
     }
 
 
+    /**
+     * @param file
+     * @return videoView
+     * in this method we are creating an instance of a video from media
+     *
+     */
     private VideoView createVideoView(File file) {
         if (mediaControls == null) {
             mediaControls = new MediaController(ImageFullScreenActivity.this);
@@ -309,18 +315,20 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         //we also set an setOnPreparedListener in order to know when the video file is ready for playback
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                // close the progress bar and play the video
-                progressDialog.dismiss();
-                mediaControls.setVisibility(View.VISIBLE);
-                mediaPlayer.setVolume(0f, 0f);
-                //if we have a position on savedInstanceState, the video playback should start from here
-                videoView.seekTo(position);
-                if (position == 0) {
-                    videoView.start();
-                } else {
-                    //if we come from a resumed activity, video playback will be paused
-                    videoView.pause();
+
+
+    public void onPrepared(MediaPlayer mediaPlayer) {
+         // close the progress bar and play the video
+         progressDialog.dismiss();
+         mediaControls.setVisibility(View.VISIBLE);
+         mediaPlayer.setVolume(0f, 0f);
+         //if we have a position on savedInstanceState, the video playback should start from here
+          videoView.seekTo(position);
+          if (position == 0) {
+          videoView.start();
+          } else {
+          //if we come from a resumed activity, video playback will be paused
+          videoView.pause();
                 }
             }
         });
@@ -328,27 +336,31 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         return videoView;
     }
 
-    // This snippet hides the system bars.
+
+    /**
+     * This code hides the system bars.
+     */
+
     private void hideSystemUI() {
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
         layout.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     // This snippet shows the system bars. It does this by removing all the flags
-// except for the ones that make the content appear under the system bars.
+    // except for the ones that make the content appear under the system bars.
     private void showSystemUI() {
         layout.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 

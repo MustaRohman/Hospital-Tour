@@ -8,19 +8,18 @@ import com.example.mustarohman.prototype.Backend.Objects.Media;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.Frontend.MainActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by Yahya on 24/03/16.
- */
-
-/*
- In this test I will test whether media is retrievable through calling the query to return the media online
+ *  In this test I will test whether media is retrievable through calling the query to return the media online
  and store it in an arrayList, if the arrayList contains a bitmap Image then we can conclude media
  is retrievable
+ *
+ */
 
 
-  */
 
 
 
@@ -35,8 +34,7 @@ public class mediaTest extends AndroidTestCase {
 
 
 
-    public void testMedia() throws Exception{
-
+    public void testMedia() throws Exception {
 
 
         DataCaching dataCaching = new DataCaching(this.getContext());
@@ -53,17 +51,23 @@ public class mediaTest extends AndroidTestCase {
         mediaArrayList = currentTourLocation.getMediaList();
 
         Bitmap bitmap=null;
+        File file = null;
 
         for (Media media : mediaArrayList) {
             if (media.getDatatype() == Media.DataType.IMAGE) {
                  bitmap = media.returnBitmap();
 
 
-            }}
+            }
+          file = media.getVidFile();
 
-        if (bitmap!=null) {
+
+        }
+
+        if (bitmap!=null && file!= null) {
           actual= true;
         }
+
 
         assertEquals(expected,actual);
 

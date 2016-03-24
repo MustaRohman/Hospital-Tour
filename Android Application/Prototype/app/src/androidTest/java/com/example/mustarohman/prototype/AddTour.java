@@ -24,6 +24,8 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * Created by Yahya on 10/03/16.
+ * test used to check whether the application adds a tour in the postlogin activity
+ * using espresso API which allows simulation of application in real time
  */
 
 @RunWith(AndroidJUnit4.class)
@@ -41,15 +43,21 @@ public class AddTour {
     public ActivityTestRule<PostLoginActivity> main = new ActivityTestRule<PostLoginActivity>(PostLoginActivity.class);
 
 
+    /**
+     * @throws Exception
+     */
     @Test
     public void addTourTest() throws Exception{
 
 
-
+        //simulation of gui, on view retrieves the view, and functions called in the performClick() method
+        //simulates an action e.g. pressing, typing
         onView(ViewMatchers.withId(R.id.add_room_button)).perform(click());
         onView(withId(R.id.AddLocationName)).perform(typeText(newRoom));
         onView(withId(R.id.retrieve_location_button)).perform(click());
 
+        //after adding the tour an update query is sent to the database, this is used to retrieve the same data
+        //that was just sent
         dbConnectionSystem = new DBConnectionSystem();
         try {
             tourNames = dbConnectionSystem.getTourName();
@@ -58,6 +66,8 @@ public class AddTour {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
 
         if (tourNames.contains(newRoom)){
             test = true;
