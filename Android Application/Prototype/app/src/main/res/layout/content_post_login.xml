@@ -25,7 +25,7 @@
         android:id="@+id/modify_tour_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Modify Tour"
+        android:text="Tour List"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
         android:textStyle="bold"
