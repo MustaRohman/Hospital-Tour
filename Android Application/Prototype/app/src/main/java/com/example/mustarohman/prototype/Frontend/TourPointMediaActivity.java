@@ -2,7 +2,9 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.mustarohman.prototype.Backend.DataCaching;
@@ -105,8 +108,16 @@ public class TourPointMediaActivity extends AppCompatActivity {
      */
     private void setVidThumbButton(LayoutInflater inflater, String filepath, int mediaIndex) {
 
+        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(filepath, MediaStore.Video.Thumbnails.MICRO_KIND);
+        bMap = Bitmap.createScaledBitmap(bMap,500,370,false);
+
         final View imageView =  inflater.inflate(R.layout.view_media_image, null);
+
+
+
+
         final ImageButton imageButton = (ImageButton) imageView.findViewById(R.id.image_button);
+        imageButton.setImageBitmap(bMap);
 
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
         param.gravity = Gravity.CENTER;
