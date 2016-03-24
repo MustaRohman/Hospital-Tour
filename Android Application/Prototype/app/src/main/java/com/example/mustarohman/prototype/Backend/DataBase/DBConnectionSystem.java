@@ -330,7 +330,9 @@ public class DBConnectionSystem {
 
             st.close();
             conn.close();
-            result.close();
+            if (result != null) {
+                result.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

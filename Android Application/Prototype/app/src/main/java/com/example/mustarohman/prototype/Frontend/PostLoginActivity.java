@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.R;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -76,27 +78,26 @@ public class PostLoginActivity extends AppCompatActivity {
       final  Context context = this;
 
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Button tourbutton = (Button) v;
-                Intent intent = new Intent(PostLoginActivity.this, EditTourActivity.class);
-                intent.putExtra("tourcode", tourbutton.getText().toString());
-
-                //editing the sharedPreference
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("codeEdit", tourbutton.getText().toString()).commit();
-                startActivity(intent);
-            }
-        };
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Button tourbutton = (Button) v;
+//                Intent intent = new Intent(PostLoginActivity.this, EditTourActivity.class);
+//                intent.putExtra("tourcode", tourbutton.getText().toString());
+//
+//                //editing the sharedPreference
+//                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("codeEdit", tourbutton.getText().toString()).commit();
+//                startActivity(intent);
+//            }
+//        };
 
         for (HashMap.Entry<String, String> tourCode : tourCodes.entrySet()){
-            Button btn = new Button(this);
-            btn.setText(tourCode.getValue()+"   ("+tourCode.getKey()+")");
-            btn.setGravity(Gravity.LEFT);
-            btn.setPadding(40, 10, 10, 10);
-            btn.setBackgroundColor(Color.TRANSPARENT);
-            btn.setOnClickListener(listener);
-            tourCodesLinear.addView(btn);
+            TextView textView = new Button(this);
+            textView.setText(tourCode.getValue() + "   (" + tourCode.getKey() + ")");
+            textView.setGravity(Gravity.LEFT);
+            textView.setPadding(40, 10, 10, 10);
+            textView.setBackgroundColor(Color.TRANSPARENT);
+            tourCodesLinear.addView(textView);
         }
     }
 

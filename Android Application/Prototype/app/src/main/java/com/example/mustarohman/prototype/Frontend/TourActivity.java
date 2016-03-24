@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
@@ -62,7 +63,12 @@ public class TourActivity extends AppCompatActivity {
 
         setUpToolbar();
         loadTourLocations();
-        addAllTourPointViews();
+        if (tourLocations.size() > 0) {
+            addAllTourPointViews();
+        } else {
+            Snackbar.make(coordinatorLayout, "No locations added for current tour", Snackbar.LENGTH_INDEFINITE)
+                    .show();
+        }
 
         checkingLocation = true;
 
@@ -79,6 +85,7 @@ public class TourActivity extends AppCompatActivity {
         catch(SecurityException e) {
             Log.w("e", "app needs location permissions");
         }
+        
     }
 
     @Override
@@ -139,72 +146,8 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener doublelistener = new View.OnClickListener(){
 
-            /**
-             * This on click triggers the dialog box for overlapping locations to allow te user to select the correct room.
-             * @param v button that represents overlaping locations
-             */
-            @Override
-            public void onClick(View v) {
-                Log.w("pressed","open dialogbox");
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
-                builder.setMessage("Please pick a room")
-                        .setPositiveButton(overlapingLocs[0], new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                                intent.putExtra(TOUR_CODE , inputTourCode);
-                                intent.putExtra(TOUR_LOCATION , overlapingLocs[0]);
-
-                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                        TourActivity.this);
-                                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
-                            }
-                        })
-                        .setNegativeButton(overlapingLocs[1], new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-                                intent.putExtra(TOUR_CODE, inputTourCode);
-                                intent.putExtra(TOUR_LOCATION, overlapingLocs[1]);
-
-                                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                        TourActivity.this);
-                                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
-                            }
-                        });
-                // Create the AlertDialog object and return it
-                builder.create();
-                builder.show();
-            }
-        };
-
-//        ArrayList<TourLocation> localList = tourLocations;
-//
-//        for(int i = 0; i<localList.size(); i++)
-//        {
-////            TourLocation firstLoc = localList.get(i);
-//            for(int j=0; j<localList.size();j++)
-//            {
-//
-////                TourLocation secondLoc = localList.get(j);
-//
-//                //don't check with yourself
-//                if(i==j){continue;}
-//
-//                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
-//                {
-//                    overlapingLocs[0] = localList.get(i).getName();
-//                    overlapingLocs[1] = localList.get(j).getName();
-//                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
-//
-//                    localList.remove(j);
-//                    localList.remove(i);
-//                }
-//            }
-//        }
-        for(TourLocation tourLocation : tourLocations)
-        {
+        for(TourLocation tourLocation : tourLocations) {
             addSingleTourPoint(tourLocation, inflater, singlelistener);
         }
 
@@ -212,7 +155,6 @@ public class TourActivity extends AppCompatActivity {
 
     /**
      * This method calls an inflater for a tourlocation that doesn't overlap
-     *
      * @param tourLoc location that is beeing added
      * @param inflater inflater for the view
      * @param listener listener for the view
@@ -239,8 +181,7 @@ public class TourActivity extends AppCompatActivity {
      * @param inflater inflater for the view
      * @param listener listener for the view
      */
-    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener)
-    {
+    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener) {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
@@ -282,13 +223,10 @@ public class TourActivity extends AppCompatActivity {
 
     }
 
-
-
     /**
      * This class is the listener that updates the current location and check if the user is in a location or not
      */
     private class MyLocationListener implements LocationListener {
-
 
         public void onLocationChanged(Location location) {
 
@@ -426,29 +364,6 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Checks if two location areas are overlapping
-     *
-     * @param la1 latitude of location 1
-     * @param lo1 longitude of location 1
-     * @param sensitivity area sensitivity
-     * @param la2 latitude of location 2
-     * @param lo2 longitude of location 2
-     * @return true if the locations are overlapping
-     */
-    public boolean areOverlapping (double la1 , double lo1 , double sensitivity , double la2 , double lo2)
-    {
-        boolean bottomLeftCornerIn = isInSquare(la1-sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
-        boolean bottomRightCornerIn = isInSquare(la1+sensitivity, lo1-sensitivity, sensitivity, la2, lo2);
-        boolean topRightCornerIn = isInSquare(la1+sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
-        boolean topLeftCornerIn = isInSquare(la1-sensitivity, lo1+sensitivity, sensitivity, la2, lo2);
-
-        if (bottomLeftCornerIn||bottomRightCornerIn||topLeftCornerIn||topRightCornerIn)
-        {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     protected void onRestart() {
