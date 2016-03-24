@@ -80,6 +80,47 @@ public class DBConnectionSystem {
         return new TourCodesListQuery().execute(query).get();
     }
 
+    public ArrayList<String> getTourName() throws ExecutionException, InterruptedException{
+        return new TourNames().execute().get();
+
+    }
+
+    public class TourNames extends AsyncTask<Void,Void,ArrayList<String>>{
+        @Override
+        protected ArrayList<String> doInBackground(Void...params){
+            String query = "Select * from tour;";
+
+            ArrayList<String> retval = new ArrayList<>();
+            try {
+                connectionDriver();
+                ResultSet rs = st.executeQuery(query);
+                while(rs.next()){
+                    retval.add(rs.getString("tour_name"));
+
+                }
+                rs.close();
+                st.close();
+                conn.close();
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            return retval;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values){
+            super.onProgressUpdate(values);
+
+        }
+
+    }
+
+
+
+
+
     private class loginQuery extends AsyncTask<String, Void, HashMap<String, ArrayList<String>>> {
         @Override
         //This does the connection protocol in the background.

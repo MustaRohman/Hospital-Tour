@@ -32,7 +32,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ImageFullScreenActivity extends AppCompatActivity {
-    int x;
+
+
+
+
     private ViewFlipper viewFlipper;
     private TourLocation currentTourLocation;
     private ArrayList<Media> mediaArrayList;
