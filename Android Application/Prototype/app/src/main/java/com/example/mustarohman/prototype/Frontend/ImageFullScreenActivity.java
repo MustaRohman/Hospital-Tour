@@ -33,9 +33,6 @@ import java.util.ArrayList;
 
 public class ImageFullScreenActivity extends AppCompatActivity {
 
-
-
-
     private ViewFlipper viewFlipper;
     private TourLocation currentTourLocation;
     private ArrayList<Media> mediaArrayList;
@@ -55,7 +52,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
     private LinearLayout layout;
 
-
     /**
      * @param savedInstanceState
      * used to save an instance of the screen upon rotating
@@ -65,7 +61,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         int position = viewFlipper.getDisplayedChild();
         savedInstanceState.putInt("TAB_NUMBER", position);
         super.onSaveInstanceState(savedInstanceState);
-
 
     }
 
@@ -79,10 +74,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
 
         int position1 = savedInstanceState.getInt("TAB_NUMBER", position);
         viewFlipper.setDisplayedChild(position1);
-
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +92,6 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         Log.d("ImageFullScreenActivity", "image-index is " + index);
         mediaArrayList = (ArrayList<Media>) bundle.getSerializable("media");
 
-
         //here we create dimensions for bitmap images/image views
         int height;
         int width;
@@ -116,11 +107,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
             //code for portrait mode
             width = size.x;
             height = size.y / 2;
-
-
         } else {
-
-
             width = size.x / 2;
             height = size.y - 200;
         }

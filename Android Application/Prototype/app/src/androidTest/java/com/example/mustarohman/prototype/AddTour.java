@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -53,7 +54,7 @@ public class AddTour {
         //simulation of gui, on view retrieves the view, and functions called in the performClick() method
         //simulates an action e.g. pressing, typing
         onView(ViewMatchers.withId(R.id.add_room_button)).perform(click());
-        onView(withId(R.id.AddLocationName)).perform(typeText(newRoom));
+        onView(withId(R.id.AddLocationName)).perform(typeText(newRoom),closeSoftKeyboard());
         onView(withId(R.id.retrieve_location_button)).perform(click());
 
         //after adding the tour an update query is sent to the database, this is used to retrieve the same data
