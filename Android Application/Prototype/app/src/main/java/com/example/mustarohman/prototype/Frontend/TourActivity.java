@@ -2,6 +2,7 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -377,6 +379,19 @@ public class TourActivity extends AppCompatActivity {
             } else if (locationsFound.size() > 1) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
+
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                for (String string: locationsFound){
+                    TextView textView = new TextView(this);
+                    textView.setText(string);
+                    textView.setGravity(Gravity.LEFT);
+                    textView.setPadding(40, 10, 10, 10);
+                    textView.setBackgroundColor(Color.TRANSPARENT);
+                    linearLayout.addView(textView);
+                }
+                builder.setView(linearLayout);
+
                 builder.setMessage("Please pick a room");
                 // Create the AlertDialog object and return it
                 builder.create();
