@@ -62,7 +62,12 @@ public class TourActivity extends AppCompatActivity {
 
         setUpToolbar();
         loadTourLocations();
-        addAllTourPointViews();
+        if (tourLocations.size() > 0) {
+            addAllTourPointViews();
+        } else {
+            Snackbar.make(coordinatorLayout, "No locations added for current tour", Snackbar.LENGTH_INDEFINITE)
+                    .show();
+        }
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try {
@@ -76,6 +81,7 @@ public class TourActivity extends AppCompatActivity {
         catch(SecurityException e) {
             Log.w("e", "app needs location permissions");
         }
+        
     }
 
     /**
@@ -193,7 +199,7 @@ public class TourActivity extends AppCompatActivity {
                 }
             }
         }
-        for(int a =0 ;a< localList.size();a++)
+        for(int a = 0 ;a< localList.size();a++)
         {
             addSingleTourPoint(localList.get(a), inflater, singlelistener);
         }
@@ -202,7 +208,6 @@ public class TourActivity extends AppCompatActivity {
 
     /**
      * This method calls an inflater for a tourlocation that doesn't overlap
-     *
      * @param tourLoc location that is beeing added
      * @param inflater inflater for the view
      * @param listener listener for the view
@@ -229,8 +234,7 @@ public class TourActivity extends AppCompatActivity {
      * @param inflater inflater for the view
      * @param listener listener for the view
      */
-    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener)
-    {
+    public void addDoubleTourPoint(TourLocation firstLoc, TourLocation secondLoc, LayoutInflater inflater, View.OnClickListener listener) {
         View tourPointView = inflater.inflate(R.layout.view_tourpoint, null);
         tourPointView.setOnClickListener(listener);
         TextView name = (TextView) tourPointView.findViewById(R.id.text_pointname);
@@ -271,8 +275,6 @@ public class TourActivity extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "add node");
 
     }
-
-
 
     /**
      * This class is the listener that updates the current location and check if the user is in a location or not

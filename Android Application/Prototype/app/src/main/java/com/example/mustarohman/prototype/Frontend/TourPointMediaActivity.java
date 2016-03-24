@@ -103,8 +103,6 @@ public class TourPointMediaActivity extends AppCompatActivity {
      * @param inflater
      * @param filepath
      */
-
-
     private void setVidThumbButton(LayoutInflater inflater, String filepath, int mediaIndex) {
 
         final View imageView =  inflater.inflate(R.layout.view_media_image, null);
