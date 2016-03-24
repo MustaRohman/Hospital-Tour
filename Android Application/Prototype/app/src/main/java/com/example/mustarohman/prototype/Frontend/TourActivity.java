@@ -359,15 +359,22 @@ public class TourActivity extends AppCompatActivity {
                     textView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                            final Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
                             intent.putExtra(TOUR_CODE, inputTourCode);
                             intent.putExtra(TOUR_LOCATION, locationsFound.get(counter));
 
                             checkingLocation = false;
 
-                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                     TourActivity.this);
-                            ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+
+                                }
+                            });
                         }
                     });
                 }
