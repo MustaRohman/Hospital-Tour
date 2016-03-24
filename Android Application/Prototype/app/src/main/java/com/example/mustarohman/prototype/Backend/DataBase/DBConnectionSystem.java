@@ -26,6 +26,7 @@ public class DBConnectionSystem {
     public static String tourCodeGlobal = "";
 
 
+
     public DBConnectionSystem() {
 
     }
@@ -76,9 +77,57 @@ public class DBConnectionSystem {
         return updateQuery.execute(query).get();
     }
 
+    //testing purposes
+    public ArrayList<String> getTestingTourCodes() throws ExecutionException, InterruptedException {
+        return new TestingTourCodesListQuery().execute().get();
+    }
+
     public HashMap<String,String> getTourCodes(String query) throws ExecutionException, InterruptedException {
         return new TourCodesListQuery().execute(query).get();
     }
+
+    public ArrayList<String> getTourName() throws ExecutionException, InterruptedException{
+        return new TourNames().execute().get();
+
+    }
+
+
+    //testing purposes
+    public class TourNames extends AsyncTask<Void,Void,ArrayList<String>>{
+        @Override
+        protected ArrayList<String> doInBackground(Void...params){
+            String query = "Select * from tour;";
+
+            ArrayList<String> retval = new ArrayList<>();
+            try {
+                connectionDriver();
+                ResultSet rs = st.executeQuery(query);
+                while(rs.next()){
+                    retval.add(rs.getString("tour_name"));
+
+                }
+                rs.close();
+                st.close();
+                conn.close();
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            return retval;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values){
+            super.onProgressUpdate(values);
+
+        }
+
+    }
+
+
+
+
 
     private class loginQuery extends AsyncTask<String, Void, HashMap<String, ArrayList<String>>> {
         @Override
@@ -291,6 +340,37 @@ public class DBConnectionSystem {
         return arrayList;
 
     }
+    //testing purposes
+    private class TestingTourCodesListQuery extends AsyncTask<Void, Void, ArrayList<String>> {
+        @Override
+        //This does the connection protocol in the background.
+        protected ArrayList<String> doInBackground(Void... params) {
+            // to retrieve the query result.
+            String query = "Select * from tour;";
+            ArrayList<String> retval = new ArrayList<>();
+            try {
+                connectionDriver();
+                //this logs in to get data from database.
+                //this is query.
+                ResultSet rs = st.executeQuery(query);
+                while (rs.next()) {
+                    retval.add(rs.getString("tourid"));
+                }
+                rs.close();
+                st.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return retval;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
 }
 
 

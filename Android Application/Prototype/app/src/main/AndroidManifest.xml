@@ -9,9 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +21,7 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+
         <activity
             android:name=".Frontend.MainActivity"
             android:label="@string/title_activity_main"
@@ -47,7 +47,6 @@
             android:name=".Frontend.CurrentActivity"
             android:label="@string/title_activity_current"
             android:screenOrientation="portrait"
-
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".Frontend.LogInActivity"
@@ -68,14 +67,11 @@
         <activity
             android:name=".Frontend.ImageFullScreenActivity"
             android:label="ImageFullScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Frontend.VidActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Frontend.VidActivity"
             android:label="VidActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
