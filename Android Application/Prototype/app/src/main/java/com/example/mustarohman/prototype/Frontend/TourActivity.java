@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class TourActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 1500; // in Milliseconds
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2500; // in Milliseconds
     public static final String TOUR_LOCATION= "tour-location-name";
     public static final String TOUR_CODE = "tour-code";
     private boolean checkingLocation;
@@ -79,6 +79,13 @@ public class TourActivity extends AppCompatActivity {
         catch(SecurityException e) {
             Log.w("e", "app needs location permissions");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkingLocation = false;
+        locationManager = null;
     }
 
     /**
