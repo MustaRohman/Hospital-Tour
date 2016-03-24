@@ -36,6 +36,8 @@ public class TourActivity extends AppCompatActivity {
     private static final long MINIMUM_TIME_BETWEEN_UPDATES = 1500; // in Milliseconds
     public static final String TOUR_LOCATION= "tour-location-name";
     public static final String TOUR_CODE = "tour-code";
+    private boolean checkingLocation;
+
 
     private String inputTourCode;
     protected LocationManager locationManager;
@@ -59,6 +61,8 @@ public class TourActivity extends AppCompatActivity {
         setUpToolbar();
         loadTourLocations();
         addAllTourPointViews();
+
+        checkingLocation = true;
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         
@@ -276,7 +280,9 @@ public class TourActivity extends AppCompatActivity {
      */
     private class MyLocationListener implements LocationListener {
 
+
         public void onLocationChanged(Location location) {
+
             String message = "location updated";
 
             // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -356,21 +362,28 @@ public class TourActivity extends AppCompatActivity {
             }
         }
 
-        if(locationsFound.size() == 1) {
-            Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
-            intent.putExtra(TOUR_CODE , inputTourCode);
-            intent.putExtra(TOUR_LOCATION , locationsFound.get(0));
+        while (checkingLocation) {
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    TourActivity.this);
-            ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
-        }else if(locationsFound.size() >1){
+            if (locationsFound.size() == 1) {
+                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                intent.putExtra(TOUR_CODE, inputTourCode);
+                intent.putExtra(TOUR_LOCATION, locationsFound.get(0));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
-            builder.setMessage("Please pick a room");
-            // Create the AlertDialog object and return it
-            builder.create();
-            builder.show();
+                checkingLocation = false;
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        TourActivity.this);
+                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+            } else if (locationsFound.size() > 1) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
+                builder.setMessage("Please pick a room");
+                // Create the AlertDialog object and return it
+                builder.create();
+                builder.show();
+                checkingLocation = false;
+
+            }
 
         }
     }
@@ -397,5 +410,11 @@ public class TourActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        checkingLocation = true;
     }
 }
