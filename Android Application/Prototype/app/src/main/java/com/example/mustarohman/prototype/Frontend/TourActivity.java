@@ -1,16 +1,13 @@
 package com.example.mustarohman.prototype.Frontend;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
@@ -27,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mustarohman.prototype.Backend.DataBase.DBConnectionSystem;
 import com.example.mustarohman.prototype.Backend.DataCaching;
 import com.example.mustarohman.prototype.Backend.Objects.TourLocation;
 import com.example.mustarohman.prototype.R;
@@ -65,6 +61,7 @@ public class TourActivity extends AppCompatActivity {
         addAllTourPointViews();
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        
         try {
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
@@ -169,33 +166,33 @@ public class TourActivity extends AppCompatActivity {
             }
         };
 
-        ArrayList<TourLocation> localList = tourLocations;
-
-        for(int i = 0; i<localList.size(); i++)
+//        ArrayList<TourLocation> localList = tourLocations;
+//
+//        for(int i = 0; i<localList.size(); i++)
+//        {
+////            TourLocation firstLoc = localList.get(i);
+//            for(int j=0; j<localList.size();j++)
+//            {
+//
+////                TourLocation secondLoc = localList.get(j);
+//
+//                //don't check with yourself
+//                if(i==j){continue;}
+//
+//                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
+//                {
+//                    overlapingLocs[0] = localList.get(i).getName();
+//                    overlapingLocs[1] = localList.get(j).getName();
+//                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
+//
+//                    localList.remove(j);
+//                    localList.remove(i);
+//                }
+//            }
+//        }
+        for(TourLocation tourLocation : tourLocations)
         {
-//            TourLocation firstLoc = localList.get(i);
-            for(int j=0; j<localList.size();j++)
-            {
-
-//                TourLocation secondLoc = localList.get(j);
-
-                //don't check with yourself
-                if(i==j){continue;}
-
-                if(areOverlapping(localList.get(i).getLatitude(), localList.get(i).getLongitude(), 0.00008, localList.get(j).getLatitude(), localList.get(j).getLongitude()))
-                {
-                    overlapingLocs[0] = localList.get(i).getName();
-                    overlapingLocs[1] = localList.get(j).getName();
-                    addDoubleTourPoint(localList.get(i), localList.get(j), inflater, doublelistener);
-
-                    localList.remove(j);
-                    localList.remove(i);
-                }
-            }
-        }
-        for(int a =0 ;a< localList.size();a++)
-        {
-            addSingleTourPoint(localList.get(a), inflater, singlelistener);
+            addSingleTourPoint(tourLocation, inflater, singlelistener);
         }
 
     }
@@ -339,7 +336,7 @@ public class TourActivity extends AppCompatActivity {
      * @param sensitivity sensitivity of the search for the in square method call
      */
     public void checkInGeofence(double la, double lo, double sensitivity) {
-
+        ArrayList<String> locationsFound = new ArrayList<>();
         ArrayList<TourLocation> nodesList = tourLocations;
         Log.w("list",""+nodesList.size());
         for (int i = 0; i <nodesList.size() ; i++) {
@@ -352,10 +349,29 @@ public class TourActivity extends AppCompatActivity {
             if(isInSquare(la,lo,sensitivity,geoLaNoe,geoloNode)) {
                 Log.w("in square","in square");
                 Toast.makeText(TourActivity.this, "you have entered your locations: "+nodesList.get(i).getName(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, TourPointMediaActivity.class);
-                startActivity(intent);
+                locationsFound.add(nodesList.get(i).getName());
 
+                Log.d("checkInGeofence", "" + locationsFound.size());
+                Log.d("",locationsFound.toString());
             }
+        }
+
+        if(locationsFound.size() == 1) {
+            Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+            intent.putExtra(TOUR_CODE , inputTourCode);
+            intent.putExtra(TOUR_LOCATION , locationsFound.get(0));
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    TourActivity.this);
+            ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+        }else if(locationsFound.size() >1){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
+            builder.setMessage("Please pick a room");
+            // Create the AlertDialog object and return it
+            builder.create();
+            builder.show();
+
         }
     }
 
