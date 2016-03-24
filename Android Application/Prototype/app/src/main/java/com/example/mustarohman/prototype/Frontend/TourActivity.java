@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 public class TourActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2500; // in Milliseconds
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 2000; // in Milliseconds
     public static final String TOUR_LOCATION= "tour-location-name";
     public static final String TOUR_CODE = "tour-code";
     private boolean checkingLocation;
@@ -73,18 +74,9 @@ public class TourActivity extends AppCompatActivity {
         checkingLocation = true;
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        
-        try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    MINIMUM_TIME_BETWEEN_UPDATES,
-                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
-                    new MyLocationListener()
-            );
-        }
-        catch(SecurityException e) {
-            Log.w("e", "app needs location permissions");
-        }
+
+        new MyLocationListener().start();
+
         
     }
 
@@ -226,13 +218,34 @@ public class TourActivity extends AppCompatActivity {
     /**
      * This class is the listener that updates the current location and check if the user is in a location or not
      */
-    private class MyLocationListener implements LocationListener {
+    private class MyLocationListener extends Thread implements LocationListener {
+
+        @Override
+        public void run() {
+            try {
+                Looper.prepare();
+                locationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER,
+                        MINIMUM_TIME_BETWEEN_UPDATES,
+                        MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,
+                        new MyLocationListener()
+                );
+                Thread.sleep(MINIMUM_TIME_BETWEEN_UPDATES);
+                Looper.loop();
+
+            }
+            catch(SecurityException e) {
+                Log.w("e", "app needs location permissions");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         public void onLocationChanged(Location location) {
 
             String message = "location updated";
 
-            // Toast.makeText(CurrentActivity.this, message, Toast.LENGTH_SHORT).show();
+             Toast.makeText(TourActivity.this, message, Toast.LENGTH_SHORT).show();
 
             checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
             Log.d("current loc","current latitude: " + location.getLatitude() + "longitude: " + location.getLongitude()+"");
@@ -312,15 +325,22 @@ public class TourActivity extends AppCompatActivity {
         while (checkingLocation) {
 
             if (locationsFound.size() == 1) {
-                Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
+                final Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
                 intent.putExtra(TOUR_CODE, inputTourCode);
                 intent.putExtra(TOUR_LOCATION, locationsFound.get(0));
 
                 checkingLocation = false;
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
-                ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ActivityCompat.startActivity(TourActivity.this, intent, options.toBundle());
+
+                    }
+                });
             } else if (locationsFound.size() > 1) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
@@ -369,5 +389,6 @@ public class TourActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         checkingLocation = true;
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     }
 }
