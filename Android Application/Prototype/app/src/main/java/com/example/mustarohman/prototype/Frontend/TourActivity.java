@@ -1,11 +1,13 @@
 package com.example.mustarohman.prototype.Frontend;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -52,7 +54,6 @@ public class TourActivity extends AppCompatActivity {
     private DataCaching dataCaching;
     private ArrayList<View> tourViewsList;
     private ArrayList<TourLocation> tourLocations;
-    private String[] overlapingLocs = new String[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,8 +275,7 @@ public class TourActivity extends AppCompatActivity {
         Boolean isInSquare = false;
 
         //check if we are in square
-        if((la <= geoLa+sensitivity && la >= geoLa-sensitivity) && (lo <= geoLo+sensitivity&& lo >= geoLo-sensitivity))
-        {
+        if((la <= geoLa+sensitivity && la >= geoLa-sensitivity) && (lo <= geoLo+sensitivity&& lo >= geoLo-sensitivity)) {
             isInSquare = true;
         }
 
@@ -309,7 +309,11 @@ public class TourActivity extends AppCompatActivity {
             }
         }
 
+        Notification.Builder notification = new Notification.Builder(this);
+
         while (checkingLocation) {
+
+
 
             if (locationsFound.size() == 1) {
                 final Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
@@ -317,6 +321,27 @@ public class TourActivity extends AppCompatActivity {
                 intent.putExtra(TOUR_LOCATION, locationsFound.get(0));
 
                 checkingLocation = false;
+                String locationName = locationsFound.get(0);
+                TourLocation currentLocation = null;
+                for (TourLocation tourLocation : tourLocations){
+                    if (tourLocation.getName().equals(locationName)){
+                        currentLocation = tourLocation;
+                    }
+                }
+                Bitmap bitmap = null;
+                ArrayList<Media> mediaArrayList = currentLocation.getMediaList();
+                for (Media media: mediaArrayList){
+                    if (media.getDatatype() == Media.DataType.IMAGE){
+                        bitmap = media.returnBitmap();
+                    }
+                }
+                notification.setLargeIcon(bitmap)
+                        .setContentTitle("Hive Tours")
+                        .setContentText("Entered " + currentLocation.getName());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    notification.build();
+                }
+
 
                 final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
