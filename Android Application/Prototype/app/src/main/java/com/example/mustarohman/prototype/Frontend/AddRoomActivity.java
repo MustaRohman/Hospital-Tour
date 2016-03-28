@@ -80,10 +80,7 @@ public class AddRoomActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
 
                 if(locationNameEt!=null){
-
-                    String latitude = String.valueOf(location.getLatitude());
-                    String longitude = String.valueOf(location.getLongitude());
-                    addButtonConfirmation(latitude,longitude);
+                    addButtonConfirmation(location.getLatitude(),location.getLongitude());
                 }else{
                     Toast.makeText(AddRoomActivity.this,"Please Enter Location Name",
                             Toast.LENGTH_SHORT).show();
@@ -106,7 +103,7 @@ public class AddRoomActivity extends AppCompatActivity {
      * @param latitude : latitude (double) of the location to add
      * @param longitude : longitude (double) of the location to add
      */
-    public void addButtonConfirmation(final String latitude,final String longitude ){
+    public void addButtonConfirmation(final double latitude,final double longitude ){
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -119,10 +116,9 @@ public class AddRoomActivity extends AppCompatActivity {
                         String locationName = locationNameEt.getText().toString();
                         locationName = locationName.replace(" ", "");
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
-                        String query = "Insert into location (lname,latitude,longitude) values('"+locationName+"',"+latitude+","+longitude+");";
                         try {
                             //Check for successful query added toast for validation.
-                          boolean checkQuery =  dbConnectionSystem.UpdateDatabase(query);
+                          boolean checkQuery =  dbConnectionSystem.UpdateDatabase(locationName, latitude, longitude);
 
                             if (checkQuery){
                                 Toast.makeText(AddRoomActivity.this,

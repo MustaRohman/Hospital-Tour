@@ -71,10 +71,10 @@ public class DBConnectionSystem {
     }
 
     //this method used to pass update queries to the database
-    public boolean UpdateDatabase(String query) throws ExecutionException, InterruptedException {
-        UpdateQuery updateQuery = new UpdateQuery();
+    public boolean UpdateDatabase(String locationName, double latitude, double longitude) throws ExecutionException, InterruptedException {
+        UpdateQuery updateQuery = new UpdateQuery(locationName);
 
-        return updateQuery.execute(query).get();
+        return updateQuery.execute(latitude, longitude).get();
     }
 
     //testing purposes
@@ -124,9 +124,6 @@ public class DBConnectionSystem {
         }
 
     }
-
-
-
 
 
     private class loginQuery extends AsyncTask<String, Void, HashMap<String, ArrayList<String>>> {
@@ -203,7 +200,15 @@ public class DBConnectionSystem {
     /**
      * This used for all update queries need to be executed by the app.
      */
-    private class UpdateQuery extends AsyncTask<String, Void, Boolean> {
+    private class UpdateQuery extends AsyncTask<Double, Void, Boolean> {
+
+        private String locationName;
+
+        public UpdateQuery(String locationName){
+            this.locationName = locationName;
+        }
+
+
         @Override
         protected void onPreExecute() {
 //Here we could add progress bar,
@@ -211,11 +216,14 @@ public class DBConnectionSystem {
 
         //this will allow the user to insert/update the database
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(Double... params) {
             connectionDriver();
             boolean check = false;
             try {
-                PreparedStatement statement = conn.prepareStatement(params[0]);
+                PreparedStatement statement = conn.prepareStatement("Insert into location (lname,latitude,longitude) values(?,?,?);");
+                statement.setString(1, locationName);
+                statement.setDouble(2, params[0]);
+                statement.setDouble(3, params[1]);
                 int rowsUpdated = statement.executeUpdate();
 
                 if (rowsUpdated > 0) {

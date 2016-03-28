@@ -101,48 +101,6 @@ public class EditTourActivity extends AppCompatActivity {
         //Sliding list of tour codes. Should reload the current activity
     }
 
-    public void generateTourCode(){
-
-
-    }
-
-    /**
-     * Method that save the changed state of the tour in the database
-     * @param view is a button that triggers the onClick
-     */
-    public void onClickSaveTour(View view) {
-
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-
-                        DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
-
-                        try {
-                            dbConnectionSystem.UpdateDatabase("update tour set tour_name= '"+tourNameEdit.getText().toString()+"' where tourid = '"+tourCodeString+"';");
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please Confirm The Changes?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
-
-
-    }
 
     /**
      * sets the text of the diferrent vies in the activity
@@ -151,8 +109,6 @@ public class EditTourActivity extends AppCompatActivity {
         TextView tourCodeText = (TextView) findViewById(R.id.tour_code);
         tourCodeText.setText(tourCodeString);
 
-        //Retrieve name of tour from the database
-        generateTourCode();
 
         TextView loggedInText = (TextView) findViewById(R.id.logged_in_text);
         String loggedInString = loggedInText.getText().toString();
