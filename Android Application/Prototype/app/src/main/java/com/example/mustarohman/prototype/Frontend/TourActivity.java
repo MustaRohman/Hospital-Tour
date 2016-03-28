@@ -232,11 +232,6 @@ public class TourActivity extends AppCompatActivity {
         }
 
         public void onLocationChanged(Location location) {
-
-            String message = "location updated";
-
-            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
-
             checkInGeofence(location.getLatitude(), location.getLongitude(), 0.00008);
             Log.d("current loc","current latitude: " + location.getLatitude() + "longitude: " + location.getLongitude()+"");
             Log.d("la+",location.getLatitude()+0.00008+"");
@@ -309,11 +304,7 @@ public class TourActivity extends AppCompatActivity {
             }
         }
 
-        Notification.Builder notification = new Notification.Builder(this);
-
         while (checkingLocation) {
-
-
 
             if (locationsFound.size() == 1) {
                 final Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
@@ -328,20 +319,6 @@ public class TourActivity extends AppCompatActivity {
                         currentLocation = tourLocation;
                     }
                 }
-                Bitmap bitmap = null;
-                ArrayList<Media> mediaArrayList = currentLocation.getMediaList();
-                for (Media media: mediaArrayList){
-                    if (media.getDatatype() == Media.DataType.IMAGE){
-                        bitmap = media.returnBitmap();
-                    }
-                }
-                notification.setLargeIcon(bitmap)
-                        .setContentTitle("Hive Tours")
-                        .setContentText("Entered " + currentLocation.getName());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    notification.build();
-                }
-
 
                 final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         TourActivity.this);
@@ -363,14 +340,17 @@ public class TourActivity extends AppCompatActivity {
                     final int counter = i;
                     TextView textView = new TextView(this);
                     textView.setText(locationsFound.get(i));
+                    textView.setTextSize(18);
                     textView.setGravity(Gravity.LEFT);
-                    textView.setPadding(40, 10, 10, 10);
+                    textView.setPadding(40, 20, 20, 20);
                     textView.setBackgroundColor(Color.TRANSPARENT);
+                    textView.setGravity(Gravity.CENTER);
                     linearLayout.addView(textView);
 
                     textView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             final Intent intent = new Intent(TourActivity.this, TourPointMediaActivity.class);
                             intent.putExtra(TOUR_CODE, inputTourCode);
                             intent.putExtra(TOUR_LOCATION, locationsFound.get(counter));

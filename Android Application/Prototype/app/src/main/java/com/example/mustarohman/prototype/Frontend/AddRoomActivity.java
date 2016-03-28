@@ -114,7 +114,6 @@ public class AddRoomActivity extends AppCompatActivity {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         String locationName = locationNameEt.getText().toString();
-                        locationName = locationName.replace(" ", "");
                         DBConnectionSystem dbConnectionSystem = new DBConnectionSystem();
                         try {
                             //Check for successful query added toast for validation.
