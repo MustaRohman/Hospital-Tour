@@ -66,7 +66,7 @@ public class MediaTest extends AndroidTestCase {
             }
             else {
 
-                file = media.getVidFile();
+                file = media.getFilePath();
             }
 
         }

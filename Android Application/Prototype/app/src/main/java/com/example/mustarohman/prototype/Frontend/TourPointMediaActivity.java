@@ -86,7 +86,7 @@ public class TourPointMediaActivity extends AppCompatActivity {
                 thumb = media.returnBitmap();
                 setImageThumbButton(inflater, thumb, indexCounter);
             } else {
-                File file = media.getVidFile();
+                File file = media.getFilePath();
                 setVidThumbButton(inflater, file.getPath(), indexCounter);
             }
             indexCounter++;

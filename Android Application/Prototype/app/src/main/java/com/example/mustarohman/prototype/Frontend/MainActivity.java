@@ -2,8 +2,6 @@ package com.example.mustarohman.prototype.Frontend;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,17 +15,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -340,6 +334,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return tourIds.containsKey(inputTourCode);
         }
 
+        private File storeS3ObjInImgFile(String name, byte[] bytes){
+            String root = Environment.getExternalStorageDirectory().toString();
+            File path = new File(root + "/images");
+            path.mkdirs();
+
+            File imgFilePath = new File(path, name);
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+            OutputStream out = null;
+            try {
+                out = new FileOutputStream(imgFilePath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            byte data[] = new byte[4096];
+            int count;
+            try {
+                while ((count = inputStream.read(data)) != -1) {
+                    out.write(data, 0, count);
+                }
+            } catch (IOException e) {
+                Snackbar.make(coordinatorLayout, "Failed to download store media on SD card", Snackbar.LENGTH_SHORT);
+                e.printStackTrace();
+            }
+
+            return imgFilePath;
+        }
+
         /**
          * This method retrieves the media data from the database
          */
@@ -351,10 +372,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", media.getInBucketName()));
                     byte[] bytes = turnS3ObjIntoByteArray(obj);
                     if (media.getDatatype() == Media.DataType.IMAGE) {
-                        media.setBitmapBytes(bytes);
+                        File imgFilePath = storeS3ObjInImgFile(media.getInBucketName(), bytes);
+                        media.setFilePath(imgFilePath);
                     } else {
                         File vidFilePath = storeS3ObjInVidFile(media.getInBucketName(), bytes);
-                        media.setVidFile(vidFilePath);
+                        media.setFilePath(vidFilePath);
                     }
                 }
                 int progress = (100/tourLocations.size()) * counter;
@@ -375,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             //Add relevant media data to each tourLocation
             //Query would be called to retrieve media data
 
-            publishProgress("Downloading media data...");
             DBConnectionSystem.locationMediaQuery(tourLocations);
             retrieveMediaData();
             Log.d("retrieveAndSaveTourData", "Media data downloaded");

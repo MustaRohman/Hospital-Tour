@@ -183,7 +183,7 @@ public class MediaFullScreenActivity extends AppCompatActivity {
                 }
 
                 //getting the video file
-                VideoView videoView = createVideoView(media.getVidFile());
+                VideoView videoView = createVideoView(media.getFilePath());
                 relativeLayout.addView(videoView);
                 viewFlipper.addView(Videoscreen);
             }

@@ -2,8 +2,7 @@ package com.example.mustarohman.prototype.Backend.Objects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import android.util.Log;
 
 import java.io.File;
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class Media implements Serializable{
 
     private byte[] bitmapBytes;
 
-    private File vidFile;
+    private File filePath;
 
     private DataType datatype;
     private String inBucketName;
@@ -83,19 +82,22 @@ public class Media implements Serializable{
     }
 
     public Bitmap returnBitmap(){
-        return BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+        BitmapFactory.Options bmo = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath(), bmo);
+        Log.d("returnBitmap", "IT WORKS");
+        return bitmap;
     }
 
     public byte[] getBitmapBytes(){
         return bitmapBytes;
     }
 
-    public File getVidFile() {
-        return vidFile;
+    public File getFilePath() {
+        return filePath;
     }
 
-    public void setVidFile(File vidFile) {
-        this.vidFile = vidFile;
+    public void setFilePath(File filePath) {
+        this.filePath = filePath;
     }
 
 

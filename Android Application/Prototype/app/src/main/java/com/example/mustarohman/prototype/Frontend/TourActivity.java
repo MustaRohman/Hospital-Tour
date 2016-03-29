@@ -347,6 +347,7 @@ public class TourActivity extends AppCompatActivity {
                     textView.setGravity(Gravity.CENTER);
                     linearLayout.addView(textView);
 
+
                     textView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
