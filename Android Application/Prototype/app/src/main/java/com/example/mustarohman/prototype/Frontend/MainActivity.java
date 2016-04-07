@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         @Override
         protected Void doInBackground(String... params) {
 
-            AWSCredentials creden= new BasicAWSCredentials("AKIAJQAUHJ7XGYHTS6AQ","2cX+t23YGpin7L4FbBAcr7zhMJAyePxL9b0bLGxK");
+            AWSCredentials creden= new BasicAWSCredentials("AKIAJBRJTSIXZGEMTSXQ","9ThIW6289Ld8i3SNm981RFGrTECcjdVbh1j12nlc");
             s3Client = new AmazonS3Client(creden);
             s3Client.setRegion(Region.getRegion(Regions.EU_WEST_1));
 
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             for (TourLocation tourLocation: tourLocations){
                 ArrayList<Media> mediaArrayList = tourLocation.getMediaList();
                 for (Media media: mediaArrayList){
-                    S3Object obj = s3Client.getObject(new GetObjectRequest("hive.testing.storage", media.getInBucketName()));
+                    S3Object obj = s3Client.getObject(new GetObjectRequest("hive.storage", media.getInBucketName()));
                     byte[] bytes = turnS3ObjIntoByteArray(obj);
                     if (media.getDatatype() == Media.DataType.IMAGE) {
                         media.setBitmapBytes(bytes);
